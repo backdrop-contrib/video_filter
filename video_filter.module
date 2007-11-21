@@ -97,8 +97,8 @@ function video_filter_process($text, $format = -1) {
 		foreach ($matches_code[0] as $ci => $code) {
 			$video = array(
 				'source'	=> $matches_code[2][$ci],
-				'width'		=> variable_get('video_filter_width_'.$format, NULL),
-				'height'	=> variable_get('video_filter_height_'.$format, NULL),
+				'width'		=> NULL,
+				'height'	=> NULL,
 				'autoplay'	=> variable_get('video_filter_autoplay_'.$format, NULL),
 				'site'		=> variable_get('video_filter_site_'.$format, NULL),
 			);
@@ -115,10 +115,17 @@ function video_filter_process($text, $format = -1) {
 				$random				= array_rand($sources, 1);
 				$video['source']	= $sources[$random];
 			}			
-			
-			$video['width']		= (intval($video['width']) > 0) ? intval($video['width']) : NULL;
-			$video['height']	= (intval($video['height']) > 0) ? intval($video['height']) : NULL;
-			$video['autoplay']	= in_array(strtolower(substr($value, 0, 1)), array('y','j','1','t','o'));
+
+			if (intval($video['width']) > 0 || intval($video['height']) > 0) {
+				$video['width']		= (intval($video['width']) > 0) ? intval($video['width']) : NULL;
+				$video['height']	= (intval($video['height']) > 0) ? intval($video['height']) : NULL;
+				
+			} else {
+				$video['width']		= variable_get('video_filter_width_'.$format, NULL);
+				$video['height']	= variable_get('video_filter_height_'.$format, NULL);
+			}
+
+			$video['autoplay']	= in_array(strtolower(substr($video['autoplay'], 0, 1)), array('y','j','1','t','o'));
 
 			if (file_exists(dirname(__FILE__).'/sites/'.$video['site'].'.inc')) {
 				include(dirname(__FILE__).'/sites/'.$video['site'].'.inc');
