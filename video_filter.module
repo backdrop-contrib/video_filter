@@ -1,0 +1,183 @@
+<?php
+
+function video_filter_filter($op, $delta = 0, $format = -1, $text = '') {
+	switch ($op) {
+		case 'list':
+			return array(
+				0 => t('Video Filter'),
+			);
+		
+		case 'no cache':
+			switch ($delta) {
+				case 0:
+					return 1;
+				default:
+					return 0;
+			}
+		
+		case 'description':
+			switch ($delta) {
+				case 0:
+					return t('Substitutes [video:source] with embedded HTML.');
+				default:
+				  return;
+			}
+		
+		case 'process':
+			switch ($delta) {
+				case 0:
+					return video_filter_process($text, $format);
+				default:
+				  return $text;
+			}
+		
+		case 'settings':
+			switch ($delta) {
+				case 0:
+					return video_filter_settings($format);
+				default:
+				  return;
+			}
+		
+		default:
+			return $text;
+	}
+}
+
+function video_filter_filter_tips($delta, $format, $long = FALSE) {
+	
+	switch ($delta) {
+		
+		case 0:
+		
+			if ($long) {
+				return t('
+					<p>Examples in using the Video filter:</p>
+					<ul>
+					  <li>
+					    Single video:
+					    <ul>
+					      <li><code>[video:http://www.youtube.com/watch?v=ID]</code></li>
+					      <li><code>[video:ID]</code></li>
+					      <li><code>[video source:http://www.youtube.com/watch?v=ID]</code></li>
+					      <li><code>[video source:ID]</code></li>
+					    </ul>
+					  </li>
+					  <li>
+					    Random video out of multiple: <code>[video:ID1,ID2]</code>
+					  </li>
+					  <li>
+					    Video from other than default site: <code>[video:ID1 site:godtube]</code>
+					  </li>
+					  <li>
+					    Autoplay other than default setting: <code>[video:ID autoplay:1]</code> (or: yes,ja,true,on)
+					  </li>
+					  <li>
+					  	Size other than default size:
+					    <ul>
+					      <li><code>[video:ID width:X]</code> (height will be calculated)</li>
+					      <li><code>[video:ID height:Y]</code> (width will be calculated)</li>
+					      <li><code>[video:ID width:X height:Y]</code></li>
+					    </ul>
+					  </li>
+					</ul>');
+					
+			 } else {
+				 return t('You may insert videos with [video:SOURCE]');
+			 }
+			 
+		break;
+	}
+}
+
+function video_filter_process($text, $format = -1) {
+	
+	if (preg_match_all('/\[video(\:(.+))?( .+)?\]/isU', $text, $matches_code)) {  
+
+		foreach ($matches_code[0] as $ci => $code) {
+			$video = array(
+				'source'	=> $matches_code[2][$ci],
+				'width'		=> variable_get('video_filter_width_'.$format, NULL),
+				'height'	=> variable_get('video_filter_height_'.$format, NULL),
+				'autoplay'	=> variable_get('video_filter_autoplay_'.$format, NULL),
+				'site'		=> variable_get('video_filter_site_'.$format, NULL),
+			);
+			
+			if ($matches_code[3][$ci] && preg_match_all('/\s+([a-z]+)\:([^\s]+)/i', $matches_code[3][$ci], $matches_attributes)) {
+
+				foreach ($matches_attributes[0] as $ai => $attribute) {
+					$video[$matches_attributes[1][$ai]] = $matches_attributes[2][$ai];
+				}
+			}
+			
+			if (strstr($video['source'], ',')) {
+				$sources			= explode(',', $video['source']);
+				$random				= array_rand($sources, 1);
+				$video['source']	= $sources[$random];
+			}			
+			
+			$video['width']		= (intval($video['width']) > 0) ? intval($video['width']) : NULL;
+			$video['height']	= (intval($video['height']) > 0) ? intval($video['height']) : NULL;
+			$video['autoplay']	= in_array(strtolower(substr($value, 0, 1)), array('y','j','1','t','o'));
+
+			if (file_exists(dirname(__FILE__).'/sites/'.$video['site'].'.inc')) {
+				include(dirname(__FILE__).'/sites/'.$video['site'].'.inc');
+				
+				if (is_callable('video_filter_'.$video['site'])) {
+					$html = call_user_func('video_filter_'.$video['site'], $video);
+				}
+			}
+			
+			$text = str_replace($code, $html ? $html : $code.'ERROR<!-- VIDEO FILTER SYNTAX ERROR -->', $text);
+		}
+	}
+  
+	return $text;
+}
+
+function video_filter_settings($format) {
+	$form['video_filter'] = array(
+		'#type' => 'fieldset',
+		'#title' => t('Video filter'),
+		'#collapsible' => TRUE,
+	);
+	$form['video_filter']['video_filter_width_'.$format] = array(
+		'#type' => 'textfield',
+		'#title' => t('Default width setting'),
+		'#default_value' => variable_get('video_filter_width_'.$format, NULL),
+		'#maxlength' => 4,
+	);
+	$form['video_filter']['video_filter_height_'.$format] = array(
+		'#type' => 'textfield',
+		'#title' => t('Default height setting'),
+		'#default_value' => variable_get('video_filter_height_'.$format, NULL),
+		'#maxlength' => 4,
+	);
+	$form['video_filter']['video_filter_autoplay_'.$format] = array(
+		'#type' => 'radios',
+		'#title' => t('Default autoplay setting'),
+		'#default_value' => variable_get('video_filter_autoplay_'.$format, NULL),
+		'#options' => array(
+			0 => t('No'),
+			1 => t('Yes'),
+		),
+	);
+	
+	$sites		= file_scan_directory(dirname(__FILE__).'/sites', '.*\.inc');
+	$options	= array('' => '');
+	
+	foreach ($sites as $site) {
+		$options[$site->name] = ucfirst($site->name);
+	}
+	
+	$form['video_filter']['video_filter_site_'.$format] = array(
+		'#type' => 'select',
+		'#title' => t('Default video site setting'),
+		'#default_value' => variable_get('video_filter_site_'.$format, NULL),
+		'#options' => $options,
+	);
+	
+	return $form;
+}
+
+?>
