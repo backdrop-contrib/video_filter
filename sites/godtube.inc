@@ -5,7 +5,7 @@ function video_filter_godtube($video) {
 	$video['width']		= $video['width'] ? $video['width'] : ($video['height'] ? ($video['height'] / (270/330)) : 330);
 	$video['height']	= $video['height'] ? $video['height'] : ($video['width'] ? ($video['width'] * (270/330)) : 270);
 	
-	$output = '<embed src="http://www.godtube.com/flvplayer.swf" flashvars="viewkey='.$video['source'].'" width="330" height="270" menu="false" allowscriptaccess="always" type="application/x-shockwave-flash"></embed>';
+	$output = '<embed src="http://www.godtube.com/flvplayer.swf" flashvars="viewkey='.$video['source'].'" width="'.$video['width'].'" height="'.$video['height'].'" menu="false" allowscriptaccess="always" type="application/x-shockwave-flash"></embed>';
 	
 	return $output;
 }
