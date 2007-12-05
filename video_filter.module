@@ -101,7 +101,7 @@ function video_filter_process($text, $format = -1) {
 				'width'		=> NULL,
 				'height'	=> NULL,
 				'autoplay'	=> variable_get('video_filter_autoplay_'.$format, NULL),
-				'site'		=> variable_get('video_filter_site_'.$format, NULL),
+				'site'		=> variable_get('video_filter_site_'.$format, 'youtube'),
 			);
 			
 			if ($matches_code[3][$ci] && preg_match_all('/\s+([a-z]+)\:([^\s]+)/i', $matches_code[3][$ci], $matches_attributes)) {
@@ -129,14 +129,14 @@ function video_filter_process($text, $format = -1) {
 			$video['autoplay']	= in_array(strtolower(substr($video['autoplay'], 0, 1)), array('y','j','1','t','o'));
 
 			if (file_exists(dirname(__FILE__).'/sites/'.$video['site'].'.inc')) {
-				include(dirname(__FILE__).'/sites/'.$video['site'].'.inc');
+				include_once(dirname(__FILE__).'/sites/'.$video['site'].'.inc');
 				
 				if (is_callable('video_filter_'.$video['site'])) {
 					$html = call_user_func('video_filter_'.$video['site'], $video);
 				}
 			}
 			
-			$text = str_replace($code, $html ? $html : $code.'ERROR<!-- VIDEO FILTER SYNTAX ERROR -->', $text);
+			$text = str_replace($code, $html ? $html : $code.'<!-- VIDEO FILTER SYNTAX ERROR -->', $text);
 		}
 	}
   
