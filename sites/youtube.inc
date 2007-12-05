@@ -1,6 +1,7 @@
 <?php
 
 function video_filter_youtube($video) {
+	video_filter_dimensions($video, 425, 355);
 	
 	if ($video['playlist']) {
 		
@@ -19,9 +20,7 @@ function video_filter_youtube($video) {
 		}
 	}
 	
-	$video['source']	= strstr($video['source'], '?v=') ? substr($video['source'], strpos($video['source'], '?v=') + 3, strpos($video['source'], '&')) : $video['source'];
-	$video['width']		= $video['width'] ? $video['width'] : ($video['height'] ? ($video['height'] / (246/300)) : 300);
-	$video['height']	= $video['height'] ? $video['height'] : ($video['width'] ? ($video['width'] * (246/300)) : 246);
+	$video['source'] = strstr($video['source'], '?v=') ? substr($video['source'], strpos($video['source'], '?v=') + 3, strpos($video['source'], '&')) : $video['source'];
 
 	if ($video['autoplay']) {
 		$output = '<embed src="http://www.youtube.com/v/'.$video['source'].'&rel=1&autoplay=1" type="application/x-shockwave-flash" wmode="transparent" width="'.$video['width'].'" height="'.$video['height'].'"></embed>';

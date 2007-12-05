@@ -92,7 +92,8 @@ function video_filter_filter_tips($delta, $format, $long = FALSE) {
 
 function video_filter_process($text, $format = -1) {
 	
-	if (preg_match_all('/\[video(\:(.+))?( .+)?\]/isU', $text, $matches_code)) {  
+	if (preg_match_all('/\[video(\:(.+))?( .+)?\]/isU', $text, $matches_code)) {
+		drupal_add_js(drupal_get_path('module', 'video_filter').'/ufo.js', 'module');
 
 		foreach ($matches_code[0] as $ci => $code) {
 			$video = array(
@@ -185,6 +186,32 @@ function video_filter_settings($format) {
 	);
 	
 	return $form;
+}
+
+function video_filter_dimensions(&$video, $default_width, $default_height) {
+	$ratio = $default_width / $default_height;
+		
+	// Width > Height
+	if ($ratio > 1) {	
+		$video['width']		= $video['width'] ? $video['width'] : $default_width;
+		$video['height']	= round($video['width'] / $ratio);
+	
+	// Height > Width
+	} else {
+		$video['height']	= $video['height'] ? $video['height'] : $default_height;
+		$video['width']		= round($video['height'] * $ratio);
+	}
+	
+	return $video;
+}
+
+/* In Development */
+function video_filter_ufo($args) {
+	$uid = uniqid('UFO_');
+	
+	drupal_add_js("var ".$uid." = ".drupal_to_js($args).";\nUFO.create(".$uid.", '".$uid."');", 'inline');
+	
+	return '<div id="'.$uid.'"><p>'.t('Your browser does not support JavaScript or Flash.').'</p></div>';
 }
 
 ?>
