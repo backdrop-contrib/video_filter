@@ -93,6 +93,7 @@ function video_filter_filter_tips($delta, $format, $long = FALSE) {
 function video_filter_process($text, $format = -1) {
 	
 	if (preg_match_all('/\[video(\:(.+))?( .+)?\]/isU', $text, $matches_code)) {
+		/* In Development */
 		drupal_add_js(drupal_get_path('module', 'video_filter').'/ufo.js', 'module');
 
 		foreach ($matches_code[0] as $ci => $code) {
