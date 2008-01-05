@@ -20,7 +20,7 @@ function video_filter_youtube($video) {
 		}
 	}
 	
-	$video['source'] = strstr($video['source'], '?v=') ? substr($video['source'], strpos($video['source'], '?v=') + 3, strpos($video['source'], '&')) : $video['source'];
+	$video['source'] = preg_replace('/^.*\?v=(.+)(&.+)?$/', '\\1', $video['source']);
 
 	if ($video['autoplay']) {
 		$output = '<embed src="http://www.youtube.com/v/'.$video['source'].'&rel=1&autoplay=1" type="application/x-shockwave-flash" wmode="transparent" width="'.$video['width'].'" height="'.$video['height'].'"></embed>';
