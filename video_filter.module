@@ -125,7 +125,7 @@ function video_filter_process($text, $format = -1) {
 				$video['height']	= variable_get('video_filter_height_'.$format, NULL);
 			}
 
-			$video['autoplay']	= in_array(strtolower(substr($video['autoplay'], 0, 1)), array('y','j','1','t','o'));
+			$video['autoplay']	= (bool) $video['autoplay'];
 
 			if (file_exists(dirname(__FILE__).'/sites/'.$video['site'].'.inc')) {
 				include_once(dirname(__FILE__).'/sites/'.$video['site'].'.inc');
@@ -135,7 +135,7 @@ function video_filter_process($text, $format = -1) {
 				}
 			}
 			
-			$text = str_replace($code, $html ? $html : $code.'<!-- VIDEO FILTER SYNTAX ERROR -->', $text);
+			$text = str_replace($code, $html ? $html : '<!-- VIDEO FILTER SYNTAX ERROR: '.$code.' -->', $text);
 		}
 	}
   
