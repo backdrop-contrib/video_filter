@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 function video_filter_godtube($video) {
 	video_filter_dimensions($video, 300, 270);
