@@ -6,7 +6,7 @@ function video_filter_google($video) {
 	
 	$video['source'] = preg_replace('/^.*\?docid=(.+)(&.+)?$/', '\\1', $video['source']);
 	
-	$output = '<embed style="width:'.$video['width'].'px; height:'.$video['height'].'px;" id="VideoPlayback" type="application/x-shockwave-flash" src="http://video.google.com/googleplayer.swf?docId='.$video['source'].'&hl=en" flashvars=""> </embed>';
+	$output = '<object type="application/x-shockwave-flash" width="'.$video['width'].'" height="'.$video['height'].'" data="http://video.google.com/googleplayer.swf?docId='.$video['source'].'&hl=en"><param name="movie" value="http://video.google.com/googleplayer.swf?docId='.$video['source'].'&hl=en" /><param name="wmode" value="transparent" /></object>';
 	
 	return $output;
 }

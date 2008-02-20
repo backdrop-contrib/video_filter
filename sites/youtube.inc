@@ -22,13 +22,8 @@ function video_filter_youtube($video) {
 	}
 	
 	$video['source'] = preg_replace('/^.*\?v=(.+)(&.+)?$/', '\\1', $video['source']);
-
-	if ($video['autoplay']) {
-		$output = '<embed src="http://www.youtube.com/v/'.$video['source'].'&rel=1&autoplay=1" type="application/x-shockwave-flash" wmode="transparent" width="'.$video['width'].'" height="'.$video['height'].'"></embed>';
-	  
-	} else {
-		$output = '<object width="'.$video['width'].'" height="'.$video['height'].'"><param name="movie" value="http://www.youtube.com/v/'.$video['source'].'&rel=1"></param><param name="wmode" value="transparent"></param><embed src="http://www.youtube.com/v/'.$video['source'].'&rel=1" type="application/x-shockwave-flash" wmode="transparent" width="'.$video['width'].'" height="'.$video['height'].'"></embed></object>';
-	}
+	
+	$output = '<object type="application/x-shockwave-flash" width="'.$video['width'].'" height="'.$video['height'].'" data="http://www.youtube.com/v/'.$video['source'].($video['autoplay'] ? '&autoplay=1' : '').'"><param name="movie" value="http://www.youtube.com/v/'.$video['source'].($video['autoplay'] ? '&autoplay=1' : '').'" /><param name="wmode" value="transparent" /></object>';
 	
 	return $output;
 }
