@@ -1,7 +1,7 @@
 <?php
 // $Id$
 
-require_once "video_filter.formats.inc";
+require_once "video_filter.codecs.inc";
 
 function video_filter_filter($op, $delta = 0, $format = -1, $text = '') {
 	switch ($op) {
@@ -86,29 +86,30 @@ function video_filter_process($text, $format = -1) {
 				'autoplay'	=> variable_get('video_filter_autoplay_'.$format, 0),
 			);
 			
-			// Load all formats
-			$formats = module_invoke_all('videoformat_info');
+			// Load all codecs
+			$codecs = module_invoke_all('codec_info');
 			
-			// Find format
-			foreach ($formats as $format) {
+			// Find codec
+			foreach ($codecs as $codec) {
 				
-				if (!is_array($format['regexp'])) {
-					$format['regexp'] = array($format['regexp']);
+				if (!is_array($codec['regexp'])) {
+					$codec['regexp'] = array($codec['regexp']);
 				}
 				
 				// Try different regular expressions
-				foreach ($format['regexp'] as $delta => $regexp) {
+				foreach ($codec['regexp'] as $delta => $regexp) {
 				
 					if (preg_match($regexp, $video['source'], $matches)) {
-						$format_info = $format;
-						$format_delta = $delta;
+						$video['codec'] = $codec;
+						$video['codec']['delta'] = $delta;
+						$video['codec']['matches'] = $matches;
 						break 2;
 					}
 				}
 			}
 			
-			// Format found
-			if ($format_info) {
+			// Codec found
+			if ($video['codec']) {
 				
 				// Override default attributes
 				if ($matches_code[3][$ci] && preg_match_all('/\s+([a-z]+)\:([^\s]+)/i', $matches_code[3][$ci], $matches_attributes)) {
@@ -124,27 +125,27 @@ function video_filter_process($text, $format = -1) {
 					$random						= array_rand($sources, 1);
 					$video['source']	= $sources[$random];
 				}
-				
+
 				// Resize within set width and height to given ratio
-				if ($format_info['ratio']) {
+				if ($video['codec']['ratio']) {
 					$video_ratio = $video['width'] / $video['height'];
-				
-					if ($format_info['ratio'] > 1 && $video_ratio > 1) {	
-						$video['height'] = round($video['height'] / $format_info['ratio']);
 					
+					if ($video['codec']['ratio'] > $video_ratio) {
+						$video['height'] = round($video['height'] / $video['codec']['ratio']);
+						
 					} else {
-						$video['height'] = round($video['height'] * $format_info['ratio']);
+						$video['width'] = round($video['width'] * $video['codec']['ratio']);;
 					}
 				}
 				
 				$video['autoplay'] = (bool) $video['autoplay'];
 				$video['align'] = in_array($video['align'], array('left', 'right')) ? $video['align'] : NULL;
-				
-				$replacement = $format_info['callback']($video, $matches, $delta);
+
+				$replacement = $video['codec']['callback']($video);
 			
 			// Invalid format
 			} else {
-				$replacement = '<!-- VIDEO FILTER - INVALID FORMAT IN: '.$code.' -->';		
+				$replacement = '<!-- VIDEO FILTER - INVALID CODEC IN: '.$code.' -->';		
 			}
 			
 			$text = str_replace($code, $replacement, $text);
