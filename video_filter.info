@@ -1,3 +1,4 @@
 ; $Id$
 name = Video Filter
 description = Filter to include videos from Youtube, Godtube etc
+core = 6.x
