@@ -8,7 +8,7 @@ function video_filter_codec_info()
 	$codecs['youtube'] = array(
 		'name' => t('YouTube'),
 		'callback' => 'video_filter_youtube',
-		'regexp' => '/youtube\.com\/watch\?v=([a-z0-9]+)/i',
+		'regexp' => '/youtube\.com\/watch\?v=([a-z0-9\-_]+)/i',
 		'ratio' => 425 / 355,
 	);
 	$codecs['google'] = array(

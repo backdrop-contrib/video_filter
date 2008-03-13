@@ -81,8 +81,8 @@ function video_filter_process($text, $format = -1) {
 			
 			$video = array(
 				'source'	=> $matches_code[2][$ci],
-				'width'		=> variable_get('video_filter_width_'.$format, 200),
-				'height'	=> variable_get('video_filter_height_'.$format, 200),
+				'width'		=> variable_get('video_filter_width_'.$format, 400),
+				'height'	=> variable_get('video_filter_height_'.$format, 400),
 				'autoplay'	=> variable_get('video_filter_autoplay_'.$format, 0),
 			);
 			
