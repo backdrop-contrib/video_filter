@@ -1,0 +1,141 @@
+# Hungarian translation of video_filter (5.x-2.4)
+# Copyright (c) 2009 by the Hungarian translation team
+# Generated from files:
+#  video_filter.module,v 1.10.2.3 2008/03/19 14:56:23 fokke
+#  video_filter.codecs.inc,v 1.1.2.4 2008/05/05 08:54:39 fokke
+#  video_filter.info,v 1.4 2008/02/21 06:46:02 fokke
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: video_filter (5.x-2.4)\n"
+"POT-Creation-Date: 2009-01-12 07:45-0600\n"
+"PO-Revision-Date: 2008-12-09 05:55-0600\n"
+"Last-Translator: Balogh Zoltán\n"
+"Language-Team: Hungarian http://forditas.mindworks.hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: video_filter.module:184
+msgid "Yes"
+msgstr "Igen"
+
+#: video_filter.module:183
+msgid "No"
+msgstr "Nem"
+
+#: video_filter.codecs.inc:9
+msgid "YouTube"
+msgstr "YouTube"
+
+#: video_filter.codecs.inc:15
+msgid "Google Video"
+msgstr "Google Video"
+
+#: video_filter.codecs.inc:21
+msgid "GodTube"
+msgstr "GodTube"
+
+#: video_filter.codecs.inc:27
+msgid "DailyMotion"
+msgstr "DailyMotion"
+
+#: video_filter.codecs.inc:33
+msgid "Eyespot"
+msgstr "Eyespot"
+
+#: video_filter.codecs.inc:40
+msgid "Jumpcut"
+msgstr "Jumpcut"
+
+#: video_filter.codecs.inc:47
+msgid "Revver"
+msgstr "Revver"
+
+#: video_filter.codecs.inc:54
+msgid "Vimeo"
+msgstr "Vimeo"
+
+#: video_filter.module:10; video_filter.info:0
+msgid "Video Filter"
+msgstr "Videó szűrő"
+
+#: video_filter.module:24
+msgid "Substitutes [video:URL] with embedded HTML."
+msgstr "Beágyazott HTML kódra cseréli a [video:URL] jelölőket."
+
+#: video_filter.module:57
+msgid ""
+"\n"
+"\t\t\t\t\t<p><strong>Note:</strong> Since the x.2 version, the full "
+"video path needs to be given.</p>\n"
+"\t\t\t\t\t<p>Examples:</p>\n"
+"\t\t\t\t\t<ul>\n"
+"\t\t\t\t\t  <li>Single video:<br "
+"/><code>[video:http://www.youtube.com/watch?v=uN1qUeId]</code></li>\n"
+"\t\t\t\t\t  <li>Random video out of multiple:<br "
+"/><code>[video:http://www.youtube.com/watch?v=uN1qUeId1,http://www.youtube.com/watch?v=uN1qUeId2]</code></li>\n"
+"\t\t\t\t\t  <li>Override default autoplay setting: "
+"<code>[video:http://www.youtube.com/watch?v=uN1qUeId "
+"autoplay:1]</code></li>\n"
+"\t\t\t\t\t  <li>Override default width and height:<br "
+"/><code>[video:http://www.youtube.com/watch?v=uN1qUeId width:X "
+"height:Y]</code></li>\n"
+"\t\t\t\t\t  <li>Align the video:<br "
+"/><code>[video:http://www.youtube.com/watch?v=uN1qUeId "
+"align:right]</code></li>\n"
+"\t\t\t\t\t</ul>"
+msgstr ""
+"\n"
+"\t\t\t\t\t<p><strong>Megjegyzés:</strong> Az x.2 verzió óta a "
+"videóhoz a teljes elérési utat meg kell adni.</p>\r\n"
+"\t\t\t\t\t<p>Példák:</p>\r\n"
+"\t\t\t\t\t<ul>\r\n"
+"\t\t\t\t\t  <li>Egyszerű "
+"videó:<br><code>[video:http://www.youtube.com/watch?v=uN1qUeId]</code></li>\r\n"
+"\t\t\t\t\t  <li>Véletlenszerű videó "
+"többől:<br><code>[video:http://www.youtube.com/watch?v=uN1qUeId1,http://www.youtube.com/watch?v=uN1qUeId2]</code></li>\r\n"
+"\t\t\t\t\t  <li>Alapértelmezett automatikus lejátszás "
+"felülbírálata: <code>[video:http://www.youtube.com/watch?v=uN1qUeId "
+"autoplay:1]</code></li>\r\n"
+"\t\t\t\t\t  <li>Alapértelmezett szélesség és magasság "
+"felülbírálata:<br><code>[video:http://www.youtube.com/watch?v=uN1qUeId "
+"width:X height:Y]</code></li>\r\n"
+"\t\t\t\t\t  <li>Videó "
+"igazítása:<br><code>[video:http://www.youtube.com/watch?v=uN1qUeId "
+"align:right]</code></li>\r\n"
+"\t\t\t\t\t</ul>"
+
+#: video_filter.module:69
+msgid "You may insert videos with [video:URL]"
+msgstr "[video:URL] segítségével videókat lehet beilleszteni"
+
+#: video_filter.module:162
+msgid "Video filter"
+msgstr "Videó szűrő"
+
+#: video_filter.module:167
+msgid "Default width setting"
+msgstr "Alapértelmezett szélesség beállítás"
+
+#: video_filter.module:173
+msgid "Default height setting"
+msgstr "Alapértelmezett magasság beállítás"
+
+#: video_filter.module:179
+msgid "Default autoplay setting"
+msgstr "Alapértelmezett automatikus lejátszás beállítás"
+
+#: video_filter.module:180
+msgid "Not all video formats support this setting."
+msgstr "Nem minden videó formátum támogatja ezt a beállítást."
+
+#: video_filter.module:0
+msgid "video_filter"
+msgstr "video_filter"
+
+#: video_filter.info:0
+msgid "Filter to include videos from Youtube, Godtube etc"
+msgstr "Szűrő a Youtube, Godtube, stb. videók beágyazásához."
+
