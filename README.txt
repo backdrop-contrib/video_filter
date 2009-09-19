@@ -1,18 +1,19 @@
-/* $Id: */
+/* $Id$ */
 
 This is a highly flexible and easy extendable filter module to embed any type of video in your site using a simple tag. Other modules can add video sites/formats (called codecs) using an easy plug-in architecture.
 
-Installation
+========= Installation =========
 
 Enable the module on the modules page.
+
 Go to admin/settings/filters and configure the input format(s) that should be allowed to use this filter. Check the box to enable Video Filter and save. Some simple settings are available if you configure the input format. There you can change the default size and auto play settings.
 
-Usage
+========= Usage =========
 
 Single video: [video:url]
 This will output the video using the default settings.
 
-Random video from multiple URL's: [video:url,url,url]
+Random video from multiple URL's: [video:url,url]
 This will output one of the specified videos each time.
 
 You can also set some parameters in the call:
@@ -20,7 +21,7 @@ You can also set some parameters in the call:
 [video:url width:X height:Y align:left/right autoplay:1/0]
 This will override the default settings for this video.
 
-Developers
+========= Developers =========
 
 This module calls hook_codec_info(), so you can add your own codecs.
 
@@ -32,6 +33,9 @@ function MODULE_codec_info() {
   $codecs['youtube'] = array(
     // Will be used some day in user information.
     'name' => t('YouTube'),
+    
+    // Special instructions for end users. Optional.
+    'instructions' => t('Any special instructions that users need to know about to get this codec working correctly.'),
 
     // The callback that will output the right embed code.
     'callback' => 'MODULE_youtube',
@@ -54,3 +58,7 @@ function MODULE_youtube($video) {
   // Outputs a general <object...> for embedding flash players. Needs width, height, source and optionally align (left or right) and params (a list of <param...> attributes)
   return video_filter_flash($video);
 }
+
+========= Troubleshooting =========
+
+If videos don't show up, try disabling any browser plugins, such as AdBlock.
