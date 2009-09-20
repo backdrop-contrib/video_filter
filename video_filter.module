@@ -1,43 +1,91 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Video filter is a highly flexible and easy extendable filter module
+ * to embed any type of video in your site using a simple tag
+ */
+
 module_load_include('inc', 'video_filter', 'video_filter.codecs');
 
 /**
- * Implementation of hook_filter().
+ * Implements hook_filter_info().
  */
-function video_filter_filter($op, $delta = 0, $format = -1, $text = '') {
-  switch ($op) {
-    case 'list':
-      return array(
-        0 => t('Video Filter'),
-      );
-
-    case 'description':
-      return t('Substitutes [video:URL] with embedded HTML.');
-
-    case 'process':
-      return video_filter_process($text, $format);
-
-    case 'settings':
-      return video_filter_settings($format);
-
-    default:
-      return $text;
-  }
+function video_filter_filter_info() {
+  $filters = array();
+  $filters['video_filter'] = array(
+    'title' => t('Video Filter'),
+    'description' => t('Substitutes [video:URL] with embedded HTML.'),
+    'process callback' => '_video_filter_process',
+    'settings callback' => '_video_filter_settings',
+    'default settings' => array(
+      'video_filter_width' => '400',
+      'video_filter_height' => '400',
+      'video_filter_autoplay' => 1,
+      'video_filter_priority' => 'height',
+      'video_filter_related' => 1,
+    ),
+    'tips callback' => '_video_filter_tips',
+  );
+  return $filters;
 }
 
-/**
- * Implementation of hook_filter_tips().
- */
-function video_filter_filter_tips($delta, $format, $long = FALSE) {
+function _video_filter_settings($form, &$form_state, $filter, $defaults) {
+  $form['video_filter_width'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Default width setting'),
+    '#default_value' => isset($filter->settings['video_filter_width']) ? $filter->settings['video_filter_width'] : $defaults['video_filter_width'],
+    '#maxlength' => 4,
+  );
+  $form['video_filter_height'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Default height setting'),
+    '#default_value' => isset($filter->settings['video_filter_height']) ? $filter->settings['video_filter_height'] : $defaults['video_filter_height'],
+    '#maxlength' => 4,
+  );
+  $form['video_filter_autoplay'] = array(
+    '#type' => 'radios',
+    '#title' => t('Default autoplay setting'),
+    '#description' => t('Not all video formats support this setting.'),
+    '#default_value' => isset($filter->settings['video_filter_autoplay']) ? $filter->settings['video_filter_autoplay'] : $defaults['video_filter_autoplay'],
+    '#options' => array(
+      0 => t('No'),
+      1 => t('Yes'),
+    ),
+  );
+  $form['video_filter_priority'] = array(
+    '#type' => 'radios',
+    '#title' => t('Default priority setting'),
+    '#description' => t('Should height or width take priority when videos are re-sized to fit?'),
+    '#default_value' => isset($filter->settings['video_filter_priority']) ? $filter->settings['video_filter_priority'] : $defaults['video_filter_priority'],
+    '#options' => array(
+      'height' => t('Height'),
+      'width' => t('Width'),
+    ),
+  );
+  $form['video_filter_related'] = array(
+    '#type' => 'radios',
+    '#title' => t('Related videos setting'),
+    '#description' => t('Show "related videos"? Not all video formats support this setting.'),
+    '#default_value' => isset($filter->settings['video_filter_related']) ? $filter->settings['video_filter_related'] : $defaults['video_filter_related'],
+    '#options' => array(
+      0 => t('No'),
+      1 => t('Yes'),
+    ),
+  );
+
+  return $form;
+}
+
+function _video_filter_tips($filter, $format, $long = FALSE) {
   if ($long) {
     $codecs = module_invoke_all('codec_info');
     $supported = array();
     $instructions = array();
     foreach ($codecs AS $codec) {
       $supported[] = $codec['name'];
-      $instructions[] = $codec['instructions'] != '' ? '<li>' . $codec['name'] . ':<br/>' . $codec['instructions'] . '</li>' : '';
+      $instructions[] = isset($codec['instructions']) ? '<li>' . $codec['name'] . ':<br/>' . $codec['instructions'] . '</li>' : '';
     }
     return t('
       <p><strong>Video Filter</strong></p>
@@ -60,15 +108,15 @@ function video_filter_filter_tips($delta, $format, $long = FALSE) {
   }
 }
 
-function video_filter_process($text, $format = -1) {
+function _video_filter_process($text, $filter) {
   if (preg_match_all('/\[video(\:(.+))?( .+)?\]/isU', $text, $matches_code)) {
     foreach ($matches_code[0] as $ci => $code) {
       $video = array(
         'source' => $matches_code[2][$ci],
-        'width' => variable_get('video_filter_width_'.$format, 400),
-        'height' => variable_get('video_filter_height_'.$format, 400),
-        'autoplay' => variable_get('video_filter_autoplay_'.$format, 0),
-        'related' => variable_get('video_filter_related_'.$format, 1),
+        'width' => $filter->settings['video_filter_width'],
+        'height' => $filter->settings['video_filter_height'],
+        'autoplay' => $filter->settings['video_filter_autoplay'],
+        'related' => $filter->settings['video_filter_related'],
       );
 
       // Pick random out of multiple sources separated by ','
@@ -110,7 +158,7 @@ function video_filter_process($text, $format = -1) {
         // Resize within width and height to given ratio
         if ($video['codec']['ratio']) {
           // @todo - make this section prettier?
-          if (variable_get('video_filter_priority_'.$format, 'height') == 'height') {
+          if ($filter->settings['video_filter_priority'] == 'height') {
             if ($video['width'] * $video['codec']['ratio'] > $video['height']) {
               $video['width'] = round($video['height'] * $video['codec']['ratio']);
               $video['height'] = round($video['width'] / $video['codec']['ratio']);
@@ -139,7 +187,7 @@ function video_filter_process($text, $format = -1) {
       // Invalid format
       }
       else {
-        $replacement = '<!-- VIDEO FILTER - INVALID CODEC IN: '.$code.' -->';
+        $replacement = '<!-- VIDEO FILTER - INVALID CODEC IN: ' . $code . ' -->';
       }
 
       $text = str_replace($code, $replacement, $text);
@@ -147,58 +195,6 @@ function video_filter_process($text, $format = -1) {
   }
 
   return $text;
-}
-
-function video_filter_settings($format) {
-  $form['video_filter'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Video filter'),
-    '#collapsible' => TRUE,
-  );
-  $form['video_filter']['video_filter_width_'.$format] = array(
-    '#type' => 'textfield',
-    '#title' => t('Default width setting'),
-    '#default_value' => variable_get('video_filter_width_'.$format, 400),
-    '#maxlength' => 4,
-  );
-  $form['video_filter']['video_filter_height_'.$format] = array(
-    '#type' => 'textfield',
-    '#title' => t('Default height setting'),
-    '#default_value' => variable_get('video_filter_height_'.$format, 400),
-    '#maxlength' => 4,
-  );
-  $form['video_filter']['video_filter_autoplay_'.$format] = array(
-    '#type' => 'radios',
-    '#title' => t('Default autoplay setting'),
-    '#description' => t('Not all video formats support this setting.'),
-    '#default_value' => variable_get('video_filter_autoplay_'.$format, 1),
-    '#options' => array(
-      0 => t('No'),
-      1 => t('Yes'),
-    ),
-  );
-  $form['video_filter']['video_filter_priority_'.$format] = array(
-    '#type' => 'radios',
-    '#title' => t('Default priority setting'),
-    '#description' => t('Should height or width take priority when videos are re-sized to fit?'),
-    '#default_value' => variable_get('video_filter_priority_'.$format, 'height'),
-    '#options' => array(
-      height => t('Height'),
-      width => t('Width'),
-    ),
-  );
-  $form['video_filter']['video_filter_related_'.$format] = array(
-    '#type' => 'radios',
-    '#title' => t('Related videos setting'),
-    '#description' => t('Show "related videos"? Not all video formats support this setting.'),
-    '#default_value' => variable_get('video_filter_related_'.$format, 1),
-    '#options' => array(
-      0 => t('No'),
-      1 => t('Yes'),
-    ),
-  );
-
-  return $form;
 }
 
 /**
@@ -219,10 +215,10 @@ function theme_video_filter_flash($video, $params) {
   $output .= '<object type="application/x-shockwave-flash" ';
 
   if ($video['align']) {
-    $output .= 'style="float:'.$video['align'].'" ';
+    $output .= 'style="float:' . $video['align'] . '" ';
   }
 
-  $output .= 'width="'.$video['width'].'" height="'.$video['height'].'" data="'.$video['source'].'">'."\n";
+  $output .= 'width="' . $video['width'] . '" height="' . $video['height'] . '" data="' . $video['source'] . '">' . "\n";
 
   $defaults = array(
     'movie' => $video['source'],
@@ -233,16 +229,16 @@ function theme_video_filter_flash($video, $params) {
   $params = array_merge($defaults, (is_array($params) && count($params)) ? $params : array());
 
   foreach ($params as $name => $value) {
-    $output .= '  <param name="'.$name.'" value="'.$value.'" />'."\n";
+    $output .= '  <param name="' . $name . '" value="' . $value . '" />' . "\n";
   }
 
-  $output .= '</object>'."\n";
+  $output .= '</object>' . "\n";
 
   return $output;
 }
 
 /**
- * Implementation of hook_theme().
+ * Implements hook_theme().
  */
 function video_filter_theme($existing, $type, $theme, $path) {
   return array(

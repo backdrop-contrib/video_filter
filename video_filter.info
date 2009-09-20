@@ -1,4 +1,7 @@
 ; $Id$
 name = Video Filter
 description = Filter to include videos from Youtube, Google video etc
-core = 6.x
+core = 7.x
+
+files[] = video_filter.module
+files[] = video_filter.codecs.inc
