@@ -81,7 +81,10 @@ function video_filter_codec_info() {
   $codecs['gametrailers'] = array(
     'name' => t('Game Trailers'),
     'callback' => 'video_filter_gametrailers',
-    'regexp' => '/gametrailers\.com\/player\/([0-9]+)/',
+    'regexp' => array(
+      '/gametrailers\.com\/player\/([0-9]+)/',
+      '/gametrailers\.com\/video\/([a-z0-9\-_]+)\/([0-9]+)/',
+    ),
     'ratio' => 480 / 392,
   );
   $codecs['collegehumor'] = array(
@@ -213,7 +216,13 @@ function video_filter_metacafe($video) {
 }
 
 function video_filter_gametrailers($video) {
-  $video['source'] = 'http://www.gametrailers.com/remote_wrap.php?mid=' . $video['codec']['matches'][1];
+  if (is_numeric($video['codec']['matches'][1])) {
+    $match = $video['codec']['matches'][1];
+  }
+  elseif (is_numeric($video['codec']['matches'][2])) {
+    $match = $video['codec']['matches'][2];
+  }
+  $video['source'] = 'http://www.gametrailers.com/remote_wrap.php?mid='.$match;
 
   return video_filter_flash($video, $params);
 }
