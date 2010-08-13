@@ -31,7 +31,7 @@ function video_filter_filter_info() {
   return $filters;
 }
 
-function _video_filter_settings($form, &$form_state, $filter, $defaults) {
+function _video_filter_settings(&$form_state, $filter, $defaults) {
   $form['video_filter_width'] = array(
     '#type' => 'textfield',
     '#title' => t('Default width setting'),
