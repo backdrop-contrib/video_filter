@@ -23,7 +23,6 @@ function video_filter_filter_info() {
       'video_filter_width' => '400',
       'video_filter_height' => '400',
       'video_filter_autoplay' => 1,
-      'video_filter_priority' => 'height',
       'video_filter_related' => 1,
     ),
     'tips callback' => '_video_filter_tips',
@@ -52,16 +51,6 @@ function _video_filter_settings($form, &$form_state, $filter, $format, $defaults
     '#options' => array(
       0 => t('No'),
       1 => t('Yes'),
-    ),
-  );
-  $settings['video_filter_priority'] = array(
-    '#type' => 'radios',
-    '#title' => t('Default priority setting'),
-    '#description' => t('Should height or width take priority when videos are re-sized to fit?'),
-    '#default_value' => isset($filter->settings['video_filter_priority']) ? $filter->settings['video_filter_priority'] : $defaults['video_filter_priority'],
-    '#options' => array(
-      'height' => t('Height'),
-      'width' => t('Width'),
     ),
   );
   $settings['video_filter_related'] = array(
@@ -96,6 +85,7 @@ function _video_filter_tips($filter, $format, $long = FALSE) {
         <li>Random video out of multiple:<br /><code>[video:http://www.youtube.com/watch?v=uN1qUeId1,http://www.youtube.com/watch?v=uN1qUeId2]</code></li>
         <li>Override default autoplay setting: <code>[video:http://www.youtube.com/watch?v=uN1qUeId autoplay:1]</code></li>
         <li>Override default width and height:<br /><code>[video:http://www.youtube.com/watch?v=uN1qUeId width:X height:Y]</code></li>
+        <li>Override default aspect ratio:<br /><code>[video:http://www.youtube.com/watch?v=uN1qUeId ratio:4/3]</code></li>
         <li>Align the video:<br /><code>[video:http://www.youtube.com/watch?v=uN1qUeId align:right]</code></li>
       </ul>
       <p>Supported sites: @codecs.</p>
@@ -130,7 +120,7 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
       $codecs = module_invoke_all('codec_info');
 
       // Find codec
-      foreach ($codecs as $codec) {
+      foreach ($codecs AS $codec_name => $codec) {
         if (!is_array($codec['regexp'])) {
           $codec['regexp'] = array($codec['regexp']);
         }
@@ -141,6 +131,7 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
             $video['codec'] = $codec;
             $video['codec']['delta'] = $delta;
             $video['codec']['matches'] = $matches;
+            $video['codec']['codec_name'] = $codec_name; // used in theme function
             break 2;
           }
         }
@@ -149,41 +140,42 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
       // Codec found
       if (isset($video['codec'])) {
         // Override default attributes
-        if ($matches_code[3][$ci] && preg_match_all('/\s+([a-z]+)\:([^\s]+)/i', $matches_code[3][$ci], $matches_attributes)) {
+        if ($matches_code[3][$ci] && preg_match_all('/\s+([a-z_]+)\:([\S\/]+)/i', $matches_code[3][$ci], $matches_attributes)) {
           foreach ($matches_attributes[0] as $ai => $attribute) {
             $video[$matches_attributes[1][$ai]] = $matches_attributes[2][$ai];
           }
         }
 
-        // Resize within width and height to given ratio
-        if ($video['codec']['ratio']) {
-          // @todo - make this section prettier?
-          if ($filter->settings['video_filter_priority'] == 'height') {
-            if ($video['width'] * $video['codec']['ratio'] > $video['height']) {
-              $video['width'] = round($video['height'] * $video['codec']['ratio']);
-              $video['height'] = round($video['width'] / $video['codec']['ratio']);
-            }
-            else {
-              $video['height'] = round($video['width'] / $video['codec']['ratio']);
-              $video['width'] = round($video['height'] * $video['codec']['ratio']);
-            }
-          }
-          else {
-            if ($video['height'] * $video['codec']['ratio'] > $video['width']) {
-              $video['height'] = round($video['width'] / $video['codec']['ratio']);
-              $video['width'] = round($video['height'] * $video['codec']['ratio']);
-            }
-            else {
-              $video['width'] = round($video['height'] * $video['codec']['ratio']);
-              $video['height'] = round($video['width'] / $video['codec']['ratio']);
-            }
-          }
+        // Use configured ratio if present, use that from the codec otherwise
+        $ratio = 0;
+        if (isset($video['ratio']) && preg_match('/(\d+)\/(\d+)/', $video['ratio'], $tratio) ) {
+          //validate given ratio parameter
+          $ratio = $tratio[1] / $tratio[2];
+        }
+        else {
+          $ratio = $video['codec']['ratio'];
+        }
+
+        // Default value for control bar height
+        $control_bar_height = 0;
+        if (isset($video['control_bar_height'])) {
+          // respect control_bar_height option if present
+          $control_bar_height = $video['control_bar_height'];
+        }
+        elseif (isset($video['codec']['control_bar_height'])) {
+          // respect setting provided by codec otherwise
+          $control_bar_height = $video['codec']['control_bar_height'];
+        }
+
+        // Resize to fit within width and height repecting aspect ratio
+        if ($ratio) {
+          $scale_factor = min(array(($video['height']-$control_bar_height), $video['width']/($ratio)));
+          $video['height'] = round($scale_factor + $control_bar_height);
+          $video['width'] = round($scale_factor * $ratio);
         }
 
         $video['autoplay'] = (bool) $video['autoplay'];
-        if (isset($video['align'])) {
-          $video['align'] = in_array($video['align'], array('left', 'right')) ? $video['align'] : NULL;
-        }
+        $video['align'] = isset($video['align']) && in_array($video['align'], array('left', 'right', 'center')) ? $video['align'] : NULL;
 
         $replacement = $video['codec']['callback']($video);
       // Invalid format
@@ -212,13 +204,27 @@ function video_filter_flash($video, $params = array()) {
  * @ingroup themeable
  */
 function theme_video_filter_flash($video, $params = array()) {
+  drupal_add_css(drupal_get_path('module', 'video_filter') . '/video_filter.css');
   $output = '';
 
-  $output .= '<object type="application/x-shockwave-flash" ';
+  // Create classes
+  $classes = array('video-filter');
 
+  // Adds alignment
   if (isset($video['align'])) {
-    $output .= 'style="float:' . $video['align'] . '" ';
+    $classes[] = 'video-' . $video['align'];
   }
+
+  // Adds codec name
+  $classes[] = 'video-' . $video['codec']['codec_name'];
+
+  // First match is the URL, we don't want that as a class.
+  unset($video['codec']['matches'][0]);
+  foreach ($video['codec']['matches'] AS $match) {
+    $classes[] = 'vf-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $match));
+  }
+
+  $output .= '<object class="' . implode(' ', $classes) . '" type="application/x-shockwave-flash" ';
 
   $output .= 'width="' . $video['width'] . '" height="' . $video['height'] . '" data="' . $video['source'] . '">' . "\n";
 
