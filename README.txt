@@ -6,7 +6,11 @@ This is a highly flexible and easy extendable filter module to embed any type of
 
 Enable the module on the modules page.
 
-Go to admin/settings/filters and configure the input format(s) that should be allowed to use this filter. Check the box to enable Video Filter and save. Some simple settings are available if you configure the input format. There you can change the default size and auto play settings.
+Go to admin/config/content/formats and configure the text format(s) that should be allowed to use this filter. Check the box to enable Video Filter and save. Some simple settings are available if you configure the text format. There you can change the default size and auto play settings.
+
+Make sure that Video Filter is processed before "Convert URLs to links". You can do this by dragging and dropping Video Filter to the top of the processing order list. Do this even if it's allready on top, just to make sure!
+
+If you're using the "Limit allowed HTML tags" filter, make sure to add <object> to the list of allowed tags.
 
 ========= Usage =========
 
