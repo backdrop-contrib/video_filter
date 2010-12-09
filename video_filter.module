@@ -109,6 +109,13 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
         'related' => $filter->settings['video_filter_related'],
       );
 
+      // Insert default values to this settings array so we don't get any "Undefined index" warnings from PHP.
+      $video += array(
+        'ratio' => 0,
+        'control_bar_height' => 0,
+        'align' => NULL,
+      );
+
       // Pick random out of multiple sources separated by ','
       if (strstr($video['source'], ',')) {
         $sources          = explode(',', $video['source']);
@@ -132,6 +139,7 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
             $video['codec']['delta'] = $delta;
             $video['codec']['matches'] = $matches;
             $video['codec']['codec_name'] = $codec_name; // used in theme function
+            $video['codec']['control_bar_height'] = 0; // default
             break 2;
           }
         }
@@ -155,7 +163,6 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
         else {
           $ratio = $video['codec']['ratio'];
         }
-
         // Default value for control bar height
         $control_bar_height = 0;
         if (isset($video['control_bar_height'])) {
