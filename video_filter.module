@@ -148,14 +148,13 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
       // Codec found
       if (isset($video['codec'])) {
         // Override default attributes
-        if ($matches_code[3][$ci] && preg_match_all('/\s+([a-z_]+)\:([\S\/]+)/i', $matches_code[3][$ci], $matches_attributes)) {
-          foreach ($matches_attributes[0] as $ai => $attribute) {
-            $video[$matches_attributes[1][$ai]] = $matches_attributes[2][$ai];
+        if ($matches_code[3][$ci] && preg_match_all('/\s+([a-zA-Z_]+)\:(\s+)?([0-9\/]+)/i', $matches_code[3][$ci], $matches_attributes)) {
+          foreach ($matches_attributes[0] AS $ai => $attribute) {
+            $video[$matches_attributes[1][$ai]] = $matches_attributes[3][$ai];
           }
         }
 
         // Use configured ratio if present, use that from the codec otherwise
-        $ratio = 0;
         if (isset($video['ratio']) && preg_match('/(\d+)\/(\d+)/', $video['ratio'], $tratio) ) {
           //validate given ratio parameter
           $ratio = $tratio[1] / $tratio[2];
