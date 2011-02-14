@@ -405,6 +405,14 @@ function _video_filter_form() {
     '#weight' => 97,
   );
 
+  $text = '<p>' . t('Insert a 3rd party video from one of the following providers.') . '</p>';
+  $text .= _video_filter_instructions();
+
+  $form['instructions']['text'] = array(
+    '#type' => 'item',
+    '#markup' => $text,
+  );
+
   $form['cancel'] = array(
     '#type' => 'button',
     '#value' => t('Cancel'),
@@ -465,4 +473,17 @@ function _video_filter_add_settings($editor) {
     );
     drupal_add_js($settings, 'setting');
   }
+}
+
+/**
+ * Parses Codec into instructions for WYSIWYG popup
+ */
+function _video_filter_instructions() {
+  $codecs = module_invoke_all('codec_info');
+  $output = '<ul>';
+  foreach ($codecs AS $codec) {
+    $output .= '<li><strong>' . $codec['name'] . '</strong><br />' . $codec['sample_url'] . '</li>';
+  }
+  $output .= '</ul>';
+  return $output;
 }
