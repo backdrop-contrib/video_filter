@@ -277,7 +277,7 @@ function video_filter_menu() {
     'page callback' => 'video_filter_dashboard_page',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
-    'page arguments' => array(3),
+    'page arguments' => array(2),
   );
 
   return $items;
@@ -303,6 +303,30 @@ function template_preprocess_video_filter_dashboard(&$variables) {
  * Creates the dashboard.
  */
 function video_filter_dashboard_page($editor) {
+  module_invoke('admin_menu', 'suppress');
+  // Add CSS.
+  drupal_add_css(drupal_get_path('module', 'video_filter') . '/css/video_filter.css');
+
+  switch ($editor) {
+    case 'wysiwyg_tinymce':
+      // Add JavaScript.
+      drupal_add_js(wysiwyg_get_path('tinymce') . '/jscripts/tiny_mce/tiny_mce_popup.js');
+      drupal_add_js(drupal_get_path('module', 'video_filter') . '/editors/tinymce/video_filter.js');
+      break;
+
+    case 'ckeditor':
+    case 'wysiwyg_ckeditor':
+      // Add JavaScript.
+      drupal_add_js(drupal_get_path('module', 'video_filter') . '/editors/ckeditor/video_filter_dialog.js');
+      break;
+
+    case 'fckeditor':
+    case 'wysiwyg_fckeditor':
+      // Add JavaScript.
+      drupal_add_js(drupal_get_path('module', 'video_filter') . '/editors/fckeditor/video_filter/video_filter_dialog.js');
+      break;
+  }
+
   print theme('video_filter_dashboard', array('form' => render(drupal_get_form('_video_filter_form'))));
   exit();
 }
