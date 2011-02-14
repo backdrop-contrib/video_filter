@@ -259,6 +259,10 @@ function video_filter_theme($existing, $type, $theme, $path) {
     'video_filter_flash' => array(
       'arguments' => array('video' => NULL, 'params' => array()),
     ),
+    'video_filter_dashboard' => array(
+      'arguments' => array('form' => NULL),
+      'template' => 'video_filter_dashboard',
+    ),
   );
 }
 
@@ -283,7 +287,88 @@ function video_filter_menu() {
  * Creates the dashboard.
  */
 function video_filter_dashboard_page($editor) {
-  return "Video_filter";
+  print theme('video_filter_dashboard', array('form' => render(drupal_get_form('_video_filter_form'))));
+  exit();
+}
+
+function _video_filter_form() {
+  $form['video_filter'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Insert Video',
+    '#weight' => 0,
+    '#collapsible' => FALSE,
+    '#collapsed' => FALSE,
+    '#attributes' => array('class' => array('clearfix')),
+  );
+
+  $form['video_filter']['file_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Video URL'),
+    '#maxlength' => 255,
+    '#size' => 80,
+    '#default_value' => '',
+    '#weight' => 1,
+  );
+
+  $form['video_filter']['width'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Width'),
+    '#maxlength' => 255,
+    '#size' => 80,
+    '#default_value' => '',
+    '#weight' => 2,
+  );
+
+  $form['video_filter']['height'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Height'),
+    '#maxlength' => 255,
+    '#size' => 80,
+    '#default_value' => '',
+    '#weight' => 3,
+  );
+
+  $form['video_filter']['align'] = array(
+    '#type' => 'select',
+    '#title' => t('Align'),
+    '#default_value' => 'none',
+    '#options' => array(
+      'none' => t('None'),
+      'left' => t('Left'),
+      'right' => t('Right'),
+      'center' => t('Center'),
+    ),
+    '#weight' => 4,
+  );
+
+  $form['video_filter']['autoplay'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Autoplay'),
+    '#weight' => 5,
+  );
+
+  $form['instructions'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Instructions'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#attributes' => array('class' => array('clearfix')),
+    '#weight' => 97,
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'button',
+    '#value' => t('Cancel'),
+    '#weight' => 98,
+  );
+
+  $form['insert'] = array(
+    '#type' => 'button',
+    '#value' => t('Insert'),
+    '#weight' => 99,
+  );
+
+  return $form;
 }
 
 function video_filter_wysiwyg_plugin($editor, $version) {
