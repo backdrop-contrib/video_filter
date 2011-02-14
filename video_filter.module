@@ -274,13 +274,22 @@ function video_filter_menu() {
 
   $items['video_filter/dashboard/%'] = array(
     'title' => 'Videofilter',
+    'description' => 'Dashboard',
     'page callback' => 'video_filter_dashboard_page',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
     'page arguments' => array(2),
+    'theme callback' => '_video_filter_dashboard_theme',
   );
 
   return $items;
+}
+
+/**
+ * Return the theme name to be used when showing linkit dashboard
+ */
+function _video_filter_dashboard_theme() {
+  return variable_get('admin_theme', 'seven');
 }
 
 /**
