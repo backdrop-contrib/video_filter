@@ -463,6 +463,7 @@ function video_filter_wysiwyg_plugin($editor, $version) {
 
 function _video_filter_add_settings($editor) {
   static $editor_settings_added = array();
+  static $global_settings_added = FALSE;
 
   if (!isset($editor_settings_added[$editor])) {
     $editor_settings_added[$editor] = TRUE;
@@ -470,6 +471,18 @@ function _video_filter_add_settings($editor) {
     // Add popup url
     $settings = array(
       'video_filter' => array('url' => array($editor => url('video_filter/dashboard/' . $editor))),
+    );
+    drupal_add_js($settings, 'setting');
+  }
+
+  if (!$global_settings_added) {
+    $global_settings_added = TRUE;
+
+    // Add global settings for video_filter
+    $settings = array(
+      'video_filter' => array(
+        'modulepath' => drupal_get_path('module', 'video_filter'),
+      ),
     );
     drupal_add_js($settings, 'setting');
   }
