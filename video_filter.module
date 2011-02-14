@@ -261,3 +261,49 @@ function video_filter_theme($existing, $type, $theme, $path) {
     ),
   );
 }
+
+function video_filter_wysiwyg_plugin($editor, $version) {
+  _video_filter_add_settings('wysiwyg_' . $editor);
+  switch ($editor) {
+    case 'tinymce':
+      $plugins['video_filter'] = array(
+        'path' => drupal_get_path('module', 'video_filter') . '/editors/tinymce/editor_plugin.js',
+        'buttons' => array('video_filter' => t('Video filter')),
+        'url' => 'http://drupal.org/project/video_filter',
+        'load' => TRUE,
+      );
+      break;
+    case 'ckeditor':
+      $plugins['video_filter'] = array(
+        'path' => drupal_get_path('module', 'video_filter') . '/editors/ckeditor/',
+        'buttons' => array('video_filter' => t('Video filter')),
+        'url' => 'http://drupal.org/project/video_filter',
+        'load' => TRUE,
+      );
+      break;
+    case 'fckeditor':
+      $plugins['video_filter'] = array(
+        'path' => drupal_get_path('module', 'video_filter') . '/editors/fckeditor/',
+        'buttons' => array('video_filter' => t('Video filter')),
+        'url' => 'http://drupal.org/project/video_filter',
+        'load' => TRUE,
+      );
+    break;
+  }
+
+  return $plugins;
+}
+
+function _video_filter_add_settings($editor) {
+  static $editor_settings_added = array();
+
+  if (!isset($editor_settings_added[$editor])) {
+    $editor_settings_added[$editor] = TRUE;
+
+    // Add popup url
+    $settings = array(
+      'video_filter' => array('url' => array($editor => url('admin/video_filter/dashboard/' . $editor))),
+    );
+    drupal_add_js($settings, 'setting');
+  }
+}
