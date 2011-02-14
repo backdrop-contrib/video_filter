@@ -463,6 +463,17 @@ function video_filter_wysiwyg_plugin($editor, $version) {
   return $plugins;
 }
 
+/**
+ * Implements hook_element_info_alter().
+ */
+function video_filter_element_info_alter(&$types) {
+  if (isset($types['text_format']['#pre_render']) && is_array($types['text_format']['#pre_render'])) {
+    if (in_array('ckeditor_pre_render_text_format', $types['text_format']['#pre_render'])) {
+      _video_filter_add_settings('ckeditor');  
+    }
+  }
+}
+
 function _video_filter_add_settings($editor) {
   static $editor_settings_added = array();
   static $global_settings_added = FALSE;
