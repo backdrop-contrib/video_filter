@@ -267,7 +267,8 @@ function video_filter_wysiwyg_plugin($editor, $version) {
   switch ($editor) {
     case 'tinymce':
       $plugins['video_filter'] = array(
-        'path' => drupal_get_path('module', 'video_filter') . '/editors/tinymce/editor_plugin.js',
+        'path' => drupal_get_path('module', 'video_filter') . '/editors/tinymce',
+        'filename' => 'editor_plugin.js',
         'buttons' => array('video_filter' => t('Video filter')),
         'url' => 'http://drupal.org/project/video_filter',
         'load' => TRUE,
