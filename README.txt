@@ -1,16 +1,24 @@
 /* $Id$ */
 
-This is a highly flexible and easy extendable filter module to embed any type of video in your site using a simple tag. Other modules can add video sites/formats (called codecs) using an easy plug-in architecture.
+This is a highly flexible and easy extendable filter module to embed any type 
+of video in your site using a simple tag. Other modules can add video 
+sites/formats (called codecs) using an easy plug-in architecture.
 
 ========= Installation =========
 
 Enable the module on the modules page.
 
-Go to admin/config/content/formats and configure the text format(s) that should be allowed to use this filter. Check the box to enable Video Filter and save. Some simple settings are available if you configure the text format. There you can change the default size and auto play settings.
+Go to admin/config/content/formats and configure the text format(s) that should 
+be allowed to use this filter. Check the box to enable Video Filter and save. 
+Some simple settings are available if you configure the text format. There you 
+can change the default size and auto play settings.
 
-Make sure that Video Filter is processed before "Convert URLs to links". You can do this by dragging and dropping Video Filter to the top of the processing order list. Do this even if it's allready on top, just to make sure!
+Make sure that Video Filter is processed before "Convert URLs to links". 
+You can do this by dragging and dropping Video Filter to the top of the 
+processing order list. Do this even if it's allready on top, just to make sure!
 
-If you're using the "Limit allowed HTML tags" filter, make sure to add <object> to the list of allowed tags.
+If you're using the "Limit allowed HTML tags" filter, make sure to add <object>
+to the list of allowed tags.
 
 ========= Usage =========
 
@@ -39,7 +47,8 @@ function MODULE_codec_info() {
     'name' => t('YouTube'),
     
     // Special instructions for end users. Optional.
-    'instructions' => t('Any special instructions that users need to know about to get this codec working correctly.'),
+    'instructions' => t('Any special instructions that users need to know about
+    to get this codec working correctly.'),
 
     // The callback that will output the right embed code.
     'callback' => 'MODULE_youtube',
@@ -56,10 +65,14 @@ function MODULE_codec_info() {
 And this will be your callback function:
 
 function MODULE_youtube($video) {
-  // $video contains the video URL in source, the codec (as above) and also [code][matches] with the result of the regexp and [codec][delta] with the key of the matched regexp.
+  // $video contains the video URL in source, the codec (as above) and also 
+  // [code][matches] with the result of the regexp and [codec][delta] with the
+  // key of the matched regexp.
   $video['source'] = 'http://www.youtube.com/v/'.$video['codec']['matches'][1].($video['autoplay'] ? '&autoplay=1' : '');
   
-  // Outputs a general <object...> for embedding flash players. Needs width, height, source and optionally align (left or right) and params (a list of <param...> attributes)
+  // Outputs a general <object...> for embedding flash players. Needs width, 
+  // height, source and optionally align (left or right) and params (a list of 
+  // <param...> attributes)
   return video_filter_flash($video);
 }
 
