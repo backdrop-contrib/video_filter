@@ -262,6 +262,30 @@ function video_filter_theme($existing, $type, $theme, $path) {
   );
 }
 
+/**
+ * Implementation of hook_menu().
+ */
+function video_filter_menu() {
+  $items = array();
+
+  $items['video_filter/dashboard/%'] = array(
+    'title' => 'Videofilter',
+    'page callback' => 'video_filter_dashboard_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'page arguments' => array(3),
+  );
+
+  return $items;
+}
+
+/**
+ * Creates the dashboard.
+ */
+function video_filter_dashboard_page($editor) {
+  return "Video_filter";
+}
+
 function video_filter_wysiwyg_plugin($editor, $version) {
   _video_filter_add_settings('wysiwyg_' . $editor);
   switch ($editor) {
@@ -303,7 +327,7 @@ function _video_filter_add_settings($editor) {
 
     // Add popup url
     $settings = array(
-      'video_filter' => array('url' => array($editor => url('admin/video_filter/dashboard/' . $editor))),
+      'video_filter' => array('url' => array($editor => url('video_filter/dashboard/' . $editor))),
     );
     drupal_add_js($settings, 'setting');
   }
