@@ -284,6 +284,22 @@ function video_filter_menu() {
 }
 
 /**
+ * Template preprocess function for video_filter_dashboard().
+ */
+function template_preprocess_video_filter_dashboard(&$variables) {
+  // Construct page title
+  $variables['head_title']        = t('Video filter dashboard');
+  $variables['head']              = drupal_get_html_head();
+  $variables['help']              = theme('help');
+  $variables['language']          = $GLOBALS['language'];
+  $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
+  $variables['messages']          = isset($variables['show_messages']) ? theme('status_messages') : '';
+  $variables['css']               = drupal_add_css();
+  $variables['styles']            = drupal_get_css();
+  $variables['scripts']           = drupal_get_js();
+}
+
+/**
  * Creates the dashboard.
  */
 function video_filter_dashboard_page($editor) {
