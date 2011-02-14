@@ -26,11 +26,13 @@ function video_filter_filter_info() {
       'video_filter_related' => 1,
     ),
     'tips callback' => '_video_filter_tips',
+    'weight' => -1, // See http://drupal.org/node/1061244
   );
   return $filters;
 }
 
 function _video_filter_settings($form, &$form_state, $filter, $format, $defaults, $filters) {
+
   $settings['video_filter_width'] = array(
     '#type' => 'textfield',
     '#title' => t('Default width setting'),
