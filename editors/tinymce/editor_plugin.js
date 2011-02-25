@@ -1,4 +1,3 @@
-// $Id$
 
 (function ($) {
 	tinymce.create('tinymce.plugins.video_filter', {

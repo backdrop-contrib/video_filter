@@ -1,4 +1,3 @@
-// $Id$
 
 /**
  * @file video_filter ckeditor dialog helper

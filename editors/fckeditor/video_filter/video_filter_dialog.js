@@ -1,4 +1,3 @@
-// $Id$
 
 var dialog	= window.parent ;
 var oEditor = dialog.InnerDialogLoaded() ;

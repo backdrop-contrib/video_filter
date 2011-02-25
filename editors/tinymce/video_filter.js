@@ -1,4 +1,3 @@
-// $Id$
 
 var video_filter_dialog = {};
 

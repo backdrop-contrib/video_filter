@@ -1,4 +1,3 @@
-/* $Id$ */
 
 ##############################################
 ## ONLY if you use ckeditor WITHOUT wysiwyg ##

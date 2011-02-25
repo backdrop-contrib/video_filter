@@ -1,4 +1,3 @@
-// $Id$
 
 /**
  * @file Plugin for inserting video tags with video_filter

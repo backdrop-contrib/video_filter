@@ -1,4 +1,3 @@
-/* $Id$ */
 
 This is a highly flexible and easy extendable filter module to embed any type 
 of video in your site using a simple tag. Other modules can add video 
