@@ -104,17 +104,8 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
     foreach ($matches_code[0] as $ci => $code) {
       $video = array(
         'source' => $matches_code[2][$ci],
-        'width' => $filter->settings['video_filter_width'],
-        'height' => $filter->settings['video_filter_height'],
         'autoplay' => $filter->settings['video_filter_autoplay'],
         'related' => $filter->settings['video_filter_related'],
-      );
-
-      // Insert default values to this settings array so we don't get any "Undefined index" warnings from PHP.
-      $video += array(
-        'ratio' => 0,
-        'control_bar_height' => 0,
-        'align' => NULL,
       );
 
       // Pick random out of multiple sources separated by ','
@@ -156,6 +147,7 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
         }
 
         // Use configured ratio if present, use that from the codec otherwise
+        $ratio = 0;
         if (isset($video['ratio']) && preg_match('/(\d+)\/(\d+)/', $video['ratio'], $tratio) ) {
           //validate given ratio parameter
           $ratio = $tratio[1] / $tratio[2];
@@ -163,6 +155,27 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
         else {
           $ratio = $video['codec']['ratio'];
         }
+
+        // Sets video width & height after any user input has been parsed.
+        // First, check if user has set a width.
+        if (isset($video['width']) && !isset($video['height'])) {
+          $video['height'] = variable_get('video_filter_height_'.$format, 400);
+        }
+        // Else, if user has set height.
+        elseif (isset($video['height']) && !isset($video['width'])) {
+          $video['width'] = $video['height'] * $ratio;
+        }
+        // Maybe both?
+        elseif (isset($video['height']) && isset($video['width'])) {
+          $video['width'] = $video['width'];
+          $video['height'] = $video['height'];
+        }
+        // Fall back to defaults.
+        else {
+          $video['width'] = $filter->settings['video_filter_width'];
+          $video['height'] = $filter->settings['video_filter_height'];
+        }
+
         // Default value for control bar height
         $control_bar_height = 0;
         if (isset($video['control_bar_height'])) {
@@ -182,7 +195,7 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
         }
 
         $video['autoplay'] = (bool) $video['autoplay'];
-        $video['align'] = isset($video['align']) && in_array($video['align'], array('left', 'right', 'center')) ? $video['align'] : NULL;
+        $video['align'] = (isset($video['align']) && in_array($video['align'], array('left', 'right', 'center'))) ? $video['align'] : NULL;
 
         $replacement = $video['codec']['callback']($video);
       // Invalid format
