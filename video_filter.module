@@ -228,21 +228,22 @@ function video_filter_flash($video, $params = array()) {
  * Function that outputs the <object> element.
  *
  * @ingroup themeable
+ * @Todo: SWF Tools support here???
  */
 function theme_video_filter_flash($video, $params = array()) {
   drupal_add_css(drupal_get_path('module', 'video_filter') . '/video_filter.css');
   $output = '';
 
   // Create classes
-  $classes = array('video-filter');
+  $classes = array(
+    'video-filter',
+    'video-' . $video['codec']['codec_name'],  // Adds codec name
+  );
 
   // Adds alignment
   if (isset($video['align'])) {
     $classes[] = 'video-' . $video['align'];
   }
-
-  // Adds codec name
-  $classes[] = 'video-' . $video['codec']['codec_name'];
 
   // First match is the URL, we don't want that as a class.
   unset($video['codec']['matches'][0]);
