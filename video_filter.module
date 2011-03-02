@@ -197,7 +197,13 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
         $video['autoplay'] = (bool) $video['autoplay'];
         $video['align'] = (isset($video['align']) && in_array($video['align'], array('left', 'right', 'center'))) ? $video['align'] : NULL;
 
-        $replacement = $video['codec']['callback']($video);
+        if (is_callable($video['codec']['callback'], FALSE)) {
+          $replacement = call_user_func($video['codec']['callback'], $video);
+        }
+        else {
+          // Invalid callback
+          $replacement = '<!-- VIDEO FILTER - INVALID CALLBACK IN: ' . $pattern . ' -->';
+        }
       // Invalid format
       }
       else {
