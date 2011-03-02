@@ -140,7 +140,7 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
       // Codec found
       if (isset($video['codec'])) {
         // Override default attributes
-        if ($matches_code[3][$ci] && preg_match_all('/\s+([a-zA-Z_]+)\:(\s+)?([0-9\/]+)/i', $matches_code[3][$ci], $matches_attributes)) {
+        if ($matches_code[3][$ci] && preg_match_all('/\s+([a-zA-Z_]+)\:(\s+)?([0-9a-zA-Z\/]+)/i', $matches_code[3][$ci], $matches_attributes)) {
           foreach ($matches_attributes[0] AS $ai => $attribute) {
             $video[$matches_attributes[1][$ai]] = $matches_attributes[3][$ai];
           }
