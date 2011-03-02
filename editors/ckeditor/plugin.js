@@ -35,7 +35,7 @@
 			range, textNode;
 
     editor.fire( 'saveSnapshot' );
-    console.log(params);
+
     var str = '[video:' + params.file_url;
     if (params.width) {
       str += ' width:' + params.width;
