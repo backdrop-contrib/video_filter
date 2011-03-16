@@ -228,10 +228,8 @@ function video_filter_flash($video, $params = array()) {
  * Function that outputs the <object> element.
  *
  * @ingroup themeable
- * @Todo: SWF Tools support here???
  */
 function theme_video_filter_flash($video, $params = array()) {
-  drupal_add_css(drupal_get_path('module', 'video_filter') . '/video_filter.css');
   $output = '';
 
   // Create classes

@@ -3,5 +3,4 @@ description = Filter to include videos from Youtube, Google video etc
 core = 7.x
 package = Input filters
 
-files[] = video_filter.module
-files[] = video_filter.codecs.inc
+stylesheets[all][] = video_filter.css
