@@ -41,13 +41,6 @@ function video_filter_codec_info() {
     'ratio' => 4 / 3,
     'control_bar_height' => 20,
   );
-  $codecs['revver'] = array(
-    'name' => t('Revver'),
-    'sample_url' => 'http://revver.com/video/123456/the-title/',
-    'callback' => 'video_filter_revver',
-    'regexp' => '/revver\.com\/video\/([0-9]+)/',
-    'ratio' => 408 / 324,
-  );
   $codecs['vimeo'] = array(
     'name' => t('Vimeo'),
     'sample_url' => 'http://www.vimeo.com/123456',
@@ -203,12 +196,6 @@ function video_filter_dailymotion($video) {
   $video['source'] = 'http://www.dailymotion.com/swf/'.$video['codec']['matches'][1];
 
   return video_filter_flash($video);
-}
-
-function video_filter_revver($video) {
-  $output = '<script src="http://flash.revver.com/player/1.0/player.js?mediaId:'.$video['codec']['matches'][1].';width:'.$video['width'].';height:'.$video['height'].';" type="text/javascript"></script>';
-
-  return $output;
 }
 
 function video_filter_vimeo($video) {
