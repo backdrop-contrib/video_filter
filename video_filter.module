@@ -131,7 +131,6 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
             $video['codec']['delta'] = $delta;
             $video['codec']['matches'] = $matches;
             $video['codec']['codec_name'] = $codec_name; // used in theme function
-            $video['codec']['control_bar_height'] = 0; // default
             break 2;
           }
         }
