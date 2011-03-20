@@ -17,7 +17,7 @@ You can do this by dragging and dropping Video Filter to the top of the
 processing order list. Do this even if it's allready on top, just to make sure!
 
 If you're using the "Limit allowed HTML tags" filter, make sure to add <object>
-to the list of allowed tags.
+and <param> to the list of allowed tags.
 
 ========= Usage =========
 
