@@ -16,8 +16,9 @@ Make sure that Video Filter is processed before "Convert URLs to links".
 You can do this by dragging and dropping Video Filter to the top of the 
 processing order list. Do this even if it's allready on top, just to make sure!
 
-If you're using the "Limit allowed HTML tags" filter, make sure to add <object>
-and <param> to the list of allowed tags.
+If you're using the "Limit allowed HTML tags" filter, make sure Video Filter is processed after that filter.
+
+To enable WYSIWYG support, go to the WYSIWYG settings for each input format and enable the Video Filter button.
 
 ========= Usage =========
 
