@@ -158,7 +158,7 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
         // Sets video width & height after any user input has been parsed.
         // First, check if user has set a width.
         if (isset($video['width']) && !isset($video['height'])) {
-          $video['height'] = variable_get('video_filter_height_'.$format, 400);
+          $video['height'] = $filter->settings['video_filter_height'];
         }
         // Else, if user has set height.
         elseif (isset($video['height']) && !isset($video['width'])) {
