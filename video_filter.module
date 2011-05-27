@@ -361,7 +361,7 @@ function video_filter_dashboard_page($editor) {
 function _video_filter_form() {
   $form['video_filter'] = array(
     '#type' => 'fieldset',
-    '#title' => 'Insert Video',
+    '#title' => t('Insert Video'),
     '#weight' => 0,
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
