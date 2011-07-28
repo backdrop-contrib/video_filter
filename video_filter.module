@@ -171,8 +171,8 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
         }
         // Fall back to defaults.
         elseif (!isset($video['height']) && !isset($video['width'])) {
-          $video['width'] = $filter->settings['video_filter_width'];
-          $video['height'] = $filter->settings['video_filter_height'];
+          $video['width'] = $filter->settings['video_filter_width'] != '' ? $filter->settings['video_filter_width'] : 400;
+          $video['height'] = $filter->settings['video_filter_height'] != '' ? $filter->settings['video_filter_height'] : 400;
         }
 
         // Default value for control bar height
