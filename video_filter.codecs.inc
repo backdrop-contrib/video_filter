@@ -12,6 +12,7 @@ function video_filter_codec_info() {
     'name' => t('YouTube'),
     'sample_url' => 'http://www.youtube.com/watch?v=uN1qUeId',
     'callback' => 'video_filter_youtube',
+    'html5_callback' => 'video_filter_youtube_html5',
     'regexp' => array(
                   '/youtube\.com\/watch\?v=([a-z0-9\-_]+)/i',
                   '/youtu.be\/([a-z0-9\-_]+)/i',
@@ -49,6 +50,7 @@ function video_filter_codec_info() {
     'name' => t('Vimeo'),
     'sample_url' => 'http://www.vimeo.com/123456',
     'callback' => 'video_filter_vimeo',
+    'html5_callback' => 'video_filter_vimeo_html5',
     'regexp' => '/vimeo\.com\/([0-9]+)/',
     'ratio' => 16 / 9,
     'control_bar_height' => 0,
@@ -179,9 +181,25 @@ function video_filter_codec_info() {
 }
 
 function video_filter_youtube($video) {
-  $video['source'] = 'http://www.youtube.com/v/'.$video['codec']['matches'][1].($video['autoplay'] ? '&amp;autoplay=1' : '').'&amp;fs=1'.($video['related'] ? '' : '&amp;rel=0');
+  $attributes = array(
+    'rel' => $video['related'] ? 'rel=1' : 'rel=0',
+    'autoplay' => $video['autoplay'] ? 'autoplay=1' : 'autoplay=0',
+  );
+
+  $video['source'] = 'http://www.youtube.com/v/' . $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
 
   return video_filter_flash($video);
+}
+
+function video_filter_youtube_html5($video) {
+  $attributes = array(
+    'rel' => $video['related'] ? 'rel=1' : 'rel=0',
+    'autoplay' => $video['autoplay'] ? 'autoplay=1' : 'autoplay=0',
+  );
+  $url = $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
+  $html = '<iframe src="http://www.youtube.com/embed/'.$url.'" width="'.$video['width'].'" height="'.$video['height'].'" frameborder="0"></iframe>';
+
+  return $html;
 }
 
 function video_filter_google($video) {
@@ -206,6 +224,12 @@ function video_filter_vimeo($video) {
   $video['source'] = 'http://www.vimeo.com/moogaloop.swf?clip_id='.$video['codec']['matches'][1].'&amp;server=www.vimeo.com&amp;fullscreen=1&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;autoplay='.$video['autoplay'];
 
   return video_filter_flash($video);
+}
+
+function video_filter_vimeo_html5($video) {
+  $html = '<iframe src="http://player.vimeo.com/video/'.$video['codec']['matches'][1].($video['autoplay'] ? '?autoplay=1' : '').'" width="'.$video['width'].'" height="'.$video['height'].'" frameborder="0"></iframe>';
+
+  return $html;
 }
 
 function video_filter_flickr_slideshows($video) {

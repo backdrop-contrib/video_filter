@@ -23,6 +23,7 @@ function video_filter_filter_info() {
       'video_filter_height' => '400',
       'video_filter_autoplay' => 1,
       'video_filter_related' => 1,
+      'video_filter_html5' => 1,
     ),
     'tips callback' => '_video_filter_tips',
     'weight' => -1, // See http://drupal.org/node/1061244
@@ -59,6 +60,17 @@ function _video_filter_settings($form, &$form_state, $filter, $format, $defaults
     '#title' => t('Related videos setting'),
     '#description' => t('Show "related videos"? Not all video formats support this setting.'),
     '#default_value' => isset($filter->settings['video_filter_related']) ? $filter->settings['video_filter_related'] : $defaults['video_filter_related'],
+    '#options' => array(
+      0 => t('No'),
+      1 => t('Yes'),
+    ),
+  );
+
+  $settings['video_filter_html5'] = array(
+    '#type' => 'radios',
+    '#title' => t('Use HTML5'),
+    '#description' => t('Use HTML5 if the codec provides it. Makes your videos more device agnostic.'),
+    '#default_value' => isset($filter->settings['video_filter_html5']) ? $filter->settings['video_filter_html5'] : $defaults['video_filter_html5'],
     '#options' => array(
       0 => t('No'),
       1 => t('Yes'),
@@ -196,7 +208,10 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
         $video['autoplay'] = (bool) $video['autoplay'];
         $video['align'] = (isset($video['align']) && in_array($video['align'], array('left', 'right', 'center'))) ? $video['align'] : NULL;
 
-        if (is_callable($video['codec']['callback'], FALSE)) {
+        if (isset($video['codec']['html5_callback']) && $filter->settings['video_filter_html5'] == 1 && is_callable($video['codec']['html5_callback'], FALSE)) {
+          $replacement = call_user_func($video['codec']['html5_callback'], $video);
+        }
+        elseif (is_callable($video['codec']['callback'], FALSE)) {
           $replacement = call_user_func($video['codec']['callback'], $video);
         }
         else {
