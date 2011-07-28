@@ -220,7 +220,7 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
  * Wrapper that calls the theme function.
  */
 function video_filter_flash($video, $params = array()) {
-  return theme('video_filter_flash', $video, $params);
+  return theme('video_filter_flash', array('video' => $video, 'params' => $params));
 }
 
 /**
@@ -228,8 +228,11 @@ function video_filter_flash($video, $params = array()) {
  *
  * @ingroup themeable
  */
-function theme_video_filter_flash($video, $params = array()) {
+function theme_video_filter_flash($variables) {
   $output = '';
+
+  $video = $variables['video'];
+  $params = isset($variables['params']) ? $variables['params'] : array();
 
   // Create classes
   $classes = array(
@@ -275,10 +278,10 @@ function theme_video_filter_flash($video, $params = array()) {
 function video_filter_theme($existing, $type, $theme, $path) {
   return array(
     'video_filter_flash' => array(
-      'arguments' => array('video' => NULL, 'params' => array()),
+      'variables' => array('video' => NULL, 'params' => NULL),
     ),
     'video_filter_dashboard' => array(
-      'arguments' => array('form' => NULL),
+      'variables' => array('form' => NULL),
       'template' => 'video_filter_dashboard',
     ),
   );
