@@ -53,6 +53,10 @@ function MODULE_codec_info() {
     // The callback that will output the right embed code.
     'callback' => 'MODULE_youtube',
 
+    // HTML5 callback, for returning something that's device agnostic.
+    // @SEE video_filter_youtube_html5.
+    'html5_callback' => 'MODULE_service_html5',
+
     // Regexp can be an array. $video['codec']['delta'] will be set to the key.
     'regexp' => '/youtube\.com\/watch\?v=([a-z0-9]+)/i',
 
