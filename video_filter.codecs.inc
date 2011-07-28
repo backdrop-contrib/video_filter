@@ -15,6 +15,7 @@ function video_filter_codec_info() {
     'regexp' => array(
                   '/youtube\.com\/watch\?v=([a-z0-9\-_]+)/i',
                   '/youtu.be\/([a-z0-9\-_]+)/i',
+                  '/youtube\.com\/v\/([a-z0-9\-_]+)/i',
                 ),
     'ratio' => 16 / 9,
     'control_bar_height' => 25,
