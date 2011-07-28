@@ -12,7 +12,10 @@ function video_filter_codec_info() {
     'name' => t('YouTube'),
     'sample_url' => 'http://www.youtube.com/watch?v=uN1qUeId',
     'callback' => 'video_filter_youtube',
-    'regexp' => '/youtube\.com\/watch\?v=([a-z0-9\-_]+)/i',
+    'regexp' => array(
+                  '/youtube\.com\/watch\?v=([a-z0-9\-_]+)/i',
+                  '/youtu.be\/([a-z0-9\-_]+)/i',
+                ),
     'ratio' => 16 / 9,
     'control_bar_height' => 25,
   );
