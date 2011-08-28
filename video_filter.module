@@ -466,6 +466,9 @@ function _video_filter_form() {
 
 function video_filter_wysiwyg_plugin($editor, $version) {
   _video_filter_add_settings('wysiwyg_' . $editor);
+
+  $plugins = array();
+
   switch ($editor) {
     case 'tinymce':
       $plugins['video_filter'] = array(
