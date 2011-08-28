@@ -82,7 +82,7 @@ function _video_filter_settings($form, &$form_state, $filter, $format, $defaults
 
 function _video_filter_tips($filter, $format, $long = FALSE) {
   if ($long) {
-    $codecs = module_invoke_all('codec_info');
+    $codecs = video_filter_get_codec_info();
     $supported = array();
     $instructions = array();
     foreach ($codecs AS $codec) {
@@ -128,7 +128,7 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
       }
 
       // Load all codecs
-      $codecs = module_invoke_all('codec_info');
+      $codecs = video_filter_get_codec_info();
 
       // Find codec
       foreach ($codecs AS $codec_name => $codec) {
@@ -239,6 +239,15 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
  */
 function video_filter_flash($video, $params = array()) {
   return theme('video_filter_flash', array('video' => $video, 'params' => $params));
+}
+
+function video_filter_get_codec_info() {
+  static $codecs;
+  if (!isset($codecs)) {
+    $codecs = module_invoke_all('codec_info');
+    drupal_alter('video_filter_codec_info', $codecs);
+  }
+  return $codecs;
 }
 
 /**
@@ -545,7 +554,7 @@ function _video_filter_add_settings($editor) {
  * Parses Codec into instructions for WYSIWYG popup
  */
 function _video_filter_instructions() {
-  $codecs = module_invoke_all('codec_info');
+  $codecs = video_filter_get_codec_info();
   $output = '<ul>';
   foreach ($codecs AS $codec) {
     $output .= '<li><strong>' . $codec['name'] . '</strong><br />' . $codec['sample_url'] . '</li>';
