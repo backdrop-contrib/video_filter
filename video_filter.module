@@ -208,6 +208,9 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
         $video['autoplay'] = (bool) $video['autoplay'];
         $video['align'] = (isset($video['align']) && in_array($video['align'], array('left', 'right', 'center'))) ? $video['align'] : NULL;
 
+        // Let modules have final say on video parameters.
+        drupal_alter('video_filter_video', $video);
+
         if (isset($video['codec']['html5_callback']) && $filter->settings['video_filter_html5'] == 1 && is_callable($video['codec']['html5_callback'], FALSE)) {
           $replacement = call_user_func($video['codec']['html5_callback'], $video);
         }
