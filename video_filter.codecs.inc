@@ -196,7 +196,7 @@ function video_filter_youtube_html5($video) {
     'rel' => $video['related'] ? 'rel=1' : 'rel=0',
     'autoplay' => $video['autoplay'] ? 'autoplay=1' : 'autoplay=0',
   );
-  $url = $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
+  $url = $video['codec']['matches'][1] . '?' . "wmode=transparent&amp;" . implode('&amp;', $attributes);
   $html = '<iframe src="http://www.youtube.com/embed/'.$url.'" width="'.$video['width'].'" height="'.$video['height'].'" frameborder="0"></iframe>';
 
   return $html;
