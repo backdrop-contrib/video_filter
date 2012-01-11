@@ -184,6 +184,7 @@ function video_filter_youtube($video) {
   $attributes = array(
     'rel' => $video['related'] ? 'rel=1' : 'rel=0',
     'autoplay' => $video['autoplay'] ? 'autoplay=1' : 'autoplay=0',
+    'fs' => 'fs=1',
   );
 
   $video['source'] = 'http://www.youtube.com/v/' . $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
