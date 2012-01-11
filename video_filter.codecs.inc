@@ -322,7 +322,7 @@ function video_filter_capped($video) {
 
 function video_filter_bliptv($video) {
   $id = $video['codec']['matches'][1];
-  
+
   // Since video ID in URL is different than in embed code, use API
   // to lookup the embed code video ID. Adapted from emfield.module.
   $result = drupal_http_request('http://blip.tv/file/' . $id . '?skin=api');
@@ -359,6 +359,11 @@ function video_filter_bliptv($video) {
       }
     }
     $id = $response['EMBEDLOOKUP'][0];
+    // Protect from XSS.
+    if (preg_match("/[^A-Za-z0-9]/", $id, $matches)) {
+      watchdog('Video Filter', t('A faulty Blip.tv ID has been detected.'));
+      $id = 0;
+    }
   }
   
   $video['source'] = 'http://blip.tv/play/' . $id;
