@@ -1,4 +1,3 @@
-
 var video_filter_dialog = {};
 
 (function ($) {
@@ -7,28 +6,29 @@ video_filter_dialog = {
     var ed = tinyMCEPopup.editor, e;
 
     tinyMCEPopup.restoreSelection();
-		
+
     tinyMCEPopup.execCommand("mceBeginUndoLevel");
-		
+
     var file_url = $('#edit-file-url').val();
 
     // @Todo: validate width and hight is INTs?
-    
+
     if (file_url == "") {
-      // File url is empry, we have nothing to insert, close the window
+      // File url is empty, we have nothing to insert, close the window
       ed.execCommand('mceRepaint');
       tinyMCEPopup.execCommand("mceEndUndoLevel");
-		  tinyMCEPopup.close();
-    } 
+      tinyMCEPopup.close();
+    }
     else {
       var str = '[video:' + file_url;
-      if ($('#edit-width').val() !== '') {
+      // If field is present (ie. not unset by the admin theme) and if value is not empty: insert value.
+      if (typeof $('#edit-width').val() != 'undefined' && $('#edit-width').val() !== '') {
         str += ' width:' + $('#edit-width').val();
       }
-      if ($('#edit-height').val() !== '') {
+      if (typeof $('#edit-height').val() != 'undefined' && $('#edit-height').val() !== '') {
         str += ' height:' + $('#edit-height').val();
       }
-      if ($('#edit-align').val() !== 'none') {
+      if (typeof $('#edit-align').val() != 'undefined' && $('#edit-align').val() !== 'none') {
         str += ' align:' + $('#edit-align').val();
       }
       if ($('#edit-autoplay').is(':checked')) {
@@ -39,8 +39,8 @@ video_filter_dialog = {
       ed.execCommand('mceInsertContent', false, str);
     }
 
-		tinyMCEPopup.execCommand("mceEndUndoLevel");
-		tinyMCEPopup.close();
+    tinyMCEPopup.execCommand("mceEndUndoLevel");
+    tinyMCEPopup.close();
   }
 };
 
