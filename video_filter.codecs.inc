@@ -197,10 +197,9 @@ function video_filter_youtube_html5($video) {
     'rel' => $video['related'] ? 'rel=1' : 'rel=0',
     'autoplay' => $video['autoplay'] ? 'autoplay=1' : 'autoplay=0',
   );
-  $url = $video['codec']['matches'][1] . '?' . "wmode=transparent&amp;" . implode('&amp;', $attributes);
-  $html = '<iframe src="http://www.youtube.com/embed/'.$url.'" width="'.$video['width'].'" height="'.$video['height'].'" frameborder="0"></iframe>';
+  $video['source'] = 'http://www.youtube.com/embed/' . $video['codec']['matches'][1] . '?' . "wmode=transparent&amp;" . implode('&amp;', $attributes);
 
-  return $html;
+  return video_filter_iframe($video);
 }
 
 function video_filter_google($video) {
@@ -228,9 +227,9 @@ function video_filter_vimeo($video) {
 }
 
 function video_filter_vimeo_html5($video) {
-  $html = '<iframe src="http://player.vimeo.com/video/'.$video['codec']['matches'][1].($video['autoplay'] ? '?autoplay=1' : '').'" width="'.$video['width'].'" height="'.$video['height'].'" frameborder="0"></iframe>';
+  $video['source'] = 'http://player.vimeo.com/video/' . $video['codec']['matches'][1] . ($video['autoplay'] ? '?autoplay=1' : '');
 
-  return $html;
+  return video_filter_iframe($video);
 }
 
 function video_filter_flickr_slideshows($video) {

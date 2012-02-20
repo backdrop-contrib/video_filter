@@ -241,6 +241,13 @@ function video_filter_flash($video, $params = array()) {
   return theme('video_filter_flash', array('video' => $video, 'params' => $params));
 }
 
+/**
+ * Wrapper that calls the theme function.
+ */
+function video_filter_iframe($video) {
+  return theme('video_filter_iframe', array('video' => $video));
+}
+
 function video_filter_get_codec_info() {
   static $codecs;
   if (!isset($codecs)) {
@@ -261,22 +268,7 @@ function theme_video_filter_flash($variables) {
   $video = $variables['video'];
   $params = isset($variables['params']) ? $variables['params'] : array();
 
-  // Create classes
-  $classes = array(
-    'video-filter',
-    'video-' . $video['codec']['codec_name'],  // Adds codec name
-  );
-
-  // Adds alignment
-  if (isset($video['align'])) {
-    $classes[] = 'video-' . $video['align'];
-  }
-
-  // First match is the URL, we don't want that as a class.
-  unset($video['codec']['matches'][0]);
-  foreach ($video['codec']['matches'] AS $match) {
-    $classes[] = 'vf-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $match));
-  }
+  $classes = video_filter_get_classes($video);
 
   $output .= '<object class="' . implode(' ', $classes) . '" type="application/x-shockwave-flash" ';
 
@@ -300,6 +292,21 @@ function theme_video_filter_flash($variables) {
 }
 
 /**
+ * Function that outputs HTML5 compatible iFrame for codecs that support it.
+ *
+ * @ingroup themeable
+ */
+function theme_video_filter_iframe($variables) {
+  $video = $variables['video'];
+
+  $classes = video_filter_get_classes($video);
+
+  $output = '<iframe src="' . $video['source'] . '" width="' . $video['width'] . '" height="' . $video['height'] . '" class="' . implode(' ', $classes) . '" frameborder="0"></iframe>';
+
+  return $output;
+}
+
+/**
  * Implements hook_theme().
  */
 function video_filter_theme($existing, $type, $theme, $path) {
@@ -307,11 +314,37 @@ function video_filter_theme($existing, $type, $theme, $path) {
     'video_filter_flash' => array(
       'variables' => array('video' => NULL, 'params' => NULL),
     ),
+    'video_filter_iframe' => array(
+      'variables' => array('video' => NULL, 'params' => NULL),
+    ),
     'video_filter_dashboard' => array(
       'variables' => array('form' => NULL),
       'template' => 'video_filter_dashboard',
     ),
   );
+}
+
+/**
+ * Helper function that extracts some classes from $video.
+ */
+function video_filter_get_classes($video) {
+  $classes = array(
+    'video-filter',
+    'video-' . $video['codec']['codec_name'],  // Adds codec name
+  );
+
+  // Adds alignment
+  if (isset($video['align'])) {
+    $classes[] = 'video-' . $video['align'];
+  }
+
+  // First match is the URL, we don't want that as a class.
+  unset($video['codec']['matches'][0]);
+  foreach ($video['codec']['matches'] AS $match) {
+    $classes[] = 'vf-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $match));
+  }
+
+  return $classes;
 }
 
 /**
