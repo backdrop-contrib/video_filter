@@ -177,6 +177,15 @@ function video_filter_codec_info() {
     'ratio' => 16 / 9,
   );
 
+  $codecs['archive'] = array(
+    'name' => t('Archive.org'),
+    'sample_url' => 'http://www.archive.org/details/DrupalconBoston2008-TheStateOfDrupal',
+    'callback' => 'video_filter_archive',
+    'html5_callback' => 'video_filter_archive',
+    'regexp' => '/archive\.org\/details\/([\w-_]+)/i',
+    'ratio' => 4 / 3,
+  );
+
   return $codecs;
 }
 
@@ -396,4 +405,10 @@ function video_filter_teachertube($video) {
   $params['flashvars'] = 'file=http://www.teachertube.com/embedFLV.php?pg=video_'.$video['codec']['matches'][1].'&amp;menu=false&amp;frontcolor=ffffff&amp;lightcolor=FF0000&amp;logo=http://www.teachertube.com/www3/images/greylogo.swf&amp;skin=http://www.teachertube.com/embed/overlay.swf&amp;volume=80&amp;controlbar=over&amp;displayclick=link&amp;viral.link=http://www.teachertube.com/viewVideo.php?video_id='.$video['codec']['matches'][1].'&amp;stretching=exactfit&amp;plugins=viral-2&amp;viral.callout=none&amp;viral.onpause=false';
 
   return video_filter_flash($video, $params);
+}
+
+function video_filter_archive($video) {
+  $video['source'] = 'http://www.archive.org/embed/' . $video['codec']['matches'][1];
+
+  return video_filter_iframe($video);
 }
