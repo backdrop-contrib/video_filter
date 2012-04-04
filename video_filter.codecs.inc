@@ -144,12 +144,14 @@ function video_filter_codec_info() {
   );
   $codecs['slideshare'] = array(
     'name' => t('Slideshare'),
-    'sample_url' => 'http://slideshare.net/?id=1759622&amp;doc=usingdrupal-090723103440-phpapp01',
+    'sample_url' => 'http://slideshare.net/1759622',
     'callback' => 'video_filter_slideshare',
-    'instructions' => t('You need to construct your own URL, using the "Wordpress Embed" code from Slideshare, extract the "id" and "doc" parts, and form the URL like this: slideshare.net/?id=1759622&amp;doc=usingdrupal-090723103440-phpapp01.'),
-    'regexp' => '/slideshare\.net\/\?id=([a-z0-9]+).*doc=([a-z0-9-]+)/',
-    'ratio' => 425 / 320,
-    'control_bar_height' => 38,
+    'instructions' => t('You need to construct your own URL, using the "Wordpress Embed" code from Slideshare, extract the "id", and form the URL like this: slideshare.net/1759622'),
+    'regexp' => array(
+                  '/slideshare\.net\/\?id=([a-z0-9]+)/',
+                  '/slideshare\.net\/([a-z0-9]+)/',
+                ),
+    'ratio' => 425 / 355,
   );
   $codecs['picasa_slideshows'] = array(
     'name' => t('Picasa Slideshows'),
@@ -381,9 +383,9 @@ function video_filter_bliptv($video) {
 }
 
 function video_filter_slideshare($video) {
-  $video['source'] = 'http://static.slideshare.net/swf/ssplayer2.swf?id=' . $video['codec']['matches'][1] . '&amp;doc=' . ($video['codec']['matches'][2]);
+  $video['source'] = 'http://www.slideshare.net/slideshow/embed_code/' . $video['codec']['matches'][1];
 
-  return video_filter_flash($video);
+  return video_filter_iframe($video);
 }
 
 function video_filter_picasa_slideshows($video) {
