@@ -28,15 +28,13 @@ function video_filter_codec_info() {
     'regexp' => '/video\.google\.[a-z]+\.?[a-z]+?\/videoplay\?docid=(\-?[0-9]+)/',
     'ratio' => 400 / 326,
   );
-  $codecs['tangle'] = array(
-    'name' => t('Tangle'),
-    'sample_url' => 'http://www.tangle.com/view_video?viewkey=b2e45d2a30cb0f5cad38',
-    'callback' => 'video_filter_tangle',
-    'regexp' => array(
-                  '/tangle\.com\/view_video\.php\?viewkey=([a-z0-9]+)/',
-                  '/tangle\.com\/view_video\?viewkey=([a-z0-9]+)/',
-                ),
-    'ratio' => 330 / 270,
+  $codecs['godtube'] = array(
+    'name' => t('GodTube'),
+    'sample_url' => 'http://www.godtube.com/watch/?v=123abc',
+    'callback' => 'video_filter_godtube',
+    'regexp' => '/godtube\.com\/watch\/\?v=([a-z0-9\-_]+)/i',
+    'ratio' => 400 / 283,
+    'control_bar_height' => 40,
   );
   $codecs['dailymotion'] = array(
     'name' => t('DailyMotion'),
@@ -217,10 +215,10 @@ function video_filter_google($video) {
   return video_filter_flash($video);
 }
 
-function video_filter_tangle($video) {
-  $video['source'] = 'http://www.tangle.com/flash/swf/flvplayer.swf?viewkey='.$video['codec']['matches'][1];
+function video_filter_godtube($video) {
+  $video['source'] = 'http://www.godtube.com/embed/watch/'.$video['codec']['matches'][1];
 
-  return video_filter_flash($video);
+  return video_filter_iframe($video);
 }
 
 function video_filter_dailymotion($video) {
