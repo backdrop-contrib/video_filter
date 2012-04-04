@@ -163,7 +163,7 @@ function video_filter_codec_info() {
                       '<code>[video: http://picasaweb.google.com/data/feed/base/user/USER_NAME/albumid/5568104935784209834?alt=rss&amp;kind=photo&amp;hl=en_US]</code>' .
                       '</li>' .
                       '</ol>',
-    'regexp' => '/picasaweb\.google\.com\/data\/feed\/base\/user\/([a-zA-Z0-9@_\-]+)\/albumid\/([a-z0-9]+)/i',
+    'regexp' => '/picasaweb\.google\.com\/data\/feed\/base\/user\/([a-zA-Z0-9@_\-\.]+)\/albumid\/([a-z0-9]+)/i',
     'ratio' => 800 / 600,
   );
 
