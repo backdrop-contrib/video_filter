@@ -99,7 +99,7 @@ function video_filter_codec_info() {
       '/gametrailers\.com\/player\/([0-9]+)/',
       '/gametrailers\.com\/video\/([a-z0-9\-_]+)\/([0-9]+)/',
     ),
-    'ratio' => 480 / 392,
+    'ratio' => 16 / 9,
   );
   $codecs['collegehumor'] = array(
     'name' => t('College Humor'),
@@ -303,9 +303,9 @@ function video_filter_gametrailers($video) {
   elseif (is_numeric($video['codec']['matches'][2])) {
     $match = $video['codec']['matches'][2];
   }
-  $video['source'] = 'http://www.gametrailers.com/remote_wrap.php?mid='.$match;
+  $video['source'] = 'http://media.mtvnservices.com/embed/mgid:moses:video:gametrailers.com:'.$match;
 
-  return video_filter_flash($video, $params);
+  return video_filter_iframe($video, $params);
 }
 
 function video_filter_collegehumor($video) {
