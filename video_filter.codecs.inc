@@ -14,10 +14,10 @@ function video_filter_codec_info() {
     'callback' => 'video_filter_youtube',
     'html5_callback' => 'video_filter_youtube_html5',
     'regexp' => array(
-                  '/youtube\.com\/watch\?v=([a-z0-9\-_]+)/i',
-                  '/youtu.be\/([a-z0-9\-_]+)/i',
-                  '/youtube\.com\/v\/([a-z0-9\-_]+)/i',
-                ),
+      '/youtube\.com\/watch\?v=([a-z0-9\-_]+)/i',
+      '/youtu.be\/([a-z0-9\-_]+)/i',
+      '/youtube\.com\/v\/([a-z0-9\-_]+)/i',
+    ),
     'ratio' => 16 / 9,
     'control_bar_height' => 25,
   );
@@ -134,11 +134,11 @@ function video_filter_codec_info() {
     'sample_url' => 'http://blip.tv/file/123456',
     'callback' => 'video_filter_bliptv',
     'regexp' => array(
-                  '@blip\.tv/rss/flash/([^"\&\?/]+)@i',
-                  '@blip\.tv/file/view/([^"\&\?/]+)@i',
-                  '@blip\.tv/file/([^"\&\?/]+)@i',
-                  '@blip\.tv/play/([^"\&\?/]+)@i',
-                ),
+      '@blip\.tv/rss/flash/([^"\&\?/]+)@i',
+      '@blip\.tv/file/view/([^"\&\?/]+)@i',
+      '@blip\.tv/file/([^"\&\?/]+)@i',
+      '@blip\.tv/play/([^"\&\?/]+)@i',
+    ),
     'ratio' => 16 / 9,
     'control_bar_height' => 30,
   );
@@ -148,9 +148,9 @@ function video_filter_codec_info() {
     'callback' => 'video_filter_slideshare',
     'instructions' => t('You need to construct your own URL, using the "Wordpress Embed" code from Slideshare, extract the "id", and form the URL like this: slideshare.net/1759622'),
     'regexp' => array(
-                  '/slideshare\.net\/\?id=([a-z0-9]+)/',
-                  '/slideshare\.net\/([a-z0-9]+)/',
-                ),
+      '/slideshare\.net\/\?id=([a-z0-9]+)/',
+      '/slideshare\.net\/([a-z0-9]+)/',
+    ),
     'ratio' => 425 / 355,
   );
   $codecs['picasa_slideshows'] = array(
@@ -158,13 +158,13 @@ function video_filter_codec_info() {
     'sample_url' => 'http://picasaweb.google.com/data/feed/base/user/USER_NAME/albumid/5568104935784209834?alt=rss&amp;kind=photo&amp;hl=en_US',
     'callback' => 'video_filter_picasa_slideshows',
     'instructions' => t('You must use the URL of the RSS feed for the Picasa album:') .
-                      '<ol>' .
-                      '<li>' . t('View the album in Picasa (you should see thumbnails, not a slideshow).') . '</li>' .
-                      '<li>' . t('Find the "RSS" link and click it.') . '</li>' .
-                      '<li>' . t('Copy the resulting URL from the browser address bar.  Example: ') . '<br />' .
-                      '<code>[video: http://picasaweb.google.com/data/feed/base/user/USER_NAME/albumid/5568104935784209834?alt=rss&amp;kind=photo&amp;hl=en_US]</code>' .
-                      '</li>' .
-                      '</ol>',
+      '<ol>' .
+      '<li>' . t('View the album in Picasa (you should see thumbnails, not a slideshow).') . '</li>' .
+      '<li>' . t('Find the "RSS" link and click it.') . '</li>' .
+      '<li>' . t('Copy the resulting URL from the browser address bar.  Example:') . '<br />' .
+      '<code>[video: http://picasaweb.google.com/data/feed/base/user/USER_NAME/albumid/5568104935784209834?alt=rss&amp;kind=photo&amp;hl=en_US]</code>' .
+      '</li>' .
+      '</ol>',
     'regexp' => '/picasaweb\.google\.com\/data\/feed\/base\/user\/([a-zA-Z0-9@_\-\.]+)\/albumid\/([a-z0-9]+)/i',
     'ratio' => 800 / 600,
   );
@@ -212,25 +212,25 @@ function video_filter_youtube_html5($video) {
 }
 
 function video_filter_google($video) {
-  $video['source'] = 'http://video.google.com/googleplayer.swf?docId='.$video['codec']['matches'][1];
+  $video['source'] = 'http://video.google.com/googleplayer.swf?docId=' . $video['codec']['matches'][1];
 
   return video_filter_flash($video);
 }
 
 function video_filter_godtube($video) {
-  $video['source'] = 'http://www.godtube.com/embed/watch/'.$video['codec']['matches'][1];
+  $video['source'] = 'http://www.godtube.com/embed/watch/' . $video['codec']['matches'][1];
 
   return video_filter_iframe($video);
 }
 
 function video_filter_dailymotion($video) {
-  $video['source'] = 'http://www.dailymotion.com/swf/'.$video['codec']['matches'][1];
+  $video['source'] = 'http://www.dailymotion.com/swf/' . $video['codec']['matches'][1];
 
   return video_filter_flash($video);
 }
 
 function video_filter_vimeo($video) {
-  $video['source'] = 'http://www.vimeo.com/moogaloop.swf?clip_id='.$video['codec']['matches'][1].'&amp;server=www.vimeo.com&amp;fullscreen=1&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;autoplay='.$video['autoplay'];
+  $video['source'] = 'http://www.vimeo.com/moogaloop.swf?clip_id=' . $video['codec']['matches'][1] . '&amp;server=www.vimeo.com&amp;fullscreen=1&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;autoplay=' . $video['autoplay'];
 
   return video_filter_flash($video);
 }
@@ -256,19 +256,19 @@ function video_filter_flickr_slideshows($video) {
 function video_filter_flickr_video($video) {
   $video['source'] = 'http://www.flickr.com/apps/video/stewart.swf?v=1.161';
 
-  $params['flashvars'] = '&amp;photo_id='.$video['codec']['matches'][2].'&amp;flickr_show_info_box=true';
+  $params['flashvars'] = '&amp;photo_id=' . $video['codec']['matches'][2] . '&amp;flickr_show_info_box=true';
 
   return video_filter_flash($video, $params);
 }
 
 function video_filter_gamevideos($video) {
-  $video['source'] = 'http://gamevideos.1up.com/swf/gamevideos12.swf?embedded=1&amp;fullscreen=1&amp;autoplay=0&amp;src=http://gamevideos.1up.com/do/videoListXML%3Fid%3D'.$video['codec']['matches'][1];
+  $video['source'] = 'http://gamevideos.1up.com/swf/gamevideos12.swf?embedded=1&amp;fullscreen=1&amp;autoplay=0&amp;src=http://gamevideos.1up.com/do/videoListXML%3Fid%3D' . $video['codec']['matches'][1];
 
   return video_filter_flash($video);
 }
 
 function video_filter_metacafe($video) {
-  $video['source'] = 'http://metacafe.com/fplayer/'.$video['codec']['matches'][1].'/'.$video['codec']['matches'][2].'.swf';
+  $video['source'] = 'http://metacafe.com/fplayer/' . $video['codec']['matches'][1] . '/' . $video['codec']['matches'][2] . '.swf';
 
   return video_filter_flash($video);
 }
@@ -285,12 +285,12 @@ function video_filter_streamhoster($video) {
     $params['flashvars'] .= '&amp;type=rtmp';
   }
   elseif ($protocol == 'http') {
-    $params[flashvars] = 'file=' . urlencode('http://' . $video['codec']['matches'][2] . '.streamhoster.com/' . $video['codec']['matches'][3] . '/' . $video['codec']['matches'][4]);
+    $params['flashvars'] = 'file=' . urlencode('http://' . $video['codec']['matches'][2] . '.streamhoster.com/' . $video['codec']['matches'][3] . '/' . $video['codec']['matches'][4]);
     $params['flashvars'] .= '&amp;type=video';
   }
 
-  $params['flashvars'] .= '&amp;width=' . $video['width'] ;
-  $params['flashvars'] .= '&amp;height=' . $video['height'] ;
+  $params['flashvars'] .= '&amp;width=' . $video['width'];
+  $params['flashvars'] .= '&amp;height=' . $video['height'];
   $params['flashvars'] .= !empty($video['autoplay']) ? '&amp;autostart=true' : '&amp;autostart=false';
 
   return video_filter_flash($video, $params);
@@ -303,13 +303,13 @@ function video_filter_gametrailers($video) {
   elseif (is_numeric($video['codec']['matches'][2])) {
     $match = $video['codec']['matches'][2];
   }
-  $video['source'] = 'http://media.mtvnservices.com/embed/mgid:moses:video:gametrailers.com:'.$match;
+  $video['source'] = 'http://media.mtvnservices.com/embed/mgid:moses:video:gametrailers.com:' . $match;
 
   return video_filter_iframe($video, $params);
 }
 
 function video_filter_collegehumor($video) {
-  $video['source'] = 'http://www.collegehumor.com/moogaloop/moogaloop.swf?clip_id='.$video['codec']['matches'][1].'&amp;fullscreen=1';
+  $video['source'] = 'http://www.collegehumor.com/moogaloop/moogaloop.swf?clip_id=' . $video['codec']['matches'][1] . '&amp;fullscreen=1';
 
   return video_filter_flash($video);
 }
@@ -317,13 +317,13 @@ function video_filter_collegehumor($video) {
 function video_filter_myspace($video) {
   // The last match is the ID we need.
   $last = count($video['codec']['matches']);
-  $video['source'] = 'http://mediaservices.myspace.com/services/media/embed.aspx/m='.$video['codec']['matches'][$last-1];
+  $video['source'] = 'http://mediaservices.myspace.com/services/media/embed.aspx/m=' . $video['codec']['matches'][$last - 1];
 
   return video_filter_flash($video, $params);
 }
 
 function video_filter_capped($video) {
-  $video['source'] = 'http://capped.micksam7.com/playeralt.swf?vid='.$video['codec']['matches'][1];
+  $video['source'] = 'http://capped.micksam7.com/playeralt.swf?vid=' . $video['codec']['matches'][1];
 
   return video_filter_flash($video);
 }
@@ -341,7 +341,7 @@ function video_filter_bliptv($video) {
     $index = array();
     xml_parse_into_struct($parser, $result->data, $vals, $index);
     xml_parser_free($parser);
-  
+
     $response = array();
     $response['_emfield_arghash'] = $arghash;
     $level = array();
@@ -358,10 +358,10 @@ function video_filter_bliptv($video) {
       if ($xml_elem['type'] == 'complete') {
         $php_stmt = '$response';
         while ($start_level < $xml_elem['level']) {
-          $php_stmt .= '[$level['. $start_level .']]';
+          $php_stmt .= '[$level[' . $start_level . ']]';
           $start_level++;
         }
-        $php_stmt .= '[$xml_elem[\'tag\']][] = $xml_elem[\'value\'];'. $php_stmt .'[$xml_elem[\'tag\']][] = $xml_elem[\'attributes\'];';
+        $php_stmt .= '[$xml_elem[\'tag\']][] = $xml_elem[\'value\'];' . $php_stmt . '[$xml_elem[\'tag\']][] = $xml_elem[\'attributes\'];';
         eval($php_stmt);
         $start_level--;
       }
@@ -369,16 +369,16 @@ function video_filter_bliptv($video) {
     $id = $response['EMBEDLOOKUP'][0];
     // Protect from XSS.
     if (preg_match("/[^A-Za-z0-9]/", $id, $matches)) {
-      watchdog('Video Filter', t('A faulty Blip.tv ID has been detected.'));
+      watchdog('Video Filter', 'A faulty Blip.tv ID has been detected.');
       $id = 0;
     }
   }
-  
+
   $video['source'] = 'http://blip.tv/play/' . $id;
   $params = array(
     'allowscriptaccess' => 'always',
   );
-  
+
   return video_filter_flash($video, $params);
 }
 
@@ -402,7 +402,7 @@ function video_filter_picasa_slideshows($video) {
 function video_filter_teachertube($video) {
   $video['source'] = 'http://www.teachertube.com/embed/player.swf';
 
-  $params['flashvars'] = 'file=http://www.teachertube.com/embedFLV.php?pg=video_'.$video['codec']['matches'][1].'&amp;menu=false&amp;frontcolor=ffffff&amp;lightcolor=FF0000&amp;logo=http://www.teachertube.com/www3/images/greylogo.swf&amp;skin=http://www.teachertube.com/embed/overlay.swf&amp;volume=80&amp;controlbar=over&amp;displayclick=link&amp;viral.link=http://www.teachertube.com/viewVideo.php?video_id='.$video['codec']['matches'][1].'&amp;stretching=exactfit&amp;plugins=viral-2&amp;viral.callout=none&amp;viral.onpause=false';
+  $params['flashvars'] = 'file=http://www.teachertube.com/embedFLV.php?pg=video_' . $video['codec']['matches'][1] . '&amp;menu=false&amp;frontcolor=ffffff&amp;lightcolor=FF0000&amp;logo=http://www.teachertube.com/www3/images/greylogo.swf&amp;skin=http://www.teachertube.com/embed/overlay.swf&amp;volume=80&amp;controlbar=over&amp;displayclick=link&amp;viral.link=http://www.teachertube.com/viewVideo.php?video_id=' . $video['codec']['matches'][1] . '&amp;stretching=exactfit&amp;plugins=viral-2&amp;viral.callout=none&amp;viral.onpause=false';
 
   return video_filter_flash($video, $params);
 }
