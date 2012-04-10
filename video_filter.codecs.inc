@@ -538,7 +538,9 @@ function video_filter_youtube($video) {
 
   $video['source'] = 'http://www.youtube.com/v/' . $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
 
-  return video_filter_flash($video);
+  $params['wmode'] = 'opaque';
+
+  return video_filter_flash($video, $params);
 }
 
 /**
@@ -550,8 +552,9 @@ function video_filter_youtube_html5($video) {
   $attributes = array(
     'rel' => $video['related'] ? 'rel=1' : 'rel=0',
     'autoplay' => $video['autoplay'] ? 'autoplay=1' : 'autoplay=0',
+    'wmode' => 'wmode=opaque',
   );
-  $video['source'] = 'http://www.youtube.com/embed/' . $video['codec']['matches'][1] . '?' . "wmode=transparent&amp;" . implode('&amp;', $attributes);
+  $video['source'] = 'http://www.youtube.com/embed/' . $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
 
   return video_filter_iframe($video);
 }
