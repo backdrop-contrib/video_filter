@@ -114,14 +114,6 @@ function video_filter_codec_info() {
     'ratio' => 400 / 326,
   );
 
-  $codecs['issuu'] = array(
-    'name' => t('Issuu'),
-    'sample_url' => 'http://issuu.com/username/docs/uN1qUeId',
-    'html5_callback' => 'video_filter_issuu_html5',
-    'regexp' => '/issuu\.com\/([a-z0-9\-_]+)\/docs\/([a-z0-9%*\-_.]+[?]*.*)/i',
-    'ratio' => 420 / 272,
-  );
-
   $codecs['metacafe'] = array(
     'name' => t('Meta Cafe'),
     'sample_url' => 'http://www.metacafe.com/watch/1234567890/some_title/',
@@ -397,17 +389,6 @@ function video_filter_google($video) {
   $video['source'] = 'http://video.google.com/googleplayer.swf?docId=' . $video['codec']['matches'][1];
 
   return video_filter_flash($video);
-}
-
-/**
- * HTML5 callback for Issuu codec.
- *
- * @see video_filter_codec_info()
- */
-function video_filter_issuu_html5($video) {
-  $video['source'] = 'http://issuu.com/' . $video['codec']['matches'][1] . '/docs/' . $video['codec']['matches'][2];
-
-  return video_filter_iframe($video);
 }
 
 /**
