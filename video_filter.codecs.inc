@@ -205,6 +205,17 @@ function video_filter_codec_info() {
     'control_bar_height' => 25,
   );
 
+  $codecs['youtube'] = array(
+    'name' => t('YouTube (Playlist)'),
+    'sample_url' => 'http://www.youtube.com/playlist?list=uN1qUeId',
+    'callback' => 'video_filter_youtube_playlist_html5',
+    'regexp' => array(
+      '/youtube\.com\/playlist\?list=([a-z0-9\-_]+)/i',
+    ),
+    'ratio' => 16 / 9,
+    'control_bar_height' => 25,
+  );
+
   return $codecs;
 }
 
@@ -536,6 +547,22 @@ function video_filter_youtube_html5($video) {
     'wmode' => 'wmode=opaque',
   );
   $video['source'] = 'http://www.youtube.com/embed/' . $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
+
+  return video_filter_iframe($video);
+}
+
+/**
+ * HTML5 callback for YouTube (Playlist) codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_youtube_playlist_html5($video) {
+  $attributes = array(
+    'rel' => $video['related'] ? 'rel=1' : 'rel=0',
+    'autoplay' => $video['autoplay'] ? 'autoplay=1' : 'autoplay=0',
+    'wmode' => 'wmode=opaque',
+  );
+  $video['source'] = 'http://www.youtube.com/embed/videoseries?list=' . $video['codec']['matches'][1] . '&amp;' . implode('&amp;', $attributes);
 
   return video_filter_iframe($video);
 }
