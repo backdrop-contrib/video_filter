@@ -611,3 +611,33 @@ function _video_filter_instructions() {
   $output .= '</ul>';
   return $output;
 }
+
+/**
+ * Requests data from an oEmbed provider.
+ *
+ * Note: This function currently only supports JSON responses.
+ *
+ * @param string $endpoint
+ *   The provider endpoint URL.
+ * @param array $arguments
+ *   An associative array of URL arguments to send the provider.
+ *
+ * @return array|FALSE
+ *   An array of data if the request is successful, otherwise FALSE.
+ *
+ * @todo Support other response formats than JSON?
+ */
+function video_filter_oembed_request($endpoint, array $arguments) {
+  // Make HTTP request.
+  $result = drupal_http_request(url($endpoint, array('query' => $arguments)));
+
+  if ($data = json_decode($result->data)) {
+    // Success.
+    return (array) $data;
+  }
+  else {
+    // Failure. Either the resource doesn't exist or there was an error with the
+    // request.
+    return FALSE;
+  }
+}
