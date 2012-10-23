@@ -191,6 +191,14 @@ function video_filter_codec_info() {
     'control_bar_height' => 0,
   );
 
+  $codecs['wistia'] = array(
+    'name' => t('Wistia'),
+    'sample_url' => 'http://wistia.com/medias/9pj9n6ftlk',
+    'callback' => 'video_filter_wistia_html5',
+    'html5_callback' => 'video_filter_wistia_html5',
+    'regexp' => '@https?://(.+\.)?(wistia\.com|wi\.st)/((m|medias|projects)|embed/(iframe|playlists))/([a-zA-Z0-9]+)@',
+  );
+
   $codecs['youtube'] = array(
     'name' => t('YouTube'),
     'sample_url' => 'http://www.youtube.com/watch?v=uN1qUeId',
@@ -565,4 +573,40 @@ function video_filter_youtube_playlist_html5($video) {
   $video['source'] = 'http://www.youtube.com/embed/videoseries?list=' . $video['codec']['matches'][1] . '&amp;' . implode('&amp;', $attributes);
 
   return video_filter_iframe($video);
+}
+
+/**
+ * Callback for Wistia codec.
+ *
+ * Adapted from the media_wistia module.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_wistia_html5($video) {
+  $video_code = $video['codec']['matches'][6];
+  $matches = $video['codec']['matches'];
+  $embed_type = ($matches[3] == 'projects' || $matches[5] == 'playlists') ? 'playlists' : 'iframe';
+
+  // Get embed code via oEmbed.
+  $endpoint = 'http://fast.wistia.com/oembed';
+  $options = array(
+    'url' => "http://fast.wistia.com/embed/{$embed_type}/{$video_code}",
+    'width' => $video['width'],
+    'height' => $video['height'],
+  );
+  $data = video_filter_oembed_request($endpoint, $options);
+  $html = $data['html'];
+
+  // See if the video source is already an iframe src.
+  $pattern = '@https?://fast.wistia.com/embed/(iframe|playlists)/[a-zA-Z0-9]+\?+.+@';
+  $matches = array();
+  if (preg_match($pattern, $video['source'], $matches)) {
+    // Replace the oEmbed iframe src with that provided in the token, in order
+    // to support embed builder URLs.
+    $pattern = '@https?://fast.wistia.com/embed/(iframe|playlists)/[a-zA-Z0-9]+\?[^"]+@';
+    $replacement = $matches[0];
+    $html = preg_replace($pattern, $replacement, $html);
+  }
+
+  return $html;
 }
