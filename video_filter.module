@@ -163,13 +163,14 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
           }
         }
 
-        // Use configured ratio if present, use that from the codec otherwise.
+        // Use configured ratio if present, otherwise use that from the codec,
+        // if set. Fall back to 1.
         $ratio = 1;
         if (isset($video['ratio']) && preg_match('/(\d+)\/(\d+)/', $video['ratio'], $tratio)) {
           // Validate given ratio parameter.
           $ratio = $tratio[1] / $tratio[2];
         }
-        else {
+        elseif (isset($video['codec']['ratio'])) {
           $ratio = $video['codec']['ratio'];
         }
 
