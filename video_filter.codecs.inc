@@ -205,7 +205,7 @@ function video_filter_codec_info() {
     'control_bar_height' => 25,
   );
 
-  $codecs['youtube'] = array(
+  $codecs['youtube_playlist'] = array(
     'name' => t('YouTube (Playlist)'),
     'sample_url' => 'http://www.youtube.com/playlist?list=uN1qUeId',
     'callback' => 'video_filter_youtube_playlist_html5',
