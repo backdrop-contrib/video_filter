@@ -258,6 +258,7 @@ function video_filter_bliptv($video) {
     xml_parser_free($parser);
 
     $response = array();
+    // @todo: What's $arghash supposed to be? It's undefined.
     $response['_emfield_arghash'] = $arghash;
     $level = array();
     $start_level = 1;
@@ -374,7 +375,7 @@ function video_filter_gametrailers($video) {
   }
   $video['source'] = 'http://media.mtvnservices.com/embed/mgid:moses:video:gametrailers.com:' . $match;
 
-  return video_filter_iframe($video, $params);
+  return video_filter_iframe($video);
 }
 
 /**
