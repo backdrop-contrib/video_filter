@@ -432,7 +432,8 @@ function video_filter_dashboard_page($editor) {
       break;
   }
 
-  print theme('video_filter_dashboard', array('form' => render(drupal_get_form('_video_filter_form'))));
+  $form = drupal_get_form('_video_filter_form');
+  print theme('video_filter_dashboard', array('form' => render($form)));
   exit();
 }
 
