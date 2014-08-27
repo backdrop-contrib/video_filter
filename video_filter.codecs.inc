@@ -34,6 +34,15 @@ function video_filter_codec_info() {
     'control_bar_height' => 30,
   );
 
+  $codecs['candidcareer'] = array(
+    'name' => t('Candid Career'),
+    'sample_url' => 'https://www.candidcareer.com/embed.php?vkey=ed5fdd900a274930252f&shared=CandidCareer&uid=30',
+    'callback' => 'video_filter_candidcareer',
+    'regexp' => '/candidcareer\.com\/embed\.php\?vkey=([a-zA-Z0-9\-_&;]+)shared=([a-zA-Z0-9\-_&;]+)uid=([a-zA-Z0-9\-_&;]+)/',
+    'ratio' => 16 / 9,
+    'control_bar_height' => 20,
+  );
+
   $codecs['capped'] = array(
     'name' => t('Capped'),
     'sample_url' => 'http://capped.tv/playeralt.php?vid=some-title',
@@ -296,6 +305,20 @@ function video_filter_bliptv($video) {
   );
 
   return video_filter_flash($video, $params);
+}
+
+/**
+ * Callback for Candid Career codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_candidcareer($video) {
+  // Their urls contain & symbols which Drupal is encoding, so decode those.
+  $decoded = decode_entities($video['codec']['matches'][0]);
+  $video['source'] = '//' . $decoded;
+  $video['attributes']['marginwidth'] = 0;
+  $video['attributes']['marginheight'] = 0;
+  return video_filter_iframe($video);
 }
 
 /**
