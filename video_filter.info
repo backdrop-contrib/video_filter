@@ -1,6 +1,6 @@
 name = Video Filter
 description = Filter to include videos from Youtube, Google video etc
-core = 7.x
+backdrop = 1.x
 package = Input filters
 
-stylesheets[all][] = video_filter.css
+stylesheets[all][] = css/video_filter.css

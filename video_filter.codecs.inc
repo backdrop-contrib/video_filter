@@ -257,10 +257,10 @@ function video_filter_bliptv($video) {
 
   // Since video ID in URL is different than in embed code, use API to lookup
   // the embed code video ID. Adapted from emfield.module.
-  $result = drupal_http_request('http://blip.tv/file/' . $id . '?skin=api');
+  $result = backdrop_http_request('http://blip.tv/file/' . $id . '?skin=api');
 
   if ($result->code == 200) {
-    $parser = drupal_xml_parser_create($result->data);
+    $parser = backdrop_xml_parser_create($result->data);
     $vals = array();
     $index = array();
     xml_parse_into_struct($parser, $result->data, $vals, $index);
@@ -313,7 +313,7 @@ function video_filter_bliptv($video) {
  * @see video_filter_codec_info()
  */
 function video_filter_candidcareer($video) {
-  // Their urls contain & symbols which Drupal is encoding, so decode those.
+  // Their urls contain & symbols which Backdrop is encoding, so decode those.
   $decoded = decode_entities($video['codec']['matches'][0]);
   $video['source'] = '//' . $decoded;
   $video['attributes']['marginwidth'] = 0;

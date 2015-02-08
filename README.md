@@ -1,46 +1,46 @@
+Video Filter
+============
 
-This is a highly flexible and easy extendable filter module to embed any type
-of video in your site using a simple tag. Other modules can add video
-sites/formats (called codecs) using an easy plug-in architecture.
+Video Filter is a highly flexible and easy extendable filter module to embed any type of video in your site using a simple tag. Other modules can add video sites/formats (called codecs) using an easy plug-in architecture.
 
-========= Installation =========
+
+Installation
+------------
 
 Enable the module on the modules page.
 
-Go to admin/config/content/formats and configure the text format(s) that should
-be allowed to use this filter. Check the box to enable Video Filter and save.
-Some simple settings are available if you configure the text format. There you
-can change the default size and auto play settings.
+Go to admin/config/content/formats and configure the text format(s) that should be allowed to use this filter. Check the box to enable Video Filter and save.
 
-Make sure that Video Filter is processed before "Convert URLs to links".
-You can do this by dragging and dropping Video Filter to the top of the
-processing order list. Do this even if it's allready on top, just to make sure!
+Some simple settings are available if you configure the text format. There you can change the default size and auto play settings.
 
-If you're using the "Limit allowed HTML tags" filter, make sure Video Filter is
-processed after that filter.
+Make sure that Video Filter is processed before "Convert URLs to links". You can do this by dragging and dropping Video Filter to the top of the processing order list. Do this even if it's allready on top, just to make sure!
 
-To enable WYSIWYG support, go to the WYSIWYG settings for each input format and
-enable the Video Filter button.
+If you're using the "Limit allowed HTML tags" filter, make sure Video Filter is processed after that filter.
 
-========= Usage =========
+To enable WYSIWYG support, go to the WYSIWYG settings for each input format and enable the Video Filter button.
 
-Single video: [video:url]
+Usage
+-----
+
+Single video: `[video:url]`
 This will output the video using the default settings.
 
-Random video from multiple URL's: [video:url,url]
+Random video from multiple URL's: `[video:url,url]`
 This will output one of the specified videos each time.
 
 You can also set some parameters in the call:
 
-[video:url width:X height:Y align:left/right autoplay:1/0]
+`[video:url width:X height:Y align:left/right autoplay:1/0]`
 This will override the default settings for this video.
 
-========= Developers =========
+Developers
+----------
 
 This module calls hook_codec_info(), so you can add your own codecs.
 
 Example:
 
+```
 function MODULE_codec_info() {
   $codecs = array();
   // You can offer multiple video formats in one module.
@@ -67,9 +67,11 @@ function MODULE_codec_info() {
   );
   return $codecs;
 }
+```
 
 And this will be your callback function:
 
+```
 function MODULE_youtube($video) {
   // $video contains the video URL in source, the codec (as above) and also
   // [code][matches] with the result of the regexp and [codec][delta] with the
@@ -81,7 +83,26 @@ function MODULE_youtube($video) {
   // <param...> attributes)
   return video_filter_flash($video);
 }
+```
 
-========= Troubleshooting =========
+Troubleshooting
+---------------
 
 If videos don't show up, try disabling any browser plugins, such as AdBlock.
+
+License
+-------
+
+This project is GPL v2 software. See the LICENSE.txt file in this directory for complete text.
+
+Current Maintainers
+-------------------
+
+This module is currently seeking maintainers.
+
+Credits
+-------
+
+Ported to Backdrop by Herb v/d Dool (https://github.com/herbdool/)
+
+This module was originally written for Drupal (https://drupal.org/project/video_filter). Drupal maintainers are: [ultimateboy](https://www.drupal.org/u/ultimateboy), [TravisCarden](https://www.drupal.org/u/TravisCarden), [blackdog](https://www.drupal.org/u/blackdog). Originally created by [Fokke](http://drupal.org/user/46354).

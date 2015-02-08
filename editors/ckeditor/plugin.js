@@ -17,7 +17,7 @@
       // Add Command
       editor.addCommand('video_filter', {
         exec : function () {
-          var path = (Drupal.settings.video_filter.url.wysiwyg_ckeditor) ? Drupal.settings.video_filter.url.wysiwyg_ckeditor : Drupal.settings.video_filter.url.ckeditor
+          var path = (Backdrop.settings.video_filter.url.wysiwyg_ckeditor) ? Backdrop.settings.video_filter.url.wysiwyg_ckeditor : Backdrop.settings.video_filter.url.ckeditor
           var media = window.showModalDialog(path, { 'opener' : window, 'editorname' : editor.name }, "dialogWidth:580px; dialogHeight:480px; center:yes; resizable:yes; help:no;");
         }
       });

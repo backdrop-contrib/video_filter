@@ -32,25 +32,25 @@ function video_filter_filter_info() {
   return $filters;
 }
 
-function _video_filter_settings($form, &$form_state, $filter, $format, $defaults, $filters) {
+function _video_filter_settings($form, &$form_state, $filter, $format) {
 
   $settings['video_filter_width'] = array(
     '#type' => 'textfield',
     '#title' => t('Default width setting'),
-    '#default_value' => isset($filter->settings['video_filter_width']) ? $filter->settings['video_filter_width'] : $defaults['video_filter_width'],
+    '#default_value' => $filter->settings['video_filter_width'],
     '#maxlength' => 4,
   );
   $settings['video_filter_height'] = array(
     '#type' => 'textfield',
     '#title' => t('Default height setting'),
-    '#default_value' => isset($filter->settings['video_filter_height']) ? $filter->settings['video_filter_height'] : $defaults['video_filter_height'],
+    '#default_value' => $filter->settings['video_filter_height'],
     '#maxlength' => 4,
   );
   $settings['video_filter_autoplay'] = array(
     '#type' => 'radios',
     '#title' => t('Default autoplay setting'),
     '#description' => t('Not all video formats support this setting.'),
-    '#default_value' => isset($filter->settings['video_filter_autoplay']) ? $filter->settings['video_filter_autoplay'] : $defaults['video_filter_autoplay'],
+    '#default_value' => $filter->settings['video_filter_autoplay'],
     '#options' => array(
       0 => t('No'),
       1 => t('Yes'),
@@ -60,7 +60,7 @@ function _video_filter_settings($form, &$form_state, $filter, $format, $defaults
     '#type' => 'radios',
     '#title' => t('Related videos setting'),
     '#description' => t('Show "related videos"? Not all video formats support this setting.'),
-    '#default_value' => isset($filter->settings['video_filter_related']) ? $filter->settings['video_filter_related'] : $defaults['video_filter_related'],
+    '#default_value' => $filter->settings['video_filter_related'],
     '#options' => array(
       0 => t('No'),
       1 => t('Yes'),
@@ -71,7 +71,7 @@ function _video_filter_settings($form, &$form_state, $filter, $format, $defaults
     '#type' => 'radios',
     '#title' => t('Use HTML5'),
     '#description' => t('Use HTML5 if the codec provides it. Makes your videos more device agnostic.'),
-    '#default_value' => isset($filter->settings['video_filter_html5']) ? $filter->settings['video_filter_html5'] : $defaults['video_filter_html5'],
+    '#default_value' => $filter->settings['video_filter_html5'],
     '#options' => array(
       0 => t('No'),
       1 => t('Yes'),
@@ -223,7 +223,7 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
         ))) ? $video['align'] : NULL;
 
         // Let modules have final say on video parameters.
-        drupal_alter('video_filter_video', $video);
+        backdrop_alter('video_filter_video', $video);
 
         if (isset($video['codec']['html5_callback']) && $filter->settings['video_filter_html5'] == 1 && is_callable($video['codec']['html5_callback'], FALSE)) {
           $replacement = call_user_func($video['codec']['html5_callback'], $video);
@@ -266,7 +266,7 @@ function video_filter_get_codec_info() {
   static $codecs;
   if (!isset($codecs)) {
     $codecs = module_invoke_all('codec_info');
-    drupal_alter('video_filter_codec_info', $codecs);
+    backdrop_alter('video_filter_codec_info', $codecs);
   }
   return $codecs;
 }
@@ -285,8 +285,8 @@ function theme_video_filter_flash($variables) {
   $classes = video_filter_get_classes($video);
 
   $attributes = '';
-  if ($video['attributes']) {
-    $attributes = drupal_attributes($video['attributes']);
+  if (isset($video['attributes'])) {
+    $attributes = backdrop_attributes($video['attributes']);
   }
 
   $output .= '<object class="' . implode(' ', $classes) . '" type="application/x-shockwave-flash" ';
@@ -319,8 +319,8 @@ function theme_video_filter_iframe($variables) {
   $video = $variables['video'];
   $classes = video_filter_get_classes($video);
   $attributes = '';
-  if ($video['attributes']) {
-    $attributes = drupal_attributes($video['attributes']);
+  if (isset($video['attributes'])) {
+    $attributes = backdrop_attributes($video['attributes']);
   }
 
   $output = '<iframe src="' . $video['source'] . '" width="' . $video['width'] . '" height="' . $video['height'] . '" class="' . implode(' ', $classes) . '" frameborder="0"' . $attributes . '></iframe>';
@@ -393,7 +393,7 @@ function video_filter_menu() {
  * Return the theme name to be used when showing linkit dashboard
  */
 function _video_filter_dashboard_theme() {
-  return variable_get('admin_theme', 'seven');
+  return config_get('system.core', 'admin_theme');
 }
 
 /**
@@ -402,14 +402,14 @@ function _video_filter_dashboard_theme() {
 function template_preprocess_video_filter_dashboard(&$variables) {
   // Construct page title.
   $variables['head_title']    = t('Video filter dashboard');
-  $variables['head']          = drupal_get_html_head();
+  $variables['head']          = backdrop_get_html_head();
   $variables['help']          = theme('help');
   $variables['language']      = $GLOBALS['language'];
   $variables['language']->dir = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
   $variables['messages']      = isset($variables['show_messages']) ? theme('status_messages') : '';
-  $variables['css']           = drupal_add_css();
-  $variables['styles']        = drupal_get_css();
-  $variables['scripts']       = drupal_get_js();
+  $variables['css']           = backdrop_add_css();
+  $variables['styles']        = backdrop_get_css();
+  $variables['scripts']       = backdrop_get_js();
 }
 
 /**
@@ -418,29 +418,17 @@ function template_preprocess_video_filter_dashboard(&$variables) {
 function video_filter_dashboard_page($editor) {
   module_invoke('admin_menu', 'suppress');
   // Add CSS.
-  drupal_add_css(drupal_get_path('module', 'video_filter') . '/css/video_filter.css');
+  backdrop_add_css(backdrop_get_path('module', 'video_filter') . '/css/video_filter.css');
 
   switch ($editor) {
-    case 'wysiwyg_tinymce':
-      // Add JavaScript.
-      drupal_add_js(wysiwyg_get_path('tinymce') . '/jscripts/tiny_mce/tiny_mce_popup.js');
-      drupal_add_js(drupal_get_path('module', 'video_filter') . '/editors/tinymce/video_filter.js');
-      break;
-
     case 'ckeditor':
     case 'wysiwyg_ckeditor':
       // Add JavaScript.
-      drupal_add_js(drupal_get_path('module', 'video_filter') . '/editors/ckeditor/video_filter_dialog.js');
-      break;
-
-    case 'fckeditor':
-    case 'wysiwyg_fckeditor':
-      // Add JavaScript.
-      drupal_add_js(drupal_get_path('module', 'video_filter') . '/editors/fckeditor/video_filter/video_filter_dialog.js');
+      backdrop_add_js(backdrop_get_path('module', 'video_filter') . '/editors/ckeditor/video_filter_dialog.js');
       break;
   }
 
-  $form = drupal_get_form('_video_filter_form');
+  $form = backdrop_get_form('_video_filter_form');
   print theme('video_filter_dashboard', array('form' => render($form)));
   exit();
 }
@@ -541,30 +529,13 @@ function video_filter_wysiwyg_plugin($editor, $version) {
   switch ($editor) {
     case 'ckeditor':
       $plugins['video_filter'] = array(
-        'path' => drupal_get_path('module', 'video_filter') . '/editors/ckeditor/',
+        'path' => backdrop_get_path('module', 'video_filter') . '/editors/ckeditor/',
         'buttons' => array('video_filter' => t('Video filter')),
         'url' => 'http://drupal.org/project/video_filter',
         'load' => TRUE,
       );
       break;
 
-    case 'fckeditor':
-      $plugins['video_filter'] = array(
-        'path' => drupal_get_path('module', 'video_filter') . '/editors/fckeditor/',
-        'buttons' => array('video_filter' => t('Video filter')),
-        'url' => 'http://drupal.org/project/video_filter',
-        'load' => TRUE,
-      );
-      break;
-
-    case 'tinymce':
-      $plugins['video_filter'] = array(
-        'path' => drupal_get_path('module', 'video_filter') . '/editors/tinymce',
-        'filename' => 'editor_plugin.js',
-        'buttons' => array('video_filter' => t('Video filter')),
-        'url' => 'http://drupal.org/project/video_filter',
-        'load' => TRUE,
-      );
       break;
   }
 
@@ -593,7 +564,7 @@ function _video_filter_add_settings($editor) {
     $settings = array(
       'video_filter' => array('url' => array($editor => url('video_filter/dashboard/' . $editor))),
     );
-    drupal_add_js($settings, 'setting');
+    backdrop_add_js($settings, 'setting');
   }
 
   if (!$global_settings_added) {
@@ -602,10 +573,10 @@ function _video_filter_add_settings($editor) {
     // Add global settings for video_filter.
     $settings = array(
       'video_filter' => array(
-        'modulepath' => drupal_get_path('module', 'video_filter'),
+        'modulepath' => backdrop_get_path('module', 'video_filter'),
       ),
     );
-    drupal_add_js($settings, 'setting');
+    backdrop_add_js($settings, 'setting');
   }
 }
 
@@ -639,7 +610,7 @@ function _video_filter_instructions() {
  */
 function video_filter_oembed_request($endpoint, array $arguments) {
   // Make HTTP request.
-  $result = drupal_http_request(url($endpoint, array('query' => $arguments)));
+  $result = backdrop_http_request(url($endpoint, array('query' => $arguments)));
 
   if ($data = json_decode($result->data)) {
     // Success.
