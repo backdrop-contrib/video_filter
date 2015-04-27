@@ -1,6 +1,7 @@
 name = Video Filter
 description = Filter to include videos from Youtube, Google video etc
 backdrop = 1.x
+type = module
 package = Input filters
 
 stylesheets[all][] = css/video_filter.css
