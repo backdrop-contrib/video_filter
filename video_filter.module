@@ -323,7 +323,7 @@ function theme_video_filter_iframe($variables) {
     $attributes = drupal_attributes($video['attributes']);
   }
 
-  $output = '<iframe src="' . $video['source'] . '" width="' . $video['width'] . '" height="' . $video['height'] . '" class="' . implode(' ', $classes) . '" frameborder="0"' . $attributes . '></iframe>';
+  $output = '<iframe src="' . $video['source'] . '" allowfullscreen="1" width="' . $video['width'] . '" height="' . $video['height'] . '" class="' . implode(' ', $classes) . '" frameborder="0"' . $attributes . '></iframe>';
 
   return $output;
 }
