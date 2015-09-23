@@ -574,6 +574,7 @@ function video_filter_youtube($video) {
  */
 function video_filter_youtube_html5($video) {
   $attributes = array(
+    'html5' => 'html5=1',
     'rel' => $video['related'] ? 'rel=1' : 'rel=0',
     'autoplay' => $video['autoplay'] ? 'autoplay=1' : 'autoplay=0',
     'wmode' => 'wmode=opaque',
