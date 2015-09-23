@@ -150,6 +150,9 @@
     if (params.autoplay) {
       str += ' autoplay:' + params.autoplay;
     }
+    else {
+      str += ' autoplay:' + '0';
+    }
     str += ']';
 
     for (var i = 0, len = ranges.length; i < len; i++) {
