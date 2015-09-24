@@ -560,6 +560,25 @@ function _video_filter_instructions_form() {
   return $form;
 }
 
+/**
+ * Implements hook_ckeditor_plugin().
+ */
+function video_filter_ckeditor_plugin() {
+  $plugins = array();
+  $plugins['video_filter'] = array(
+    'name' => 'video_filter',
+    'desc' => t('Plugin to directly embed videos with the video filter module.'),
+    'path' => drupal_get_path('module', 'video_filter') . '/editors/ckeditor/',
+    'buttons' => array(
+      'video_filter' => array(
+        'label' => t('Video filter'),
+        'icon' => 'video_filter.png',
+      ),
+    ),
+  );
+  return $plugins;
+}
+
 function video_filter_wysiwyg_plugin($editor, $version) {
   _video_filter_add_settings('wysiwyg_' . $editor);
 
