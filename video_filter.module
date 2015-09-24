@@ -289,7 +289,7 @@ function theme_video_filter_flash($variables) {
     $attributes = drupal_attributes($video['attributes']);
   }
 
-  $output .= '<object class="' . implode(' ', $classes) . '" type="application/x-shockwave-flash" ';
+  $output .= '<div class="video-filter"><object class="' . implode(' ', $classes) . '" type="application/x-shockwave-flash" ';
 
   $output .= 'width="' . $video['width'] . '" height="' . $video['height'] . '" data="' . $video['source'] . '" ' . $attributes . '>' . "\n";
 
@@ -305,7 +305,7 @@ function theme_video_filter_flash($variables) {
     $output .= '  <param name="' . $name . '" value="' . $value . '" />' . "\n";
   }
 
-  $output .= '</object>' . "\n";
+  $output .= '</object></div>' . "\n";
 
   return $output;
 }
@@ -323,7 +323,7 @@ function theme_video_filter_iframe($variables) {
     $attributes = drupal_attributes($video['attributes']);
   }
 
-  $output = '<iframe src="' . $video['source'] . '" allowfullscreen="1" width="' . $video['width'] . '" height="' . $video['height'] . '" class="' . implode(' ', $classes) . '" frameborder="0"' . $attributes . '></iframe>';
+  $output = '<div class="video-filter"><iframe src="' . $video['source'] . '" width="' . $video['width'] . '" height="' . $video['height'] . '" class="' . implode(' ', $classes) . '" frameborder="0"' . $attributes . '></iframe></div>';
 
   return $output;
 }
