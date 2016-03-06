@@ -610,12 +610,23 @@ function video_filter_youku_html5($video) {
  */
 function video_filter_youtube($video) {
   $attributes = array(
-    'rel' => $video['related'] ? 'rel=1' : 'rel=0',
-    'autoplay' => $video['autoplay'] ? 'autoplay=1' : 'autoplay=0',
+    'modestbranding' => !empty($video['modestbranding']) ? 'modestbranding=1' : 'modestbranding=0',
+    'rel' => !empty($video['related']) ? 'rel=1' : 'rel=0',
+    'autoplay' => !empty($video['autoplay']) ? 'autoplay=1' : 'autoplay=0',
     'fs' => 'fs=1',
+    'loop' => !empty($video['loop']) ? 'loop=1' : 'loop=0',
+    'controls' => !empty($video['controls']) ? 'controls=1' : 'controls=0',
+    'autohide' => !empty($video['autohide']) ? 'autohide=1' : 'autohide=0',
+    'showinfo' => !empty($video['showinfo']) ? 'showinfo=1' : 'showinfo=0',
+    'theme' => !empty($video['theme']) ? 'theme=' . $video['theme'] : 'theme=dark',
+    'color' => !empty($video['color']) ? 'color=' . $video['color'] : 'color=red',
   );
 
-  $video['source'] = '//www.youtube.com/v/' . $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
+  if (!empty($video['loop'])) {
+    $attributes['playlist'] = 'playlist=' . $video['codec']['matches'][1];
+  }
+
+  $video['source'] = '//www.youtube.com/embed/' . $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
 
   $params['wmode'] = 'opaque';
 
@@ -640,11 +651,23 @@ function video_filter_vine($video) {
  */
 function video_filter_youtube_html5($video) {
   $attributes = array(
+    'modestbranding' => !empty($video['modestbranding']) ? 'modestbranding=1' : 'modestbranding=0',
     'html5' => 'html5=1',
     'rel' => $video['related'] ? 'rel=1' : 'rel=0',
     'autoplay' => $video['autoplay'] ? 'autoplay=1' : 'autoplay=0',
     'wmode' => 'wmode=opaque',
+    'loop' => !empty($video['loop']) ? 'loop=1' : 'loop=0',
+    'controls' => !empty($video['controls']) ? 'controls=1' : 'controls=0',
+    'autohide' => !empty($video['autohide']) ? 'autohide=1' : 'autohide=0',
+    'showinfo' => !empty($video['showinfo']) ? 'showinfo=1' : 'showinfo=0',
+    'theme' => !empty($video['theme']) ? 'theme=' . $video['theme'] : 'theme=dark',
+    'color' => !empty($video['color']) ? 'color=' . $video['color'] : 'color=red',
   );
+
+  if (!empty($video['loop'])) {
+    $attributes['playlist'] = 'playlist=' . $video['codec']['matches'][1];
+  }
+
   $video['source'] = '//www.youtube.com/embed/' . $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
 
   return video_filter_iframe($video);

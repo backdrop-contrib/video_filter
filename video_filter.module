@@ -217,11 +217,21 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
         // Sets video width & height after any user input has been parsed.
         // First, check if user has set a width.
         if (isset($video['width']) && !isset($video['height'])) {
-          $video['height'] = $filter->settings['video_filter_height'];
+          if ($ratio) {
+            $video['height'] = ceil($video['width'] / $ratio);
+          }
+          else {
+            $video['height'] = $filter->settings['video_filter_height'];
+          }
         }
         // Else, if user has set height.
         elseif (isset($video['height']) && !isset($video['width'])) {
-          $video['width'] = $video['height'] * $ratio;
+          if ($ratio) {
+            $video['width'] = ceil($video['height'] * $ratio);
+          }
+          else {
+            $video['width'] = $filter->settings['video_filter_height'];
+          }
         }
         // Maybe both?
         elseif (isset($video['height']) && isset($video['width'])) {
@@ -244,16 +254,7 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
           // Respect setting provided by codec otherwise.
           $control_bar_height = $video['codec']['control_bar_height'];
         }
-
-        // Resize to fit within width and height repecting aspect ratio.
-        if ($ratio) {
-          $scale_factor = min(array(
-            ($video['height'] - $control_bar_height),
-            $video['width'] / $ratio,
-          ));
-          $video['height'] = round($scale_factor + $control_bar_height);
-          $video['width'] = round($scale_factor * $ratio);
-        }
+        $video['height'] += $control_bar_height;
 
         $video['autoplay'] = (bool) $video['autoplay'];
         $video['align'] = (isset($video['align']) && in_array($video['align'], array(
