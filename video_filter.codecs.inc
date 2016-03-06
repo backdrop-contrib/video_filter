@@ -123,6 +123,17 @@ function video_filter_codec_info() {
     'ratio' => 400 / 326,
   );
 
+  $codecs['instagram'] = array(
+    'name' => t('Instagram'),
+    'callback' => 'video_filter_instagram',
+    'sample_url' => 'http://instagram.com/p/uN1qUeId',
+    'regexp' => array(
+      '/instagram\.com\/p\/([a-z0-9\-_]+)/i',
+      '/instagr.am\/p\/([a-z0-9\-_]+)/i',
+    ),
+    'ratio' => 612 / 710,
+  );
+
   $codecs['metacafe'] = array(
     'name' => t('Meta Cafe'),
     'sample_url' => 'http://www.metacafe.com/watch/1234567890/some_title/',
@@ -441,6 +452,16 @@ function video_filter_google($video) {
   $video['source'] = '//video.google.com/googleplayer.swf?docId=' . $video['codec']['matches'][1];
 
   return video_filter_flash($video);
+}
+
+/**
+ * Callback for Instagram codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_instagram($video) {
+  $video['source'] = '//www.instagram.com/p/' . $video['codec']['matches'][1] . '/embed';
+  return video_filter_iframe($video);
 }
 
 /**
