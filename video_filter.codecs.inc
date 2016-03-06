@@ -759,7 +759,7 @@ function video_filter_youtube($video) {
     'autoplay' => !empty($video['autoplay']) ? 'autoplay=1' : 'autoplay=0',
     'fs' => 'fs=1',
     'loop' => !empty($video['loop']) ? 'loop=1' : 'loop=0',
-    'controls' => !empty($video['controls']) ? 'controls=1' : 'controls=0',
+    'controls' => !empty($video['controls']) ? 'controls=1' : (!isset($video['controls']) ? 'controls=1' : 'controls=0'),
     'autohide' => !empty($video['autohide']) ? 'autohide=1' : 'autohide=0',
     'showinfo' => !empty($video['showinfo']) ? 'showinfo=1' : 'showinfo=0',
     'theme' => !empty($video['theme']) ? 'theme=' . $video['theme'] : 'theme=dark',
@@ -768,6 +768,15 @@ function video_filter_youtube($video) {
 
   if (!empty($video['loop'])) {
     $attributes['playlist'] = 'playlist=' . $video['codec']['matches'][1];
+  }
+
+  if (preg_match('/t=((\d+[m|s])?(\d+[s]?)?)/', $video['source'], $matches)) {
+    $attributes['start'] = 'start=' . (preg_replace("/[^0-9]/", "", $matches[2]) * 60 + (preg_replace("/[^0-9]/", "", $matches[3])));
+  }
+  if (!empty($video['start'])) {
+    if (preg_match('/((\d+[m|s])?(\d+[s]?)?)/', $video['start'], $matches)) {
+      $attributes['start'] = 'start=' . (preg_replace("/[^0-9]/", "", $matches[2]) * 60 + (preg_replace("/[^0-9]/", "", $matches[3])));
+    }
   }
 
   $video['source'] = '//www.youtube.com/embed/' . $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
@@ -801,7 +810,7 @@ function video_filter_youtube_html5($video) {
     'autoplay' => $video['autoplay'] ? 'autoplay=1' : 'autoplay=0',
     'wmode' => 'wmode=opaque',
     'loop' => !empty($video['loop']) ? 'loop=1' : 'loop=0',
-    'controls' => !empty($video['controls']) ? 'controls=1' : 'controls=0',
+    'controls' => !empty($video['controls']) ? 'controls=1' : (!isset($video['controls']) ? 'controls=1' : 'controls=0'),
     'autohide' => !empty($video['autohide']) ? 'autohide=1' : 'autohide=0',
     'showinfo' => !empty($video['showinfo']) ? 'showinfo=1' : 'showinfo=0',
     'theme' => !empty($video['theme']) ? 'theme=' . $video['theme'] : 'theme=dark',
@@ -810,6 +819,15 @@ function video_filter_youtube_html5($video) {
 
   if (!empty($video['loop'])) {
     $attributes['playlist'] = 'playlist=' . $video['codec']['matches'][1];
+  }
+
+  if (preg_match('/t=((\d+[m|s])?(\d+[s]?)?)/', $video['source'], $matches)) {
+    $attributes['start'] = 'start=' . (preg_replace("/[^0-9]/", "", $matches[2]) * 60 + (preg_replace("/[^0-9]/", "", $matches[3])));
+  }
+  if (!empty($video['start'])) {
+    if (preg_match('/((\d+[m|s])?(\d+[s]?)?)/', $video['start'], $matches)) {
+      $attributes['start'] = 'start=' . (preg_replace("/[^0-9]/", "", $matches[2]) * 60 + (preg_replace("/[^0-9]/", "", $matches[3])));
+    }
   }
 
   $video['source'] = '//www.youtube.com/embed/' . $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
