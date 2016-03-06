@@ -200,6 +200,14 @@ function video_filter_codec_info() {
     'control_bar_height' => 0,
   );
 
+  $codecs['vine'] = array(
+    'name' => t('Vine'),
+    'sample_url' => 'https://www.vine.co/v/uN1qUeId',
+    'callback' => 'video_filter_vine',
+    'regexp' => '/vine\.co\/v\/([0-9a-z]+)/i',
+    'ratio' => 4 / 3,
+  );
+
   $codecs['wistia'] = array(
     'name' => t('Wistia'),
     'sample_url' => 'http://wistia.com/medias/9pj9n6ftlk',
@@ -566,6 +574,17 @@ function video_filter_youtube($video) {
   $params['wmode'] = 'opaque';
 
   return video_filter_flash($video, $params);
+}
+
+/**
+ * Callback for Vine codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_vine($video) {
+  $video['source'] = '//vine.co/v/' . $video['codec']['matches'][1] . '/embed/simple';
+
+  return video_filter_iframe($video);
 }
 
 /**
