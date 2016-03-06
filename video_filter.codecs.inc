@@ -764,6 +764,7 @@ function video_filter_youtube($video) {
     'showinfo' => !empty($video['showinfo']) ? 'showinfo=1' : 'showinfo=0',
     'theme' => !empty($video['theme']) ? 'theme=' . $video['theme'] : 'theme=dark',
     'color' => !empty($video['color']) ? 'color=' . $video['color'] : 'color=red',
+    'enablejsapi' => !empty($video['enablejsapi']) ? 'enablejsapi=' . (int) $video['enablejsapi'] : 'enablejsapi=0',
   );
 
   if (!empty($video['loop'])) {
@@ -815,6 +816,7 @@ function video_filter_youtube_html5($video) {
     'showinfo' => !empty($video['showinfo']) ? 'showinfo=1' : 'showinfo=0',
     'theme' => !empty($video['theme']) ? 'theme=' . $video['theme'] : 'theme=dark',
     'color' => !empty($video['color']) ? 'color=' . $video['color'] : 'color=red',
+    'enablejsapi' => !empty($video['enablejsapi']) ? 'enablejsapi=' . (int) $video['enablejsapi'] : 'enablejsapi=0',
   );
 
   if (!empty($video['loop'])) {
