@@ -201,6 +201,15 @@ function video_filter_codec_info() {
     'ratio' => 16 / 9,
   );
 
+  $codecs['ted'] = array(
+    'name' => t('TED'),
+    'instructions' => t('Click in Embed and copy the "Link to this talk" link and paste here.'),
+    'callback' => 'video_filter_ted',
+    'html5_callback' => 'video_filter_ted',
+    'regexp' => '/ted\.com\/talks\/lang\/([a-zA-Z]+)\/([a-zA-Z0-9\-_]+)(\.html)?/',
+    'ratio' => 4 / 3,
+  );
+
   $codecs['twitch'] = array(
     'name' => t('Twitch'),
     'sample_url' => 'http://www.twitch.tv/uN1qUe-I_d',
@@ -410,6 +419,16 @@ function video_filter_flickr_slideshows($video) {
   $params['flashvars'] = "&amp;offsite=true&amp;lang=en-us&amp;page_show_url=%2Fphotos%2F$user_name%2Fsets%2F$set_id%2Fshow%2F&amp;page_show_back_url=%2Fphotos%2F$user_name%2Fsets%2F$set_id%2F&amp;set_id=$set_id&amp;jump_to=";
 
   return video_filter_flash($video, $params);
+}
+
+/**
+ * Callback for Ted.com codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_ted($video) {
+  $video['source'] = '//embed.ted.com/talks/' . $video['codec']['matches'][3] . '.html';
+  return video_filter_iframe($video);
 }
 
 /**
