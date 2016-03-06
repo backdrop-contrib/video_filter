@@ -70,6 +70,24 @@ function video_filter_codec_info() {
     'control_bar_height' => 20,
   );
 
+  $codecs['democracynow_fullshow'] = array(
+    'name' => t('DemocracyNow Fullshow'),
+    'sample_url' => 'http://www.democracynow.org/shows/2015/3/20',
+    'callback' => 'video_filter_democracynow_fullshow',
+    'regexp' => '/democracynow\.org\/shows\/([0-9]+)\/([0-9]+)\/([0-9]+)/',
+    'ratio' => 16 / 9,
+    'control_bar_height' => 0,
+  );
+
+  $codecs['democracynow_story'] = array(
+    'name' => t('DemocracyNow Story'),
+    'sample_url' => 'http://www.democracynow.org/2015/3/23/yemen_in_crisis_us_closes_key',
+    'callback' => 'video_filter_democracynow_story',
+    'regexp' => '/democracynow\.org\/([0-9]+)\/([0-9]+)\/([0-9]+)\/([a-zA-Z0-9\-_]+)/',
+    'ratio' => 16 / 9,
+    'control_bar_height' => 0,
+  );
+
   $codecs['flickr_slideshows'] = array(
     'name' => t('Flickr Slideshows'),
     'sample_url' => 'http://www.flickr.com/photos/username/sets/1234567890/show/',
@@ -452,6 +470,40 @@ function video_filter_flickr_slideshows($video) {
   $params['flashvars'] = "&amp;offsite=true&amp;lang=en-us&amp;page_show_url=%2Fphotos%2F$user_name%2Fsets%2F$set_id%2Fshow%2F&amp;page_show_back_url=%2Fphotos%2F$user_name%2Fsets%2F$set_id%2F&amp;set_id=$set_id&amp;jump_to=";
 
   return video_filter_flash($video, $params);
+}
+
+/**
+ * Callback for DemocracyNow Fullshow codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_democracynow_fullshow($video) {
+  $video['source'] = 'http://www.democracynow.org/embed/show/' . $video['codec']['matches'][0];
+  // The above is pulling in the url part of the regex, so we need to do a
+  // search and replace to remove it.
+  $toomuch = array("http://www.democracynow.org/embed/show/democracynow.org/shows/");
+  $justright = array("http://www.democracynow.org/embed/show/");
+  $replaced = str_replace($toomuch, $justright, $video);
+  $video = $replaced;
+
+  return video_filter_iframe($video);
+}
+
+/**
+ * Callback for DemocracyNow story codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_democracynow_story($video) {
+  $video['source'] = 'http://www.democracynow.org/embed/story/' . $video['codec']['matches'][0];
+  // The above is pulling in the url part of the regex, so we need to do a
+  // search and replace to remove it.
+  $toomuch = array("http://www.democracynow.org/embed/story/democracynow.org/");
+  $justright = array("http://www.democracynow.org/embed/story/");
+  $replaced = str_replace($toomuch, $justright, $video);
+  $video = $replaced;
+
+  return video_filter_iframe($video);
 }
 
 /**
