@@ -64,6 +64,7 @@ function video_filter_codec_info() {
     'name' => t('DailyMotion'),
     'sample_url' => 'http://www.dailymotion.com/video/some_video_title',
     'callback' => 'video_filter_dailymotion',
+    'html5_callback' => 'video_filter_dailymotion_html5',
     'regexp' => '/dailymotion\.com\/video\/([a-z0-9\-_]+)/i',
     'ratio' => 4 / 3,
     'control_bar_height' => 20,
@@ -412,6 +413,20 @@ function video_filter_dailymotion($video) {
   $video['source'] = '//www.dailymotion.com/swf/' . $video['codec']['matches'][1];
 
   return video_filter_flash($video);
+}
+
+/**
+ * HTML5 callback for DailyMotion codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_dailymotion_html5($video) {
+  $attributes = array(
+    'autoplay' => $video['autoplay'] ? 'autoplay=1' : 'autoplay=0',
+  );
+  $video['source'] = '//www.dailymotion.com/embed/video/' . $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
+
+  return video_filter_iframe($video);
 }
 
 /**
