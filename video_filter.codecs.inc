@@ -236,6 +236,16 @@ function video_filter_codec_info() {
     'ratio' => 4 / 3,
   );
 
+  $codecs['whatchado'] = array(
+    'name' => t('whatchado'),
+    'sample_url' => 'https://www.whatchado.com/de/some-title',
+    'callback' => 'video_filter_whatchado_whatchado',
+    'regexp' => array(
+      '/whatchado\.com\/[a-z]{2}\/([\w-_]+)/i',
+    ),
+    'ratio' => 960 / 540,
+  );
+
   $codecs['wistia'] = array(
     'name' => t('Wistia'),
     'sample_url' => 'http://wistia.com/medias/9pj9n6ftlk',
@@ -624,6 +634,17 @@ function video_filter_vimeo($video) {
  */
 function video_filter_vimeo_html5($video) {
   $video['source'] = '//player.vimeo.com/video/' . $video['codec']['matches'][1] . ($video['autoplay'] ? '?autoplay=1' : '');
+
+  return video_filter_iframe($video);
+}
+
+/**
+ * Callback for Whatchadoo codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_whatchado($video) {
+  $video['source'] = '//www.whatchado.com/embed/player/' . $video['codec']['matches'][1];
 
   return video_filter_iframe($video);
 }
