@@ -24,30 +24,7 @@ function video_filter_filter_info() {
       'video_filter_autoplay' => 1,
       'video_filter_related' => 1,
       'video_filter_html5' => 1,
-      'video_filter_codecs' => array(
-        'archive' => 'archive',
-        'bliptv' => 'bliptv',
-        'capped' => 'capped',
-        'collegehumor' => 'collegehumor',
-        'dailymotion' => 'dailymotion',
-        'flickr_slideshows' => 'flickr_slideshows',
-        'flickr_video' => 'flickr_video',
-        'gametrailers' => 'gametrailers',
-        'gamevideos' => 'gamevideos',
-        'godtube' => 'godtube',
-        'google' => 'google',
-        'metacafe' => 'metacafe',
-        'myspace' => 'myspace',
-        'picasa_slideshows' => 'picasa_slideshows',
-        'slideshare' => 'slideshare',
-        'streamhoster' => 'streamhoster',
-        'teachertube' => 'teachertube',
-        'vimeo' => 'vimeo',
-        'wistia' => 'wistia',
-        'youku' => 'youku',
-        'youtube' => 'youtube',
-        'youtube_playlist' => 'youtube_playlist',
-      ),
+      'video_filter_codecs' => _video_filter_map_codecs_name(video_filter_get_codec_info()),
     ),
     'tips callback' => '_video_filter_tips',
     // See http://drupal.org/node/1061244.
@@ -57,7 +34,6 @@ function video_filter_filter_info() {
 }
 
 function _video_filter_settings($form, &$form_state, $filter, $format, $defaults, $filters) {
-
   $settings['video_filter_width'] = array(
     '#type' => 'textfield',
     '#title' => t('Default width setting'),
