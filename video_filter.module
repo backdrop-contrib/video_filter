@@ -108,7 +108,7 @@ function _video_filter_settings($form, &$form_state, $filter, $format, $defaults
     '#default_value' => isset($filter->settings['video_filter_codecs']) ? $filter->settings['video_filter_codecs'] : $defaults['video_filter_codecs'],
     '#options' => _video_filter_map_codecs_name(video_filter_get_codec_info()),
   );
-  
+
   return $settings;
 }
 
@@ -327,7 +327,7 @@ function _video_filter_merge_format_codecs($filters_codecs) {
         $codecs[$codec_name] = $codec_value;
       }
     }
-  } 
+  }
 
   return $codecs;
 }
@@ -746,7 +746,7 @@ function _video_filter_instructions() {
     }
   }
   $video_filter_codecs = _video_filter_merge_format_codecs($filters_codecs);
-  
+
   $codecs = video_filter_get_codec_enabled($video_filter_codecs);
 
   $output = '<ul>';
