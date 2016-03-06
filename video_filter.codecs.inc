@@ -233,19 +233,6 @@ function video_filter_codec_info() {
     'callback' => 'video_filter_youku_html5',
     'html5_callback' => 'video_filter_youku_html5',
     'regexp' => array(
-      '/youku\.com\/v_show\/id_([a-z0-9\-_=]+)\.html/i',
-      '/youku\.com\/player\.php\/sid\/([a-z0-9\-_=]+)/i',
-    ),
-    'ratio' => 16 / 9,
-    'control_bar_height' => 50,
-  );
-
-  $codecs['youku'] = array(
-    'name' => t('YouKu'),
-    'sample_url' => 'http://v.youku.com/v_show/id_XNjgzNDM4MzIw.html',
-    'callback' => 'video_filter_youku_html5',
-    'html5_callback' => 'video_filter_youku_html5',
-    'regexp' => array(
       '/youku\.com\/v_show\/id_([a-z0-9\-_]+)\.html/i',
       '/youku\.com\/player\.php\/sid\/([a-z0-9\-_]+)/i',
     ),
@@ -600,18 +587,6 @@ function video_filter_vimeo($video) {
  */
 function video_filter_vimeo_html5($video) {
   $video['source'] = '//player.vimeo.com/video/' . $video['codec']['matches'][1] . ($video['autoplay'] ? '?autoplay=1' : '');
-
-  return video_filter_iframe($video);
-}
-
-/**
- * HTML5 callback for YouKu codec.
- *
- * @see video_filter_codec_info()
- */
-function video_filter_youku_html5($video) {
-  $attributes = array();
-  $video['source'] = 'http://player.youku.com/embed/' . $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
 
   return video_filter_iframe($video);
 }
