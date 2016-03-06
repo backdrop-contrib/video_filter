@@ -201,6 +201,14 @@ function video_filter_codec_info() {
     'ratio' => 16 / 9,
   );
 
+  $codecs['twitch'] = array(
+    'name' => t('Twitch'),
+    'sample_url' => 'http://www.twitch.tv/uN1qUe-I_d',
+    'callback' => 'video_filter_twitch',
+    'regexp' => '/twitch\.tv\/([a-z0-9\-_]+)/i',
+    'ratio' => 16 / 9,
+  );
+
   $codecs['vimeo'] = array(
     'name' => t('Vimeo'),
     'sample_url' => 'http://www.vimeo.com/123456',
@@ -554,6 +562,16 @@ function video_filter_streamhoster($video) {
   $params['flashvars'] .= !empty($video['autoplay']) ? '&amp;autostart=true' : '&amp;autostart=false';
 
   return video_filter_flash($video, $params);
+}
+
+/**
+ * Callback for Twitch codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_twitch($video) {
+  $video['source'] = '//player.twitch.tv/?channel=' . $video['codec']['matches'][1] ;
+  return video_filter_iframe($video);
 }
 
 /**
