@@ -219,6 +219,14 @@ function video_filter_codec_info() {
     'ratio' => 16 / 9,
   );
 
+  $codecs['vbox'] = array(
+    'name' => t('Vbox7'),
+    'sample_url' => 'http://vbox7.com/play:b4a7291f3d',
+    'callback' => 'video_filter_vbox',
+    'regexp' => '/vbox7\.com\/play\:([a-z0-9]+)/i',
+    'ratio' => 400 / 345,
+  );
+
   $codecs['vimeo'] = array(
     'name' => t('Vimeo'),
     'sample_url' => 'http://www.vimeo.com/123456',
@@ -629,6 +637,17 @@ function video_filter_teachertube($video) {
   $params['flashvars'] = 'file=http://www.teachertube.com/embedFLV.php?pg=video_' . $video['codec']['matches'][1] . '&amp;menu=false&amp;frontcolor=ffffff&amp;lightcolor=FF0000&amp;logo=http://www.teachertube.com/www3/images/greylogo.swf&amp;skin=http://www.teachertube.com/embed/overlay.swf&amp;volume=80&amp;controlbar=over&amp;displayclick=link&amp;viral.link=http://www.teachertube.com/viewVideo.php?video_id=' . $video['codec']['matches'][1] . '&amp;stretching=exactfit&amp;plugins=viral-2&amp;viral.callout=none&amp;viral.onpause=false';
 
   return video_filter_flash($video, $params);
+}
+
+/**
+ * Callback for VBox7 codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_vbox($video) {
+  $video['source'] = '//vbox7.com/emb/external.php?vid=' . $video['codec']['matches'][1];
+
+  return video_filter_flash($video);
 }
 
 /**
