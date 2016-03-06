@@ -16,7 +16,7 @@ function video_filter_codec_info() {
     'sample_url' => 'http://www.archive.org/details/DrupalconBoston2008-TheStateOfDrupal',
     'callback' => 'video_filter_archive',
     'html5_callback' => 'video_filter_archive',
-    'regexp' => '/archive\.org\/details\/([\w-_]+)/i',
+    'regexp' => '/archive\.org\/details\/([\w-_\.]+)/i',
     'ratio' => 4 / 3,
   );
 
