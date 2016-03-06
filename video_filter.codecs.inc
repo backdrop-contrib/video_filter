@@ -287,8 +287,8 @@ function video_filter_codec_info() {
     'callback' => 'video_filter_youku_html5',
     'html5_callback' => 'video_filter_youku_html5',
     'regexp' => array(
-      '/youku\.com\/v_show\/id_([a-z0-9\-_]+)\.html/i',
-      '/youku\.com\/player\.php\/sid\/([a-z0-9\-_]+)/i',
+      '/youku\.com\/v_show\/id_([a-z0-9\-_=]+)\.html/i',
+      '/youku\.com\/player\.php\/sid\/([a-z0-9\-_=]+)/i',
     ),
     'ratio' => 16 / 9,
     'control_bar_height' => 50,
