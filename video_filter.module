@@ -44,6 +44,7 @@ function video_filter_filter_info() {
         'teachertube' => 'teachertube',
         'vimeo' => 'vimeo',
         'wistia' => 'wistia',
+        'youku' => 'youku',
         'youtube' => 'youtube',
         'youtube_playlist' => 'youtube_playlist',
       ),
