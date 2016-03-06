@@ -481,9 +481,26 @@ function video_filter_dashboard_page($editor) {
 
   switch ($editor) {
     case 'wysiwyg_tinymce':
-      // Add JavaScript.
-      drupal_add_js(wysiwyg_get_path('tinymce') . '/jscripts/tiny_mce/tiny_mce_popup.js');
-      drupal_add_js(drupal_get_path('module', 'video_filter') . '/editors/tinymce/video_filter.js');
+      // Add JavaScript.  First, we'll need to determine what version we're on.
+      $has_added_js = FALSE;
+      // Solves bug that causes tinymce.inc to not be loaded.
+      wysiwyg_load_includes('editors', 'editor', 'tinymce');
+
+      // Check for TinyMCE 4.x first.
+      if (function_exists('wysiwyg_tinymce_editor')) {
+        $loaded_editor = wysiwyg_tinymce_editor();
+        $version = wysiwyg_tinymce_version($loaded_editor['tinymce']);
+        if (version_compare($version, '4', '>=')) {
+          drupal_add_js(drupal_get_path('module', 'video_filter') . '/editors/tinymce/video_filter-4.js');
+          $has_added_js = TRUE;
+        }
+      }
+
+      // Add JS for <= TinyMCE 3.x.
+      if (!$has_added_js) {
+        drupal_add_js(wysiwyg_get_path('tinymce') . '/jscripts/tiny_mce/tiny_mce_popup.js');
+        drupal_add_js(drupal_get_path('module', 'video_filter') . '/editors/tinymce/video_filter.js');
+      }
       break;
 
     case 'ckeditor':
