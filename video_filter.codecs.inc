@@ -708,7 +708,20 @@ function video_filter_vbox($video) {
  * @see video_filter_codec_info()
  */
 function video_filter_vimeo($video) {
-  $video['source'] = '//www.vimeo.com/moogaloop.swf?clip_id=' . $video['codec']['matches'][1] . '&amp;server=www.vimeo.com&amp;fullscreen=1&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;autoplay=' . $video['autoplay'];
+  $attributes = array(
+    'autopause' => isset($video['autopause']) ? 'autopause=' . (int) $video['autopause'] : 'autopause=1',
+    'autoplay' => isset($video['autoplay']) ? 'autoplay=' . (int) $video['autoplay'] : 'autoplay=0',
+    'badge' => isset($video['badge']) ? 'badge=' . (int) $video['badge'] : 'badge=1',
+    'byline' => isset($video['byline']) ? 'byline=' . (int) $video['byline'] : 'byline=1',
+    'loop' => isset($video['loop']) ? 'loop=' . (int) $video['loop'] : 'loop=0',
+    'portrait' => isset($video['portrait']) ? 'portrait=' . (int) $video['portrait'] : 'portrait=1',
+    'title' => isset($video['title']) ? 'autopause=' . (int) $video['title'] : 'autopause=1',
+    'fullscreen' => isset($video['fullscreen']) ? 'fullscreen=' . (int) $video['fullscreen'] : 'fullscreen=1',
+  );
+  if (!empty($video['color'])) {
+    $attributes['color'] = (string) $video['color'];
+  }
+  $video['source'] = '//www.vimeo.com/moogaloop.swf?clip_id=' . $video['codec']['matches'][1] . '&amp;server=www.vimeo.com&amp;' . implode('&amp;', $attributes);
 
   return video_filter_flash($video);
 }
@@ -719,7 +732,20 @@ function video_filter_vimeo($video) {
  * @see video_filter_codec_info()
  */
 function video_filter_vimeo_html5($video) {
-  $video['source'] = '//player.vimeo.com/video/' . $video['codec']['matches'][1] . ($video['autoplay'] ? '?autoplay=1' : '');
+  $attributes = array(
+    'autopause' => isset($video['autopause']) ? 'autopause=' . (int) $video['autopause'] : 'autopause=1',
+    'autoplay' => isset($video['autoplay']) ? 'autoplay=' . (int) $video['autoplay'] : 'autoplay=0',
+    'badge' => isset($video['badge']) ? 'badge=' . (int) $video['badge'] : 'badge=1',
+    'byline' => isset($video['byline']) ? 'byline=' . (int) $video['byline'] : 'byline=1',
+    'loop' => isset($video['loop']) ? 'loop=' . (int) $video['loop'] : 'loop=0',
+    'portrait' => isset($video['portrait']) ? 'portrait=' . (int) $video['portrait'] : 'portrait=1',
+    'title' => isset($video['title']) ? 'autopause=' . (int) $video['title'] : 'autopause=1',
+    'fullscreen' => isset($video['fullscreen']) ? 'fullscreen=' . (int) $video['fullscreen'] : 'fullscreen=1',
+  );
+  if (!empty($video['color'])) {
+    $attributes['color'] = (string) $video['color'];
+  }
+  $video['source'] = '//player.vimeo.com/video/' . $video['codec']['matches'][1] . '?' . implode('&', $attributes);
 
   return video_filter_iframe($video);
 }
