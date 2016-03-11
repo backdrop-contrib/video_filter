@@ -106,6 +106,16 @@ function video_filter_codec_info() {
     'control_bar_height' => 0,
   );
 
+  $codecs['foxnews'] = array(
+    'name' => t('Fox News'),
+    'sample_url' => 'http://video.foxnews.com/v/123456/the-title/',
+    'callback' => 'video_filter_foxnews',
+    'html5_callback' => 'video_filter_foxnews',
+    'regexp' => '/video\.foxnews\.com\/v\/([0-9]+)\/([a-zA-Z0-9\-]+)/i',
+    'ratio' => 466 / 263,
+    'control_bar_height' => 0,
+  );
+
   $codecs['gametrailers'] = array(
     'name' => t('Game Trailers'),
     'sample_url' => 'http://www.gametrailers.com/video/some-title/12345',
@@ -550,6 +560,17 @@ function video_filter_flickr_video($video) {
   $params['flashvars'] = '&amp;photo_id=' . $video['codec']['matches'][2] . '&amp;flickr_show_info_box=true';
 
   return video_filter_flash($video, $params);
+}
+
+/**
+ * Callback for Fox News codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_foxnews($video) {
+  $video_id = $video['codec']['matches'][1];
+  $html = '<script type="text/javascript" src="http://video.foxnews.com/v/embed.js?id=' . $video_id . '&w=' . $video['width'] . '&h=' . $video['height'] . '"></script>';
+  return $html;
 }
 
 /**
