@@ -172,6 +172,16 @@ function video_filter_codec_info() {
     'control_bar_height' => 32,
   );
 
+  $codecs['mailru'] = array(
+    'name' => t('Mail.Ru'),
+    'sample_url' => 'https://my.mail.ru/v/semenikhin_denis/video/_groupvideo/[video-id].html',
+    'callback' => 'video_filter_mailru',
+    'html5_callback' => 'video_filter_mailru',
+    'regexp' => '/my\.mail\.ru\/v\/(.*)\/([0-9]+)\.html/i',
+    'ratio' => 16 / 9,
+    'control_bar_height' => 0,
+  );
+
   $codecs['myspace'] = array(
     'name' => t('MySpace'),
     'sample_url' => 'http://myspace.com/video/vid/1234567890',
@@ -211,6 +221,17 @@ function video_filter_codec_info() {
       '</ol>',
     'regexp' => '/picasaweb\.google\.com\/data\/feed\/base\/user\/([a-zA-Z0-9@_\-\.]+)\/albumid\/([a-z0-9]+)/i',
     'ratio' => 800 / 600,
+  );
+
+  $codecs['rutube'] = array(
+    'name' => t('Rutube'),
+    'sample_url' => 'http://rutube.ru/video/c80617086143e80ee08f760a2e9cbf43/?pl_type=source&pl_id=8188',
+    'html5_callback' => 'video_filter_rutube',
+    'callback' => 'video_filter_rutube',
+    'regexp' => array(
+      '/rutube\.ru\/(.*)/i',
+    ),
+    'ratio' => 16 / 9,
   );
 
   $codecs['slideshare'] = array(
@@ -634,6 +655,19 @@ function video_filter_instagram($video) {
 }
 
 /**
+ * Callback for Mail.Ru codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_mailru($video) {
+  $attributes = array(
+    'autoplay' => !empty($video['autoplay']) ? 'autoplay=' . (int) $video['autoplay'] : '',
+  );
+  $video['source'] = 'https://videoapi.my.mail.ru/videos/embed/v/' . $video['codec']['matches'][1] . '/' . $video['codec']['matches'][2] . '.html?' . implode('&', $attributes);
+  return video_filter_iframe($video);
+}
+
+/**
  * Callback for Meta Cafe codec.
  *
  * @see video_filter_codec_info()
@@ -681,6 +715,32 @@ function video_filter_picasa_slideshows($video) {
   $params['flashvars'] = "host=picasaweb.google.com&amp;&amp;feat=flashalbum&amp;RGB=0x000000&amp;feed=http%3A%2F%2Fpicasaweb.google.com%2Fdata%2Ffeed%2Fapi%2Fuser%2F" . $user_name . "%2Falbumid%2F" . $set_id . "%3Falt%3Drss%26kind%3Dphoto%26" . ($video['autoplay'] ? '' : '&amp;noautoplay=1');
 
   return video_filter_flash($video, $params);
+}
+
+/**
+ * Callback for Rutube codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_rutube($video) {
+  $attributes = array(
+    'skinColor' => (isset($video['skinColor']) && !empty($video['standardColor'])) ? 'skinColor=' . (string) $video['skinColor'] : '',
+    'sTitle' => (isset($video['sTitle']) && $video['sTitle'] == 1) ? 'sTitle=true' : 'sTitle=false',
+    'sAuthor' => (isset($video['sAuthor']) && $video['sAuthor'] == 1) ? 'sAuthor=true' : 'sAuthor=false',
+    'bmstart' => (isset($video['bmstart']) && $video['bmstart'] > 1) ? 'bmstart=' . (int) $video['bmstart'] : 'bmstart=false',
+  );
+  $endpoint = 'http://rutube.ru/api/oembed';
+  $options = array(
+    'url' => $video['source'],
+    'format' => 'json',
+  );
+  $data = video_filter_oembed_request($endpoint, $options);
+  if (!empty($data['html'])) {
+    if (preg_match('/src="([^"]+)"/', $data['html'], $match)) {
+      $video['source'] = $match[1] . '?' . implode('&', $attributes);
+      return video_filter_iframe($video);
+    }
+  }
 }
 
 /**
