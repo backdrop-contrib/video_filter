@@ -60,6 +60,15 @@ function video_filter_codec_info() {
     'control_bar_height' => 0,
   );
 
+  $codecs['coub'] = array(
+    'name' => t('Coub'),
+    'sample_url' => 'http://coub.com/view/b7ghv',
+    'callback' => 'video_filter_coub',
+    'html5_callback' => 'video_filter_coub',
+    'regexp' => '/coub\.com\/view\/([a-z0-9]+)/i',
+    'ratio' => 4 / 3,
+  );
+
   $codecs['dailymotion'] = array(
     'name' => t('DailyMotion'),
     'sample_url' => 'http://www.dailymotion.com/video/some_video_title',
@@ -133,6 +142,15 @@ function video_filter_codec_info() {
     'callback' => 'video_filter_gamevideos',
     'regexp' => '/gamevideos\.1up\.com\/video\/id\/([0-9]+)/',
     'ratio' => 500 / 319,
+  );
+
+  $codecs['giphy'] = array(
+    'name' => t('Giphy'),
+    'sample_url' => 'http://giphy.com/gifs/disney-kids-peter-pan-[gif-id]',
+    'callback' => 'video_filter_giphy',
+    'html5_callback' => 'video_filter_giphy',
+    'regexp' => '/giphy\.com\/gifs\/(([a-zA-Z0-9\-]+)\-|)([a-zA-Z0-9]+)/i',
+    'ratio' => 16 / 9,
   );
 
   $codecs['godtube'] = array(
@@ -482,6 +500,23 @@ function video_filter_collegehumor($video) {
 }
 
 /**
+ * HTML5 callback for Coub codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_coub($video) {
+  $attributes = array(
+    'autostart' => !empty($video['autoplay']) ? 'autoplay=true' : 'autoplay=false',
+    'originalSize' => !empty($video['originalSize']) ? 'originalSize=true' : 'originalSize=false',
+    'startWithHD' => !empty($video['startWithHD']) ? 'startWithHD=true' : 'startWithHD=false',
+    'muted' => !empty($video['muted']) ? 'muted=true' : 'muted=false',
+  );
+  $video['source'] = '//coub.com/embed/' . $video['codec']['matches'][1] . '?' . implode('&', $attributes);
+
+  return video_filter_iframe($video);
+}
+
+/**
  * Callback for DailyMotion codec.
  *
  * @see video_filter_codec_info()
@@ -620,6 +655,17 @@ function video_filter_gamevideos($video) {
   $video['source'] = '//gamevideos.1up.com/swf/gamevideos12.swf?embedded=1&amp;fullscreen=1&amp;autoplay=0&amp;src=http://gamevideos.1up.com/do/videoListXML%3Fid%3D' . $video['codec']['matches'][1];
 
   return video_filter_flash($video);
+}
+
+/**
+ * Callback for Giphy codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_giphy($video) {
+  $video['source'] = '//giphy.com/embed/' . $video['codec']['matches'][3];
+
+  return video_filter_iframe($video);
 }
 
 /**
