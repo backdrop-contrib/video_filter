@@ -396,20 +396,6 @@ function theme_video_filter_iframe($variables) {
 }
 
 /**
- * Instgram embed theme.
- *
- * @param $variables
- * @return string
- */
-function theme_video_filter_instagram($variables) {
-  $video = $variables['video'];
-  $output = '<blockquote class="instagram-media" data-instgrm-captioned data-instgrm-version="6" style="width:99.375%;">
-              <a href="' . $video['source'] . '"></a>
-             </blockquote>';
-  return $output;
-}
-
-/**
  * Implements hook_theme().
  */
 function video_filter_theme($existing, $type, $theme, $path) {
@@ -419,9 +405,6 @@ function video_filter_theme($existing, $type, $theme, $path) {
     ),
     'video_filter_iframe' => array(
       'variables' => array('video' => NULL, 'params' => NULL),
-    ),
-    'video_filter_instagram' => array(
-      'variables' => array('video' => NULL),
     ),
     'video_filter_dashboard' => array(
       'variables' => array('form' => NULL),

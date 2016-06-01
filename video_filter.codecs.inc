@@ -6,12 +6,6 @@
  */
 
 /**
- * The instagram embed javascript url.
- */
-define('VIDEO_FILTER_INSTAGRAM_EMBED_JS', '//platform.instagram.com/en_US/embeds.js');
-
-
-/**
  * Implements hook_codec_info().
  */
 function video_filter_codec_info() {
@@ -704,16 +698,7 @@ function video_filter_google($video) {
  */
 function video_filter_instagram($video) {
   $video['source'] = '//www.instagram.com/p/' . $video['codec']['matches'][1] . '/embed';
-  drupal_add_js(VIDEO_FILTER_INSTAGRAM_EMBED_JS, array(
-      'type' => 'external',
-      'scope' => 'footer',
-    )
-  );
-  return theme('video_filter_instagram',
-    array(
-      'video' => $video,
-    )
-  );
+  return video_filter_iframe($video);
 }
 
 /**
