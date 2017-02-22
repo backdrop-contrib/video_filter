@@ -13,6 +13,7 @@ module_load_include('inc', 'video_filter', 'video_filter.codecs');
  */
 function video_filter_filter_info() {
   $filters = array();
+  $codecs = array_keys(_video_filter_map_codecs_name(video_filter_get_codec_info()));
   $filters['video_filter'] = array(
     'title' => t('Video Filter'),
     'description' => t('Substitutes [video:URL] with embedded HTML.'),
@@ -24,7 +25,7 @@ function video_filter_filter_info() {
       'video_filter_autoplay' => 1,
       'video_filter_related' => 1,
       'video_filter_html5' => 1,
-      'video_filter_codecs' => _video_filter_map_codecs_name(video_filter_get_codec_info()),
+      'video_filter_codecs' => array_combine($codecs, $codecs),
       'video_filter_multiple_sources' => TRUE,
     ),
     'tips callback' => '_video_filter_tips',
