@@ -335,9 +335,10 @@ function video_filter_codec_info() {
 
   $codecs['whatchado'] = array(
     'name' => t('whatchado'),
-    'sample_url' => 'https://www.whatchado.com/de/some-title',
-    'callback' => 'video_filter_whatchado_whatchado',
+    'sample_url' => 'https://www.whatchado.com/en/stories/some-title',
+    'callback' => 'video_filter_whatchado',
     'regexp' => array(
+      '/whatchado\.com\/[a-z]{2}\/stories\/([\w-_]+)/i',
       '/whatchado\.com\/[a-z]{2}\/([\w-_]+)/i',
     ),
     'ratio' => 960 / 540,
