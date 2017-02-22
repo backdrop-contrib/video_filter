@@ -264,6 +264,17 @@ function video_filter_codec_info() {
     'ratio' => 425 / 355,
   );
 
+  $codecs['soundcloud'] = array(
+    'name' => t('SoundCloud'),
+    'sample_url' => 'https://soundcloud.com/bigbabydram/broccoli',
+    'callback' => 'video_filter_soundcloud',
+    'instructions' => t(''),
+    'regexp' => array(
+      '/soundcloud\.com\/([a-z0-9]+)\/([a-z0-9]+)/',
+    ),
+    'ratio' => 4 / 3,
+  );
+
   $codecs['streamhoster'] = array(
     'name' => t('Streamhoster'),
     'sample_url' => 'http://web26.streamhoster.com/username/filename.flv',
@@ -815,6 +826,33 @@ function video_filter_slideshare($video) {
   $video['source'] = '//www.slideshare.net/slideshow/embed_code/' . $video['codec']['matches'][1];
 
   return video_filter_iframe($video);
+}
+
+/**
+ * Callback for Soundcloud codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_soundcloud($video) {
+  $html = &drupal_static(__FUNCTION__);
+  $id = $video['codec']['matches'][1] . '/' . $video['codec']['matches'][2];
+  if ($cache = cache_get('video_filter_soundcloud:' . $id)) {
+    $html = $cache->data;
+  }
+  else {
+    $endpoint = 'http://soundcloud.com/oembed';
+    $options = array(
+      'url' => $video['source'],
+      'format' => 'json',
+    );
+    $data = video_filter_oembed_request($endpoint, $options);
+
+    if (!empty($data['html'])) {
+      $html = $data['html'];
+    }
+    cache_set('video_filter_soundcloud:' . $id, $html, 'cache');
+  }
+  return $html;
 }
 
 /**
