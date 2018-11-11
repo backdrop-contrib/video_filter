@@ -204,8 +204,12 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
           // Respect setting provided by codec otherwise.
           $control_bar_height = $video['codec']['control_bar_height'];
         }
+        
+        // Ensure that width and height are integers. e.g. 600px should be 600.
+        $video['height'] = intval($video['height']);
+        $video['width'] = intval($video['width']);
 
-        // Resize to fit within width and height repecting aspect ratio.
+        // Resize to fit within width and height respecting aspect ratio.
         if ($ratio) {
           $scale_factor = min(array(
             ($video['height'] - $control_bar_height),
@@ -291,7 +295,10 @@ function theme_video_filter_flash($variables) {
 
   $output .= '<object class="' . implode(' ', $classes) . '" type="application/x-shockwave-flash" ';
 
-  $output .= 'width="' . $video['width'] . '" height="' . $video['height'] . '" data="' . $video['source'] . '" ' . $attributes . '>' . "\n";
+  $output .= 'width="' . 
+  
+  
+  . '" height="' . $video['height'] . '" data="' . $video['source'] . '" ' . $attributes . '>' . "\n";
 
   $defaults = array(
     'movie' => $video['source'],
