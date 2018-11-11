@@ -292,7 +292,7 @@ function theme_video_filter_flash($variables) {
   if (isset($video['attributes'])) {
     $attributes = backdrop_attributes($video['attributes']);
   }
-  
+
   $output .= '<object class="' . implode(' ', $classes) . '" type="application/x-shockwave-flash" ';
 
   $output .= 'width="' . $video['width'] . '" height="' . $video['height'] . '" data="' . $video['source'] . '" ' . $attributes . '>' . "\n";
