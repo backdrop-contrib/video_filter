@@ -323,7 +323,8 @@ function theme_video_filter_iframe($variables) {
     $attributes = backdrop_attributes($video['attributes']);
   }
 
-  $output = '<iframe src="' . $video['source'] . '" width="' . $video['width'] . '" height="' . $video['height'] . '" class="' . implode(' ', $classes) . '" frameborder="0"' . $attributes . '></iframe>';
+  $output = '<iframe src="' . $video['source'] . '" width="' . $video['width'] . '" height="' . $video['height'] . '" class="' . implode(' ', $classes) . '" ' . $attributes . '></iframe>';
+
 
   return $output;
 }
