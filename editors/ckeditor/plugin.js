@@ -1,7 +1,7 @@
 /**
  * @file Plugin for inserting video tags with video_filter
  */
-(function ($) {
+(function ($, Backdrop, CKEDITOR) {
   CKEDITOR.plugins.add('video_filter', {
 
     requires : [],
@@ -169,4 +169,4 @@
     editor.fire('saveSnapshot');
   }
 
-})(jQuery);
+})(jQuery, Backdrop, CKEDITOR);

@@ -508,13 +508,12 @@ function template_preprocess_video_filter_dashboard(&$variables) {
  * Creates the dashboard.
  */
 function video_filter_dashboard_page($editor) {
-  module_invoke('admin_menu', 'suppress');
+  module_invoke('admin_bar', 'suppress');
   // Add CSS.
   backdrop_add_css(backdrop_get_path('module', 'video_filter') . '/css/video_filter.css');
 
   switch ($editor) {
     case 'ckeditor':
-    case 'wysiwyg_ckeditor':
       // Add JavaScript.
       backdrop_add_js(backdrop_get_path('module', 'video_filter') . '/editors/ckeditor/video_filter_dialog.js');
       break;
@@ -529,7 +528,7 @@ function video_filter_dashboard_page($editor) {
  * Creates the instructions page.
  */
 function video_filter_instructions_page() {
-  module_invoke('admin_menu', 'suppress');
+  module_invoke('admin_bar', 'suppress');
 
   $form = backdrop_get_form('_video_filter_instructions_form');
   print theme('video_filter_dashboard', array('form' => render($form)));
@@ -632,41 +631,23 @@ function _video_filter_instructions_form() {
 }
 
 /**
- * Implements hook_ckeditor_plugin().
+ * Implements hook_ckeditor_plugins().
  */
-function video_filter_ckeditor_plugin() {
+function video_filter_ckeditor_plugins() {
+  $image_prefix = backdrop_get_path('module', 'video_filter') . '/editors/ckeditor/';
   $plugins = array();
   $plugins['video_filter'] = array(
     'name' => 'video_filter',
     'desc' => t('Plugin to directly embed videos with the video filter module.'),
-    'path' => backdrop_get_path('module', 'video_filter') . '/editors/ckeditor/',
+    'path' => backdrop_get_path('module', 'video_filter') . '/editors/ckeditor',
+    'file' => 'plugin.js',
     'buttons' => array(
       'video_filter' => array(
         'label' => t('Video filter'),
-        'icon' => 'video_filter.png',
+        'icon' => $image_prefix . 'video_filter.png',
       ),
     ),
   );
-  return $plugins;
-}
-
-function video_filter_wysiwyg_plugin($editor, $version) {
-  _video_filter_add_settings('wysiwyg_' . $editor);
-
-  $plugins = array();
-
-  switch ($editor) {
-    case 'ckeditor':
-      $plugins['video_filter'] = array(
-        'path' => backdrop_get_path('module', 'video_filter') . '/editors/ckeditor/',
-        'buttons' => array('video_filter' => t('Video filter')),
-        'url' => 'https://backdropcms.org/project/video_filter',
-        'load' => TRUE,
-      );
-      break;
-
-  }
-
   return $plugins;
 }
 
@@ -674,10 +655,8 @@ function video_filter_wysiwyg_plugin($editor, $version) {
  * Implements hook_element_info_alter().
  */
 function video_filter_element_info_alter(&$types) {
-  if (isset($types['text_format']['#pre_render']) && is_array($types['text_format']['#pre_render'])) {
-    if (in_array('ckeditor_pre_render_text_format', $types['text_format']['#pre_render'])) {
-      _video_filter_add_settings('ckeditor');
-    }
+  if (isset($types['text_format']) && is_array($types['text_format'])) {
+     _video_filter_add_settings('ckeditor');
   }
 }
 
