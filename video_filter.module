@@ -142,7 +142,7 @@ function _video_filter_tips($filter, $format, $long = FALSE) {
     );
   }
   else {
-    return t('You may insert videos with [video:URL]');
+    return t('You may insert videos with <code>[video:URL]</code> or with various settings <code>[video:URL autoplay:1 width:X height:Y ratio:4/3 align:right]</code>. See <a href="@url" target="_blank">full instructions</a>.', array('@url' => url('video_filter/instructions')));
   }
 }
 
