@@ -25,6 +25,7 @@ function video_filter_filter_info() {
       'video_filter_autoplay' => 1,
       'video_filter_related' => 1,
       'video_filter_html5' => 1,
+      'video_filter_privacy' => 1,
       'video_filter_codecs' => array_combine($codecs, $codecs),
       'video_filter_multiple_sources' => TRUE,
     ),
@@ -74,6 +75,17 @@ function _video_filter_settings($form, &$form_state, $filter, $format) {
     '#title' => t('Use HTML5'),
     '#description' => t('Use HTML5 if the codec provides it. Makes your videos more device agnostic.'),
     '#default_value' => $filter->settings['video_filter_html5'],
+    '#options' => array(
+      0 => t('No'),
+      1 => t('Yes'),
+    ),
+  );
+
+  $settings['video_filter_privacy'] = array(
+    '#type' => 'radios',
+    '#title' => t('Use privacy-enhanced mode'),
+    '#description' => t('Prevent video service from setting cookies in the site visitor\'s browser if the codec provides it.'),
+    '#default_value' => $filter->settings['video_filter_privacy'],
     '#options' => array(
       0 => t('No'),
       1 => t('Yes'),
@@ -272,6 +284,9 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
           'right',
           'center',
         ))) ? $video['align'] : NULL;
+
+        // Privacy setting
+        $video['privacy'] = $filter->settings['video_filter_privacy'];
 
         // Let modules have final say on video parameters.
         backdrop_alter('video_filter_video', $video);
