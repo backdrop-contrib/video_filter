@@ -386,6 +386,7 @@ function video_filter_codec_info() {
       '/youtu.be\/([a-z0-9\-_]+)/i',
       '/youtube\.com\/v\/([a-z0-9\-_]+)/i',
       '/youtube\.com\/embed\/([a-z0-9\-_]+)/i',
+      '/youtube-nocookie\.com\/embed\/([a-z0-9\-_]+)/i',
     ),
     'ratio' => 16 / 9,
     'control_bar_height' => 0,
@@ -947,6 +948,9 @@ function video_filter_vimeo($video) {
     'title' => isset($video['title']) ? 'autopause=' . (int) $video['title'] : 'autopause=1',
     'fullscreen' => isset($video['fullscreen']) ? 'fullscreen=' . (int) $video['fullscreen'] : 'fullscreen=1',
   );
+  if (!empty($video['privacy']) || preg_match('/\?dnt=1/', $video['source'])) {
+    $attributes['dnt'] = 'dnt=1';
+  }
   if (!empty($video['color'])) {
     $attributes['color'] = (string) $video['color'];
   }
@@ -971,6 +975,9 @@ function video_filter_vimeo_html5($video) {
     'title' => isset($video['title']) ? 'autopause=' . (int) $video['title'] : 'autopause=1',
     'fullscreen' => isset($video['fullscreen']) ? 'fullscreen=' . (int) $video['fullscreen'] : 'fullscreen=1',
   );
+  if (!empty($video['privacy']) || preg_match('/\?dnt=1/', $video['source'])) {
+    $attributes['dnt'] = 'dnt=1';
+  }
   if (!empty($video['color'])) {
     $attributes['color'] = (string) $video['color'];
   }
@@ -1034,8 +1041,8 @@ function video_filter_youtube($video) {
       $attributes['start'] = 'start=' . (preg_replace("/[^0-9]/", "", $matches['minutes']) * 60 + (preg_replace("/[^0-9]/", "", $matches['seconds'])));
     }
   }
-
-  $video['source'] = '//www.youtube.com/embed/' . $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
+  $domain = (!empty($video['privacy']) || preg_match('/youtube-nocookie\.com/', $video['source'])) ? '//www.youtube-nocookie.com/embed/' : '//www.youtube.com/embed/';
+  $video['source'] = $domain . $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
 
   $params['wmode'] = 'opaque';
 
@@ -1086,8 +1093,8 @@ function video_filter_youtube_html5($video) {
       $attributes['start'] = 'start=' . (preg_replace("/[^0-9]/", "", $matches['minutes']) * 60 + (preg_replace("/[^0-9]/", "", $matches['seconds'])));
     }
   }
-
-  $video['source'] = '//www.youtube.com/embed/' . $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
+  $domain = (!empty($video['privacy']) || preg_match('/youtube-nocookie\.com/', $video['source'])) ? '//www.youtube-nocookie.com/embed/' : '//www.youtube.com/embed/';
+  $video['source'] = $domain . $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
 
   return video_filter_iframe($video);
 }
