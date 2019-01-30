@@ -947,8 +947,10 @@ function video_filter_vimeo($video) {
     'portrait' => isset($video['portrait']) ? 'portrait=' . (int) $video['portrait'] : 'portrait=1',
     'title' => isset($video['title']) ? 'autopause=' . (int) $video['title'] : 'autopause=1',
     'fullscreen' => isset($video['fullscreen']) ? 'fullscreen=' . (int) $video['fullscreen'] : 'fullscreen=1',
-    'dnt' => !empty($video['privacy']) ? 'dnt=1' : '',
   );
+  if (!empty($video['privacy']) || preg_match('/\?dnt=1/', $video['source'])) {
+    $attributes['dnt'] = 'dnt=1';
+  }
   if (!empty($video['color'])) {
     $attributes['color'] = (string) $video['color'];
   }
@@ -972,8 +974,10 @@ function video_filter_vimeo_html5($video) {
     'portrait' => isset($video['portrait']) ? 'portrait=' . (int) $video['portrait'] : 'portrait=1',
     'title' => isset($video['title']) ? 'autopause=' . (int) $video['title'] : 'autopause=1',
     'fullscreen' => isset($video['fullscreen']) ? 'fullscreen=' . (int) $video['fullscreen'] : 'fullscreen=1',
-    'dnt' => !empty($video['privacy']) ? 'dnt=1' : '',
   );
+  if (!empty($video['privacy']) || preg_match('/\?dnt=1/', $video['source'])) {
+    $attributes['dnt'] = 'dnt=1';
+  }
   if (!empty($video['color'])) {
     $attributes['color'] = (string) $video['color'];
   }
