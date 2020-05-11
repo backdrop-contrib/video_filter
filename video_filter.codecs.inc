@@ -16,7 +16,7 @@ function video_filter_codec_info() {
     'sample_url' => '//www.archive.org/details/DrupalconBoston2008-TheStateOfDrupal',
     'callback' => 'video_filter_archive',
     'html5_callback' => 'video_filter_archive',
-    'regexp' => '/archive\.org\/details\/([\w-_\.]+)/i',
+    'regexp' => '/archive\.org\/details\/([\w\-_\.]+)/i',
     'ratio' => 4 / 3,
   );
 
@@ -349,8 +349,8 @@ function video_filter_codec_info() {
     'sample_url' => '//www.whatchado.com/en/stories/some-title',
     'callback' => 'video_filter_whatchado',
     'regexp' => array(
-      '/whatchado\.com\/[a-z]{2}\/stories\/([\w-_]+)/i',
-      '/whatchado\.com\/[a-z]{2}\/([\w-_]+)/i',
+      '/whatchado\.com\/[a-z]{2}\/stories\/([\w\-_]+)/i',
+      '/whatchado\.com\/[a-z]{2}\/([\w\-_]+)/i',
     ),
     'ratio' => 960 / 540,
   );
