@@ -523,7 +523,7 @@ function template_preprocess_video_filter_dashboard(&$variables) {
  * Creates the dashboard.
  */
 function video_filter_dashboard_page($editor) {
-  module_invoke('admin_menu', 'suppress');
+  module_invoke('admin_bar', 'suppress');
   // Add CSS.
   backdrop_add_css(backdrop_get_path('module', 'video_filter') . '/css/video_filter.css');
 
