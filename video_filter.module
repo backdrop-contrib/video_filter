@@ -544,7 +544,7 @@ function video_filter_dashboard_page($editor) {
  * Creates the instructions page.
  */
 function video_filter_instructions_page() {
-  module_invoke('admin_menu', 'suppress');
+  module_invoke('admin_bar', 'suppress');
 
   $form = backdrop_get_form('_video_filter_instructions_form');
   print theme('video_filter_dashboard', array('form' => render($form)));
