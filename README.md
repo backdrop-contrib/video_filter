@@ -38,11 +38,11 @@ This will override the default settings for this video.
 Developers
 ----------
 
-This module calls hook_codec_info(), so you can add your own codecs.
+This module calls `hook_codec_info()`, so you can add your own codecs.
 
 Example:
 
-```
+```php
 function MODULE_codec_info() {
   $codecs = array();
   // You can offer multiple video formats in one module.
@@ -73,7 +73,7 @@ function MODULE_codec_info() {
 
 And this will be your callback function:
 
-```
+```php
 function MODULE_youtube($video) {
   // $video contains the video URL in source, the codec (as above) and also
   // [code][matches] with the result of the regexp and [codec][delta] with the

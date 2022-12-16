@@ -3,7 +3,8 @@
  */
 
 var video_filter_dialog = {};
-(function ($) {
+
+(function ($, Backdrop, CKEDITOR) {
 video_filter_dialog = {
   init : function() {
     //Get CKEDITOR
@@ -62,4 +63,4 @@ $(document).ready(function() {
   });
 });
 
-})(jQuery);
+})(jQuery, Backdrop, CKEDITOR);
