@@ -1,0 +1,40 @@
+/**
+ * Override some CKEditor dialog styles
+ *   Ensure they more closely match Backdrop Seven theme.
+ */
+
+.cke_dialog,
+.cke_dialog *,
+.cke_dialog a,
+.cke_dialog textarea {
+  font: normal 16px/1.538 "Open Sans", "Lucida Grande", "Lucida Sans Unicode", sans-serif !important;
+}
+
+.cke_dialog_title {
+  font-size: 1.2em !important;
+  font-weight: normal !important;
+}
+
+.cke_dialog_contents tr:hover,
+.cke_dialog_contents tr:hover td.active,
+.cke_dialog_contents tr.odd:hover td.active {
+  background: none;
+}
+
+.cke_dialog label {
+  font-weight: bold !important;
+}
+
+.cke_dialog .cke_dialog_ui_button {
+  border-radius: 4px;
+}
+.cke_dialog a.cke_dialog_ui_button_ok {
+  border-color: #114a75;
+  background-color: #114a75;
+  color: white;
+}
+
+.cke_dialog a.cke_dialog_ui_button_ok:hover {
+  border-color: #114a75;
+  background-color: #114a75;
+}

@@ -650,12 +650,12 @@ function _video_filter_instructions_form() {
  */
 function video_filter_ckeditor_plugins() {
   $image_prefix = backdrop_get_path('module', 'video_filter') . '/editors/ckeditor/';
-  $plugins = array();
+
   $plugins['video_filter'] = array(
-    'name' => 'video_filter',
-    'desc' => t('Plugin to directly embed videos with the video filter module.'),
+    'label' => t('Video filter'),
     'path' => backdrop_get_path('module', 'video_filter') . '/editors/ckeditor',
     'file' => 'plugin.js',
+    'enabled callback' => 'video_filter_ckeditor_video_filter_plugin_check',
     'buttons' => array(
       'video_filter' => array(
         'label' => t('Video filter'),
@@ -667,10 +667,36 @@ function video_filter_ckeditor_plugins() {
 }
 
 /**
+ * Enabled callback for hook_ckeditor_plugins().
+ *
+ * Checks if the Video Filter plugin should be enabled based on the configuration of
+ * a text format and editor.
+ *
+ * @param $format
+ *   The filter format object for which CKEditor is checking settings.
+ *
+ * @return bool
+ *   TRUE if the video filter plugin is enabled, FALSE otherwise.
+ */
+function video_filter_ckeditor_video_filter_plugin_check($format, $plugin_name) {
+  // Automatically enable this plugin if the Video Filter button is enabled.
+  foreach ($format->editor_settings['toolbar'] as $row) {
+    foreach ($row as $button_group) {
+      if (in_array('video_filter', $button_group['items'])) {
+        return TRUE;
+      }
+    }
+  }
+  return FALSE;
+}
+
+/**
  * Implements hook_element_info_alter().
  */
 function video_filter_element_info_alter(&$types) {
   if (isset($types['text_format']) && is_array($types['text_format'])) {
+    // @todo use Backdrop.ckeditor.openDialog() instead so no need to override styles below.
+    backdrop_add_css(backdrop_get_path('module', 'video_filter') . '/css/dialog.css');
     _video_filter_add_settings('ckeditor');
   }
 }
@@ -714,9 +740,8 @@ function _video_filter_instructions() {
   $formats = filter_formats($user);
   $filters_codecs = array();
   foreach ($formats as $format) {
-    $format_filters =  filter_list_format($format->format);
-    if (isset($format_filters['video_filter'])) {
-      $filters_codecs[$format->name] = $format_filters['video_filter']->settings['video_filter_codecs'];
+    if (isset($format->filters['video_filter'])) {
+      $filters_codecs[$format->name] = $format->filters['video_filter']->settings['video_filter_codecs'];
     }
   }
   $video_filter_codecs = _video_filter_merge_format_codecs($filters_codecs);
