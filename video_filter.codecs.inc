@@ -328,10 +328,13 @@ function video_filter_codec_info() {
 
   $codecs['vimeo'] = array(
     'name' => t('Vimeo'),
-    'sample_url' => '//www.vimeo.com/123456',
+    'sample_url' => '//vimeo.com/123456',
+    'instructions' => t('Unlisted Vimeo video URLs also include a privacy hash that is required for embedding to work. E.g. <code>//vimeo.com/123456/82e9Bae2d1</code>'),
     'callback' => 'video_filter_vimeo',
     'html5_callback' => 'video_filter_vimeo_html5',
-    'regexp' => '/vimeo\.com\/([0-9]+)/',
+    'regexp' => array(
+      '/vimeo\.com\/([0-9]+)[\/]*([a-z0-9]*)/i',
+    ),
     'ratio' => 16 / 9,
     'control_bar_height' => 0,
   );
@@ -975,6 +978,9 @@ function video_filter_vimeo_html5($video) {
     'title' => isset($video['title']) ? 'autopause=' . (int) $video['title'] : 'autopause=1',
     'fullscreen' => isset($video['fullscreen']) ? 'fullscreen=' . (int) $video['fullscreen'] : 'fullscreen=1',
   );
+  if (!empty($video['codec']['matches'][2])) {
+    $attributes['h'] = 'h=' . $video['codec']['matches'][2];
+  }
   if (!empty($video['privacy']) || preg_match('/\?dnt=1/', $video['source'])) {
     $attributes['dnt'] = 'dnt=1';
   }

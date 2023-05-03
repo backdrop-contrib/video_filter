@@ -750,7 +750,11 @@ function _video_filter_instructions() {
 
   $output = '<ul>';
   foreach ($codecs as $codec) {
-    $output .= '<li><strong>' . $codec['name'] . '</strong><br />' . t('e.g.') . ' ' . $codec['sample_url'] . '</li>';
+    $output .= '<li><strong>' . $codec['name'] . '</strong><br />' . t('e.g.') . ' <code>' . $codec['sample_url'] . '</code>';
+    if (!empty($codec['instructions'])) {
+      $output .= '<br />' . $codec['instructions'];
+    }
+    $output .= '</li>';
   }
   $output .= '</ul>';
   return $output;
