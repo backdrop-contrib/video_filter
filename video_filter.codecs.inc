@@ -329,7 +329,7 @@ function video_filter_codec_info() {
   $codecs['vimeo'] = array(
     'name' => t('Vimeo'),
     'sample_url' => '//vimeo.com/123456',
-    'instructions' => t('The URL can also include a hex string that may be required for embedding some videos. E.g. //vimeo.com/123456/82e9Bae2d1'),
+    'instructions' => t('Unlisted Vimeo video URLs also include a privacy hash that is required for embedding to work. E.g. <code>//vimeo.com/123456/82e9Bae2d1</code>'),
     'callback' => 'video_filter_vimeo',
     'html5_callback' => 'video_filter_vimeo_html5',
     'regexp' => array(
