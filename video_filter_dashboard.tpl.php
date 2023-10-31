@@ -17,7 +17,6 @@
 
 <body id="video_filter">
   <?php if (!empty($messages)): print $messages; endif; ?>
-  <?php if (!empty($help)): print $help; endif; ?>
   <div class="clearfix">
      <?php print $form; ?>
   </div>
