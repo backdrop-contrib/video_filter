@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file Install and update functions.
+ */
+
+/**
+ * Notify if TinyMCE Video Filter module is present.
+ */
+function video_filter_update_1000() {
+  $path = backdrop_get_path('module', 'tinymce_video_filter');
+  if ($path) {
+    backdrop_set_message(t('Video Filter now provides the functionality provided by @name module. Remove this module from your installation.', array(
+      '@name' => t('TinyMCE Video Filter'),
+      )), 'warning');
+  }
+}

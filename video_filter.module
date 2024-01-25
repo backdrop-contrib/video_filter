@@ -690,6 +690,29 @@ function video_filter_ckeditor_video_filter_plugin_check($format, $plugin_name) 
 }
 
 /**
+ * Implements hook_tinymce_external_plugins().
+ */
+function video_filter_tinymce_external_plugins($format) {
+  $module_url = base_path() . backdrop_get_path('module', 'video_filter');
+  $plugins = array(
+    'video_filter' => array(
+      'plugin_path' => $module_url . '/editors/tinymce/plugin.js',
+      'buttons' => array(
+        'video_filter' => array(
+          'icon' => 'embed',
+          'tooltip' => t('Add video'),
+        ),
+      ),
+      'variables' => array(
+        'videoFilterInstructionUrl' => url('video_filter/instructions'),
+        'videoFilterTooltip' => t('Add video'),
+      ),
+    ),
+  );
+  return $plugins;
+}
+
+/**
  * Implements hook_element_info_alter().
  */
 function video_filter_element_info_alter(&$types) {
