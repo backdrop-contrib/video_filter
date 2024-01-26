@@ -693,6 +693,9 @@ function video_filter_ckeditor_video_filter_plugin_check($format, $plugin_name) 
  * Implements hook_tinymce_external_plugins().
  */
 function video_filter_tinymce_external_plugins($format) {
+  if (module_exists('tinymce_video_filter')) {
+    return;
+  }
   $module_url = base_path() . backdrop_get_path('module', 'video_filter');
   $plugins = array(
     'video_filter' => array(

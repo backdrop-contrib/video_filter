@@ -5,6 +5,29 @@
  */
 
 /**
+ * Implements hook_requirements().
+ */
+function video_filter_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+
+  if ($phase == 'runtime') {
+    if (module_exists('tinymce_video_filter')) {
+      $description = $t('TinyMCE support for Video Filter is now included in the Video Filter module. You can safely uninstall TinyMCE Video Filter module and remove it from your installation. For more information see this <a href="!url" target="_blank">issue</a>.', array(
+          '!url' => 'https://github.com/backdrop-contrib/video_filter/issues/20'));
+      $requirements['tinymce_video_filter'] = array(
+        'title' => 'TinyMCE Video Filter',
+        'value' => $t('The module %name is no longer required.', array('%name' => 'TinyMCE Video Filter')),
+        'severity' => REQUIREMENT_WARNING,
+        'description' => $description,
+      );
+    }
+  }
+
+  return $requirements;
+}
+
+/**
  * Notify if TinyMCE Video Filter module is present.
  */
 function video_filter_update_1000() {
