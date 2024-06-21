@@ -114,6 +114,31 @@ function _video_filter_settings($form, &$form_state, $filter, $format) {
   return $settings;
 }
 
+
+/**
+ * Implements hook_library_info().
+ */
+function video_filter_library_info() {
+  $module_path = backdrop_get_path('module', 'video_filter');
+  $info = system_get_info('module', 'video_filter');
+
+  $libraries['video_filter.ckeditor5.video-filter'] = array(
+    'title' => 'CKEditor plugin to insert videos.',
+    'version' => $info['version'],
+    'js' => array(
+      $module_path . '/editors/ckeditor5/video-filter.js' => array(),
+    ),
+    'css' => array(
+      $module_path . '/css/video_filter.css' => array(),
+    ),
+    'dependencies' => array(
+      array('ckeditor5', 'ckeditor5'),
+    ),
+  );
+
+  return $libraries;
+}
+
 function _video_filter_map_codecs_name($codecs) {
   $codecs_map = array();
   foreach ($codecs as $codec_cod => $codec) {
@@ -713,6 +738,56 @@ function video_filter_tinymce_external_plugins($format) {
     ),
   );
   return $plugins;
+}
+
+/**
+ * Implements hook_ckeditor5_plugins().
+ *
+ * Return a list of all plugins provided by this module.
+ */
+function video_filter_ckeditor5_plugins() {
+  $image_prefix = backdrop_get_path('module', 'video_filter') . '/editors/ckeditor5';
+
+  $plugins['videoFilter.VideoFilter'] = array(
+    'library' => array('video_filter', 'video_filter.ckeditor5.video-filter'),
+    'css' => array(backdrop_get_path('module', 'video_filter') . '/css/video_filter.css'),
+    'enabled_callback' => 'video_filter_ckeditor5_video_filter_plugin_check',
+    'buttons' => array(
+      'videoFilter' => array(
+        //'library' => array('video_filter', 'video-filter-ckeditor5-plugin'),
+        'label' => t('Video filter'),
+        'image' => $image_prefix . '/video.svg',
+        'required_html' => array(
+          '<p>',
+        ),
+      ),
+    ),
+    'config' => array(
+      'videoFilterLabel' => t('Video Filter'),
+      // 'videoFilter' => array(
+      //   'editLabel' => t('Edit Video'),
+      //   'insertLabel' => t('Insert Video'),
+      // ),
+    ),
+  );
+
+  return $plugins;
+}
+
+/**
+ * Implements hook_ckeditor5_upgrade_button_mapping().
+ */
+function video_filter_ckeditor5_upgrade_button_mapping() {
+  return array(
+    'video_filter' => 'videoFilter',
+  );
+}
+
+/**
+ * Enabled callback for hook_ckeditor5_plugins().
+ */
+function video_filter_ckeditor5_video_filter_plugin_check($format, $plugin_name) {
+  return !empty($format->filters['video_filter']->status);
 }
 
 /**
