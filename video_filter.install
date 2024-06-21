@@ -38,3 +38,18 @@ function video_filter_update_1000() {
       )), 'warning');
   }
 }
+
+/**
+ * Add option for converting simple URLs. Disabled by default.
+ */
+function video_filter_update_1001() {
+  $format_configs = config_get_names_with_prefix('filter.format.');
+
+  foreach ($format_configs as $config_name) {
+    $config = config($config_name);
+    if ($config->get('filters.video_filter.settings')) {
+      $config->set('filters.video_filter.settings.video_filter_parse_url', 0);
+      $config->save();
+    }
+  }
+}

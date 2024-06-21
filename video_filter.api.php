@@ -63,7 +63,7 @@ function hook_codec_info() {
 function hook_video_filter_codec_info_alter(&$codecs) {}
 
 /**
- * Alters a video's attributes previous to rendering.
+ * Alters a video's attributes prior to rendering.
  *
  * @param array $video
  */

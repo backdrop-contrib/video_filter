@@ -1,42 +1,61 @@
-Video Filter
-============
+# Video Filter
 
 This is a highly flexible and easy extendable filter module to embed any type
 of video in your site using a simple tag. Other modules can add video
 sites/formats (called codecs) using an easy plug-in architecture.
 
-
-Installation
-------------
+## Installation
 
 Enable the module on the modules page.
 
-Go to admin/config/content/formats and configure the text format(s) that should be allowed to use this filter. Check the box to enable Video Filter and save.
+Go to admin/config/content/formats and configure the text format(s) that should
+be allowed to use this filter. Check the box to enable Video Filter and save.
 
-Some simple settings are available if you configure the text format. There you can change the default size and auto play settings.
+Some simple settings are available if you configure the text format. There you
+can change the default size and auto play settings.
 
-Make sure that Video Filter is processed before "Convert URLs to links". You can do this by dragging and dropping Video Filter to the top of the processing order list. Do this even if it's allready on top, just to make sure!
+Make sure that Video Filter is processed before "Convert URLs to links". You can
+do this by dragging and dropping Video Filter to the top of the processing order
+list. Do this even if it's already on top, just to make sure!
 
-If you're using the "Limit allowed HTML tags" filter, make sure Video Filter is processed after that filter.
+If you're using the "Limit allowed HTML tags" filter, make sure Video Filter is
+processed after that filter.
 
-To enable WYSIWYG support, go to the WYSIWYG settings for each input format and enable the Video Filter button.
+To enable Editor support, go to the Editor settings for each input format and
+enable the Video Filter button. Currently there is support for CKEditor 4 and
+TinyMCE.
 
-Usage
------
+## Usage
 
-Single video: `[video:url]`
+### Single video
+
+`[video:url]`
+
 This will output the video using the default settings.
 
-Random video from multiple URL's: `[video:url,url]`
+### Single video with a URL
+
+`http://www.youtube.com/watch?v=uN1qUeId`
+
+This is an optional setting that will convert videos not inside tokens as well.
+The link must be an absolute path (with the `https`) and custom parameters are
+not possible. It will ignore links inside these tags: `<a>`, `<pre>`,
+`<script>`, `<code>` so one can still just link to a video instead of embedding
+it.
+
+### Random video from multiple URLs
+
+`[video:url,url]`
+
 This will output one of the specified videos each time.
 
-You can also set some parameters in the call:
+### Set some parameters
 
 `[video:url width:X height:Y align:left/right autoplay:1/0]`
-This will override the default settings for this video.
 
-Developers
-----------
+This will override the default parameters for this video.
+
+## Developers
 
 This module calls `hook_codec_info()`, so you can add your own codecs.
 
@@ -87,25 +106,26 @@ function MODULE_youtube($video) {
 }
 ```
 
-Troubleshooting
----------------
+## Troubleshooting
 
 If videos don't show up, try disabling any browser plugins, such as AdBlock.
 
-License
--------
+## License
 
-This project is GPL v2 software. See the LICENSE.txt file in this directory for complete text.
+This project is GPL v2 software. See the LICENSE.txt file in this directory for
+complete text.
 
-Current Maintainers
--------------------
+## Current Maintainers
 
 * [Herb v/d Dool](https://github.com/herbdool/)
 * Currently seeking maintainers.
 
-Credits
--------
+## Credits
 
 Ported to Backdrop by [Herb v/d Dool](https://github.com/herbdool/).
 
-This module was originally written for Drupal (https://drupal.org/project/video_filter). Drupal maintainers are: [ultimateboy](https://www.drupal.org/u/ultimateboy), [TravisCarden](https://www.drupal.org/u/TravisCarden), [blackdog](https://www.drupal.org/u/blackdog). Originally created by [Fokke](http://drupal.org/user/46354).
+This module was originally written for Drupal (https://drupal.org/project/video_filter).
+Drupal maintainers are: [ultimateboy](https://www.drupal.org/u/ultimateboy),
+[TravisCarden](https://www.drupal.org/u/TravisCarden), [blackdog](https://www.drupal.org/u/blackdog).
+
+Originally created by [Fokke](http://drupal.org/user/46354).
