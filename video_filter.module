@@ -469,12 +469,22 @@ function _video_filter_parse($text, $matches_code, $filter, $type = 'token') {
       }
       else {
         // Invalid callback.
-        $replacement = '<!-- VIDEO FILTER - INVALID CALLBACK IN: ' . $video['codec']['callback'] . ' -->';
+        $replacement = $code;
+        watchdog('video_filter', 'Invalid video codec callback: @callback, @code', array(
+          '@callback' => $video['codec']['callback'],
+          '@code' => $code,
+        ), WATCHDOG_WARNING);
       }
     }
     // Invalid format.
+    elseif ($type == 'token') {
+      $replacement = $code;
+      watchdog('video_filter', 'Invalid video codec for: @code', array(
+        '@code' => $code,
+      ), WATCHDOG_WARNING);
+    }
     else {
-      $replacement = '<!-- VIDEO FILTER - INVALID CODEC IN: ' . $code . ' -->';
+      $replacement = $code;
     }
 
     $text = str_replace($code, $replacement, $text);
