@@ -80,10 +80,10 @@ function MODULE_youtube($video) {
   // key of the matched regexp.
   $video['source'] = '//www.youtube.com/v/' . $video['codec']['matches'][1] . ($video['autoplay'] ? '&autoplay=1' : '');
 
-  // Outputs a general <object...> for embedding flash players. Needs width,
+  // Outputs a general <iframe...> for embedding iframe. Needs width,
   // height, source and optionally align (left or right) and params (a list of
   // <param...> attributes)
-  return video_filter_flash($video);
+  return video_filter_iframe($video);
 }
 ```
 
