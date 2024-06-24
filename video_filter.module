@@ -907,7 +907,7 @@ function _video_filter_build_token($file_url, $attributes) {
   if (!empty($attributes['height'])) {
     $token .= ' height:' . $attributes['height'];
   }
-  if (!empty($attributes['align'])) {
+  if ($attributes['align'] != 'none') {
     $token .= ' align:' . $attributes['align'];
   }
   if (!empty($attributes['autoplay'])) {
