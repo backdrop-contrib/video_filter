@@ -523,34 +523,13 @@ function video_filter_menu() {
     'page callback' => 'backdrop_get_form',
     'page arguments' => array('video_filter_select_video_form', 3),
     'access callback' => 'filter_dialog_access',
-    'access arguments' => array(3, 'video_filter_select'),
+    'access arguments' => array(3, 'video_filter'),
     'theme callback' => 'ajax_base_page_theme',
     'type' => MENU_CALLBACK,
     'file' => 'video_filter.pages.inc',
   );
 
   return $items;
-}
-
-/**
- * Helper function to build videoFilterDialogUrl.
- *
- * @param object $format
- *   Filter format.
- *
- * @return string
- */
-function _video_filter_get_dialog_url($format) {
-  global $base_path;
-  $video_filter_token = filter_editor_dialog_token($format, 'video_filter_select');
-  $path = $base_path . 'editor/dialog/video-filter/' . $format->format;
-  $url = url($path, array(
-    'query' => array(
-      'token' => $video_filter_token,
-      'calling_path' => $_GET['q'],
-    ),
-  ));
-  return $url;
 }
 
 /**
@@ -774,7 +753,7 @@ function video_filter_tinymce_external_plugins($format) {
  * Return a list of all plugins provided by this module.
  */
 function video_filter_ckeditor5_plugins() {
-  $image_prefix = backdrop_get_path('module', 'video_filter') . '/editors/ckeditor5';
+  $image_prefix = backdrop_get_path('module', 'video_filter') . '/editors/ckeditor5/icons';
 
   $plugins['videoFilter.VideoFilter'] = array(
     'library' => array('video_filter', 'video_filter.ckeditor5.video-filter'),
@@ -786,9 +765,6 @@ function video_filter_ckeditor5_plugins() {
         'image' => $image_prefix . '/video.svg',
         'plugins' => array('videoFilter.VideoFilter'),
       ),
-    ),
-    'config' => array(
-      'videoFilterLabel' => t('Video Filter'),
     ),
   );
 
@@ -815,10 +791,15 @@ function video_filter_ckeditor5_video_filter_plugin_check($format, $plugin_name)
  * Implements hook_ckeditor5_config_alter().
  */
 function video_filter_ckeditor5_config_alter(array &$config, $format) {
-  $config['video_filter']['videoFilterDialogUrl'] = _video_filter_get_dialog_url($format);
+  // Create a token for access to dialogs.
+  if (in_array('videoFilter.VideoFilter', $config['pluginList'])) {
+    $token = filter_editor_dialog_token($format, 'video_filter');
+    $config['video_filter']['dialogUrl'] = url('editor/dialog/video-filter/' . $format->format, array('query' => array(
+      'token' => $token,
+      'calling_path' => $_GET['q'],
+    )));
+  }
 }
-
-// @todo also use for CKeditor 4 and for TinyMCE.
 
 /**
  * Implements hook_element_info_alter().
