@@ -816,7 +816,7 @@ function _video_filter_instructions() {
   $formats = filter_formats($user);
   $filters_codecs = array();
   foreach ($formats as $format) {
-    if (isset($format->filters['video_filter'])) {
+    if (isset($format->filters['video_filter']) && $format->filters['video_filter']->status) {
       $filters_codecs[$format->name] = $format->filters['video_filter']->settings['video_filter_codecs'];
     }
   }
