@@ -17,6 +17,8 @@ function video_filter_select_video_form($form, &$form_state, $format) {
     '#weight' => 1,
   );
 
+  $default_width = $format->filters['video_filter']->settings['video_filter_width'] ?? '';
+  $default_height = $format->filters['video_filter']->settings['video_filter_height'] ?? '';
   $form['width'] = array(
     '#type' => 'number',
     '#title' => t('Width'),
@@ -24,6 +26,9 @@ function video_filter_select_video_form($form, &$form_state, $format) {
     '#default_value' => '',
     '#weight' => 2,
   );
+  if ($default_width) {
+    $form['width']['#description'] = t('If empty, a default width of @default_width will be used.', array('@default_width' => $default_width));
+  }
 
   $form['height'] = array(
     '#type' => 'number',
@@ -32,6 +37,9 @@ function video_filter_select_video_form($form, &$form_state, $format) {
     '#default_value' => '',
     '#weight' => 3,
   );
+  if ($default_height) {
+    $form['height']['#description'] = t('If empty, a default height of @default_height will be used.', array('@default_height' => $default_height));
+  }
 
   $form['align'] = array(
     '#type' => 'select',
