@@ -18,19 +18,17 @@ function video_filter_select_video_form($form, &$form_state, $format) {
   );
 
   $form['width'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#title' => t('Width'),
-    '#maxlength' => 255,
-    '#size' => 80,
+    '#min' => 0,
     '#default_value' => '',
     '#weight' => 2,
   );
 
   $form['height'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#title' => t('Height'),
-    '#maxlength' => 255,
-    '#size' => 80,
+    '#min' => 0,
     '#default_value' => '',
     '#weight' => 3,
   );
