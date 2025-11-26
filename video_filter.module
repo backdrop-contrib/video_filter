@@ -81,16 +81,16 @@ function video_filter_filter_info() {
  */
 function _video_filter_settings($form, &$form_state, $filter, $format) {
   $settings['video_filter_width'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#title' => t('Default width setting'),
     '#default_value' => $filter->settings['video_filter_width'],
-    '#maxlength' => 4,
+    '#min' => 0,
   );
   $settings['video_filter_height'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#title' => t('Default height setting'),
     '#default_value' => $filter->settings['video_filter_height'],
-    '#maxlength' => 4,
+    '#min' => 0,
   );
   $settings['video_filter_autoplay'] = array(
     '#type' => 'radios',
@@ -297,7 +297,9 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
 
         // Sets video width & height after any user input has been parsed.
         // First, check if user has set a width.
-        if (isset($video['width']) && !isset($video['height'])) {
+        $width_is_int = isset($video['width']) && is_int($video['width']);
+        $height_is_int = isset($video['height']) && is_int($video['height']);
+        if ($width_is_int && !isset($video['height'])) {
           if ($ratio) {
             $video['height'] = ceil($video['width'] / $ratio);
           }
@@ -306,7 +308,7 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
           }
         }
         // Else, if user has set height.
-        elseif (isset($video['height']) && !isset($video['width'])) {
+        elseif ($height_is_int && !isset($video['width'])) {
           if ($ratio) {
             $video['width'] = ceil($video['height'] * $ratio);
           }
@@ -315,7 +317,7 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
           }
         }
         // Maybe both?
-        elseif (isset($video['height']) && isset($video['width'])) {
+        elseif ($height_is_int && $width_is_int) {
           $video['width'] = $video['width'];
           $video['height'] = $video['height'];
         }
