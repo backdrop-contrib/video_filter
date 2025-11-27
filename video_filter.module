@@ -81,16 +81,16 @@ function video_filter_filter_info() {
  */
 function _video_filter_settings($form, &$form_state, $filter, $format) {
   $settings['video_filter_width'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#title' => t('Default width setting'),
     '#default_value' => $filter->settings['video_filter_width'],
-    '#maxlength' => 4,
+    '#min' => 0,
   );
   $settings['video_filter_height'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#title' => t('Default height setting'),
     '#default_value' => $filter->settings['video_filter_height'],
-    '#maxlength' => 4,
+    '#min' => 0,
   );
   $settings['video_filter_autoplay'] = array(
     '#type' => 'radios',
@@ -297,7 +297,14 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
 
         // Sets video width & height after any user input has been parsed.
         // First, check if user has set a width.
-        if (isset($video['width']) && !isset($video['height'])) {
+        if (isset($video['width'])) {
+          $video['width'] = intval($video['width']);
+        }
+        if (isset($video['height'])) {
+          $video['height'] = intval($video['height']);
+        }
+
+        if (isset($video['width']) && $video['width'] > 0 && !isset($video['height'])) {
           if ($ratio) {
             $video['height'] = ceil($video['width'] / $ratio);
           }
@@ -306,7 +313,7 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
           }
         }
         // Else, if user has set height.
-        elseif (isset($video['height']) && !isset($video['width'])) {
+        elseif (isset($video['height']) && $video['height'] > 0 && !isset($video['width'])) {
           if ($ratio) {
             $video['width'] = ceil($video['height'] * $ratio);
           }
@@ -315,12 +322,12 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
           }
         }
         // Maybe both?
-        elseif (isset($video['height']) && isset($video['width'])) {
+        elseif (isset($video['height']) && $video['height'] > 0 && isset($video['width']) && $video['width'] > 0) {
           $video['width'] = $video['width'];
           $video['height'] = $video['height'];
         }
         // Fall back to defaults.
-        elseif (!isset($video['height']) && !isset($video['width'])) {
+        else {
           $video['width'] = $filter->settings['video_filter_width'] != '' ? $filter->settings['video_filter_width'] : 400;
           $video['height'] = $filter->settings['video_filter_height'] != '' ? $filter->settings['video_filter_height'] : 400;
         }
