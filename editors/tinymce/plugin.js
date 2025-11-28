@@ -12,10 +12,10 @@
   const buildToken = function (data) {
     let embedStr = '';
     embedStr += 'video:' + data.videourl.value;
-    if (data.width) {
+    if (data.width && /^\d+$/.test(data.width)) {
       embedStr += ' width:' + data.width;
     }
-    if (data.height) {
+    if (data.height && /^\d+$/.test(data.height)) {
       embedStr += ' height:' + data.height;
     }
     if (data.align != 'none') {
