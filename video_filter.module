@@ -479,21 +479,12 @@ function _video_filter_parse($text, $matches_code, $filter, $type = 'token') {
         $replacement = call_user_func($video['codec']['callback'], $video);
       } else {
         // Invalid callback.
-        $replacement = $code;
-        watchdog('video_filter', 'Invalid video codec callback: @callback, @code', array(
-          '@callback' => $video['codec']['callback'],
-          '@code' => $code,
-        ), WATCHDOG_WARNING);
+        $replacement = '<!-- VIDEO FILTER - INVALID CALLBACK IN: ' . $video['codec']['callback'] . ' -->';
       }
     }
     // Invalid format.
-    elseif ($type == 'token') {
-      $replacement = $code;
-      watchdog('video_filter', 'Invalid video codec for: @code', array(
-        '@code' => $code,
-      ), WATCHDOG_WARNING);
-    } else {
-      $replacement = $code;
+    else {
+      $replacement = '<!-- VIDEO FILTER - INVALID CODEC IN: ' . $code . ' -->';
     }
 
     $text = str_replace($code, $replacement, $text);
