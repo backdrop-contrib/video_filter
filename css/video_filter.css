@@ -17,3 +17,7 @@
 .video-filter {
   border: none;
 }
+
+.video-responsive {
+  width: 100% !important;
+}

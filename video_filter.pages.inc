@@ -17,28 +17,37 @@ function video_filter_select_video_form($form, &$form_state, $format) {
     '#weight' => 1,
   );
 
+  $responsive = $format->filters['video_filter']->settings['video_filter_responsive'] ?? 0;
+  $form['responsive'] = array(
+    '#type' => 'hidden',
+    '#value' => $responsive,
+  );
+
   $default_width = $format->filters['video_filter']->settings['video_filter_width'] ?? '';
   $default_height = $format->filters['video_filter']->settings['video_filter_height'] ?? '';
-  $form['width'] = array(
-    '#type' => 'number',
-    '#title' => t('Width'),
-    '#min' => 0,
-    '#default_value' => '',
-    '#weight' => 2,
-  );
-  if ($default_width) {
-    $form['width']['#description'] = t('If empty, a default width of @default_width will be used.', array('@default_width' => $default_width));
-  }
 
-  $form['height'] = array(
-    '#type' => 'number',
-    '#title' => t('Height'),
-    '#min' => 0,
-    '#default_value' => '',
-    '#weight' => 3,
-  );
-  if ($default_height) {
-    $form['height']['#description'] = t('If empty, a default height of @default_height will be used.', array('@default_height' => $default_height));
+  if (!$responsive) {
+    $form['width'] = array(
+      '#type' => 'number',
+      '#title' => t('Width'),
+      '#min' => 0,
+      '#default_value' => '',
+      '#weight' => 2,
+    );
+    if ($default_width) {
+      $form['width']['#description'] = t('If empty, a default width of @default_width will be used.', array('@default_width' => $default_width));
+    }
+
+    $form['height'] = array(
+      '#type' => 'number',
+      '#title' => t('Height'),
+      '#min' => 0,
+      '#default_value' => '',
+      '#weight' => 3,
+    );
+    if ($default_height) {
+      $form['height']['#description'] = t('If empty, a default height of @default_height will be used.', array('@default_height' => $default_height));
+    }
   }
 
   $form['align'] = array(
@@ -97,12 +106,15 @@ function video_filter_select_video_form_save($form, &$form_state) {
     $commands[] = ajax_command_prepend('.editor-dialog .ui-dialog-content', $error_messages);
   }
   else {
+    $responsive = $form_state['values']['responsive'] ?? NULL;
     $attributes = array(
-      'width' => $form_state['values']['width'],
-      'height' => $form_state['values']['height'],
       'align' => $form_state['values']['align'],
       'autoplay' => $form_state['values']['autoplay'],
     );
+    if (!$responsive) {
+      $attributes['width'] = $form_state['values']['width'];
+      $attributes['height'] = $form_state['values']['height'];
+    }
     $commands[] = array(
       'command' => 'editorDialogSave',
       'values' => _video_filter_build_token($form_state['values']['file_url'], $attributes,
