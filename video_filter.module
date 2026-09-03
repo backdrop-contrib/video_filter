@@ -194,7 +194,7 @@ function _video_filter_map_codecs_name($codecs) {
  */
 function _video_filter_tips($filter, $format, $long = FALSE) {
   if ($long) {
-    $codecs = video_filter_get_codec_enabled($filter->settings['video_filter_codecs']);
+    $codecs = video_filter_get_codec_enabled((array) $filter->settings['video_filter_codecs']);
     $supported = array();
     $instructions = array();
     foreach ($codecs as $codec) {
@@ -249,7 +249,7 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
       }
 
       // Load all codecs.
-      $codecs = video_filter_get_codec_enabled($filter->settings['video_filter_codecs']);
+      $codecs = video_filter_get_codec_enabled((array) $filter->settings['video_filter_codecs']);
 
       // Find codec.
       foreach ($codecs as $codec_name => $codec) {
@@ -429,6 +429,7 @@ function video_filter_get_codec_info() {
  */
 function _video_filter_merge_format_codecs($filters_codecs) {
   $codecs = array_pop($filters_codecs);
+  $codecs = $codecs ?? array();
 
   foreach ($filters_codecs as $format_name => $format_codecs) {
     foreach ($format_codecs as $codec_name => $codec_value) {
@@ -448,7 +449,7 @@ function _video_filter_merge_format_codecs($filters_codecs) {
  *
  * @return array
  */
-function video_filter_get_codec_enabled($video_filter_codecs) {
+function video_filter_get_codec_enabled(array $video_filter_codecs) {
   $codecs = array_intersect_key(
     video_filter_get_codec_info(),
     array_filter($video_filter_codecs)
@@ -848,7 +849,7 @@ function _video_filter_instructions() {
   }
   $video_filter_codecs = _video_filter_merge_format_codecs($filters_codecs);
 
-  $codecs = video_filter_get_codec_enabled($video_filter_codecs);
+  $codecs = video_filter_get_codec_enabled((array) $video_filter_codecs);
 
   $output = '<ul>';
   foreach ($codecs as $codec) {
