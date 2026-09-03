@@ -121,14 +121,10 @@ function _video_filter_settings($form, &$form_state, $filter, $format) {
     '#title' => t('Other settings'),
   );
   $settings['video_filter_other']['video_filter_parse_oembed'] = array(
-    '#type' => 'radios',
-    '#title' => t('Convert tokens and oembed'),
-    '#description' => t('Choose to convert only URLs inside a <code>[video:URL]</code> token, or to also convert any URLs in the open format <code><oembed></code>, created by an editor plugin or manually.'),
+    '#type' => 'checkbox',
+    '#title' => t('Parse oEmbed'),
+    '#description' => t('Choose to also convert any URLs in the open oEmbed format <code>@oembed</code>, created by an editor plugin such as CKEditor 5 Media Embed plugin or manually.', array('@oembed' => '<oembed url=""></oembed>')),
     '#default_value' => $filter->settings['video_filter_parse_oembed'] ?? 1,
-    '#options' => array(
-      1 => t('Token and oEmbed'),
-      0 => t('Token-only'),
-    ),
   );
   $settings['video_filter_other']['video_filter_autoplay'] = array(
     '#type' => 'radios',
@@ -263,7 +259,7 @@ function _video_filter_tips($filter, $format, $long = FALSE) {
       $long_text = t(
         '
         <p><strong>Video Filter</strong></p>
-        <p>You may insert videos from popular video sites by using a simple token <code>[video:URL]</code> or by inserting a video link (must be a full URL).</p>
+        <p>You may insert videos from popular video sites by using a simple token <code>[video:URL]</code> or insert video links in the oEmbed elements. Editor plugins such as CKEditor 5 Media Embed plugin will create oEmbed video links automatically.</p>
         <p>Examples:</p>
         <ul>
           <li>Single video link (no token and no default settings):<br /><code>http://www.youtube.com/watch?v=uN1qUeId</code></li>
@@ -273,12 +269,14 @@ function _video_filter_tips($filter, $format, $long = FALSE) {
           <li>Override default width and height:<br /><code>[video:http://www.youtube.com/watch?v=uN1qUeId width:X height:Y]</code></li>
           <li>Override default aspect ratio:<br /><code>[video:http://www.youtube.com/watch?v=uN1qUeId ratio:4/3]</code></li>
           <li>Align the video:<br /><code>[video:http://www.youtube.com/watch?v=uN1qUeId align:right]</code></li>
+          <li>oEmbed:<br /><code>@oembed</code></li>
         </ul>
         <p>Supported sites: @codecs.</p>
         <p>Special instructions:</p>
         <small>Some codecs need special input. You\'ll find those instructions here.</small>
         <ul>!instructions</ul>',
         array(
+          '@oembed' => '<oembed url=""></oembed>',
           '@codecs' => implode(', ', $supported),
           '!instructions' => implode('', $instructions),
         )
@@ -287,10 +285,11 @@ function _video_filter_tips($filter, $format, $long = FALSE) {
     return $long_text;
   }
   else {
-    // @todo If CKEditor 5 Media Embed plugin is enabled then can just insert a video link.
     $short_text = t('You may insert videos with <code>[video:URL]</code> or with various settings <code>[video:URL autoplay:1 width:X height:Y ratio:4/3 align:right]</code>. See <a href="@url" target="_blank">full instructions</a>.', array('@url' => url('video_filter/instructions')));
     if (!empty($filter->settings['video_filter_parse_oembed'])) {
-      $short_text = t('You may insert videos with a token <code>[video:URL]</code> or by inserting a video link with a full URL (for example, <code>http://www.youtube.com/watch?v=uN1qUeId</code>). With the token, you may use various settings <code>[video:URL autoplay:1 width:X height:Y ratio:4/3 align:right]</code>. See <a href="@url" target="_blank">full instructions</a>.', array('@url' => url('video_filter/instructions')));
+      $short_text = t('You may insert videos with a token <code>[video:URL]</code> or by inserting a video link in an oEmbed format (for example, manually add <code>@oembed</code> or rely on an editor plugin such as CKEditor 5 Media Embed plugin). With the token, you may use various settings <code>[video:URL autoplay:1 width:X height:Y ratio:4/3 align:right]</code>. See <a href="@url" target="_blank">full instructions</a>.', array(
+        '@oembed' => '<oembed url=""></oembed>',
+        '@url' => url('video_filter/instructions')));
     }
     return $short_text;
   }
