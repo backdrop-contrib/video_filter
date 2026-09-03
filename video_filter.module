@@ -466,12 +466,15 @@ function video_filter_get_codec_enabled(array $video_filter_codecs) {
 function theme_video_filter_iframe($variables) {
   $video = $variables['video'];
   $classes = video_filter_get_classes($video);
-  $attributes = '';
+  $attributes = array(
+    'allowfullscreen' => 'true',
+    'referrerpolicy' => 'strict-origin-when-cross-origin',
+  );
   if (!empty($video['attributes'])) {
-    $attributes = backdrop_attributes($video['attributes']);
+    $attributes += $video['attributes'];
   }
 
-  $output = '<div class="video-filter"><iframe src="' . $video['source'] . '" width="' . $video['width'] . '" height="' . $video['height'] . '" class="' . implode(' ', $classes) . '" allowfullscreen="true"' . $attributes . '></iframe></div>';
+  $output = '<div class="video-filter"><iframe src="' . $video['source'] . '" width="' . $video['width'] . '" height="' . $video['height'] . '" class="' . implode(' ', $classes) . '"' . backdrop_attributes($attributes) . '></iframe></div>';
 
   return $output;
 }
