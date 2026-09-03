@@ -152,7 +152,7 @@ function _video_filter_settings($form, &$form_state, $filter, $format) {
  */
 function video_filter_library_info() {
   $module_path = backdrop_get_path('module', 'video_filter');
-  $info = system_get_info('module', 'video_filter');
+  $info = (array) system_get_info('module', 'video_filter');
 
   $libraries['video_filter.ckeditor5.video-filter'] = array(
     'title' => 'CKEditor plugin to insert videos.',
@@ -397,6 +397,10 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
 
 /**
  * Wrapper that calls the theme function.
+ *
+ * @param array $video
+ *
+ * @return string
  */
 function video_filter_iframe($video) {
   return theme('video_filter_iframe', array('video' => $video));
@@ -404,6 +408,8 @@ function video_filter_iframe($video) {
 
 /**
  * Get a list of all available video codecs.
+ *
+ * @return array
  */
 function video_filter_get_codec_info() {
   static $codecs;
@@ -437,6 +443,10 @@ function _video_filter_merge_format_codecs($filters_codecs) {
 
 /**
  * Get a list of enabled video codecs.
+ *
+ * @param array $video_filter_codecs
+ *
+ * @return array
  */
 function video_filter_get_codec_enabled($video_filter_codecs) {
   $codecs = array_intersect_key(
@@ -482,6 +492,10 @@ function video_filter_theme($existing, $type, $theme, $path) {
 
 /**
  * Helper function that extracts some classes from $video.
+ *
+ * @param array $video
+ *
+ * @return array
  */
 function video_filter_get_classes($video) {
   $classes = array(
@@ -784,6 +798,11 @@ function video_filter_element_info_alter(&$types) {
   }
 }
 
+/**
+ * Add settings to JS.
+ *
+ * @param string $editor
+ */
 function _video_filter_add_settings($editor) {
   static $editor_settings_added = array();
   static $global_settings_added = FALSE;

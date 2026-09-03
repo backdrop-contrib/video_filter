@@ -308,7 +308,7 @@ function video_filter_archive($video) {
  */
 function video_filter_candidcareer($video) {
   // Their urls contain & symbols which Backdrop is encoding, so decode those.
-  $decoded = decode_entities($video['codec']['matches'][0]);
+  $decoded = (string) decode_entities($video['codec']['matches'][0]);
   $video['source'] = '//' . $decoded;
   $video['attributes']['marginwidth'] = 0;
   $video['attributes']['marginheight'] = 0;
