@@ -20,6 +20,14 @@ function video_filter_codec_info() {
     'ratio' => 4 / 3,
   );
 
+  $codecs['brightcove'] = array(
+    'name' => t('Brightcove'),
+    'sample_url' => '//players.brightcove.net/1486906377/default_default/index.html?videoId=1700308830799244866',
+    'callback' => 'video_filter_brightcove',
+    'regexp' => '/players\.brightcove\.net\/([0-9]+)\/([a-zA-Z0-9\-_&;]+)\/index\.html\?videoId=([0-9]+)/',
+    'ratio' => 16 / 9,
+  );
+
   $codecs['candidcareer'] = array(
     'name' => t('Candid Career'),
     'sample_url' => '//www.candidcareer.com/embed.php?vkey=ed5fdd900a274930252f&shared=CandidCareer&uid=30',
@@ -64,6 +72,14 @@ function video_filter_codec_info() {
     'regexp' => '/democracynow\.org\/([0-9]+)\/([0-9]+)\/([0-9]+)\/([a-zA-Z0-9\-_]+)/',
     'ratio' => 16 / 9,
     'control_bar_height' => 0,
+  );
+
+  $codecs['facebook'] = array(
+    'name' => t('Facebook'),
+    'sample_url' => '//www.facebook.com/video.php?v=10152795258318553',
+    'callback' => 'video_filter_facebook',
+    'regexp' => '/facebook\.com\/video\.php\?v=([0-9]+)/i',
+    'ratio' => 466 / 263,
   );
 
   $codecs['flickr_slideshows'] = array(
@@ -302,6 +318,18 @@ function video_filter_archive($video) {
 }
 
 /**
+ * Callback for Brightcove codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_brightcove($video) {
+  // Attributes on the iframe.
+  $video['attributes']['allowfullscreen'] = TRUE;
+
+  return video_filter_iframe($video);
+}
+
+/**
  * Callback for Candid Career codec.
  *
  * @see video_filter_codec_info()
@@ -328,6 +356,9 @@ function video_filter_coub($video) {
     'muted' => !empty($video['muted']) ? 'muted=true' : 'muted=false',
   );
   $video['source'] = '//coub.com/embed/' . $video['codec']['matches'][1] . '?' . implode('&', $attributes);
+
+  // Attributes on the iframe.
+  $video['attributes']['allowfullscreen'] = TRUE;
 
   return video_filter_iframe($video);
 }
@@ -380,6 +411,9 @@ function video_filter_flickr_slideshows($video) {
  * @see video_filter_codec_info()
  */
 function video_filter_democracynow_fullshow($video) {
+  // Attributes on the iframe.
+  $video['attributes']['allowfullscreen'] = TRUE;
+
   $video['source'] = '//www.democracynow.org/embed/show/' . $video['codec']['matches'][0];
   // The above is pulling in the url part of the regex, so we need to do a
   // search and replace to remove it.
@@ -397,6 +431,9 @@ function video_filter_democracynow_fullshow($video) {
  * @see video_filter_codec_info()
  */
 function video_filter_democracynow_story($video) {
+  // Attributes on the iframe.
+  $video['attributes']['allowfullscreen'] = TRUE;
+
   $video['source'] = '//www.democracynow.org/embed/story/' . $video['codec']['matches'][0];
   // The above is pulling in the url part of the regex, so we need to do a
   // search and replace to remove it.
@@ -415,6 +452,21 @@ function video_filter_democracynow_story($video) {
  */
 function video_filter_ted($video) {
   $video['source'] = '//embed.ted.com/talks/' . $video['codec']['matches'][3] . '.html';
+  return video_filter_iframe($video);
+}
+
+/**
+ * Callback for Facebook codec.
+ *
+ * @see video_filter_codec_info()
+ */
+function video_filter_facebook($video) {
+  $video['source'] = 'https://www.facebook.com/video/embed?video_id=' . $video['codec']['matches'][1];
+
+  // Attributes on the iframe.
+  $video['attributes']['allowfullscreen'] = 'false';
+  $video['attributes']['scrolling'] = 'no';
+
   return video_filter_iframe($video);
 }
 
@@ -453,6 +505,9 @@ function video_filter_gametrailers($video) {
  */
 function video_filter_giphy($video) {
   $video['source'] = '//giphy.com/embed/' . $video['codec']['matches'][3];
+
+  // Attributes on the iframe.
+  $video['attributes']['allowfullscreen'] = TRUE;
 
   return video_filter_iframe($video);
 }
@@ -503,6 +558,10 @@ function video_filter_mailru($video) {
     'autoplay' => !empty($video['autoplay']) ? 'autoplay=' . (int) $video['autoplay'] : '',
   );
   $video['source'] = '//videoapi.my.mail.ru/videos/embed/v/' . $video['codec']['matches'][1] . '/' . $video['codec']['matches'][2] . '.html?' . implode('&', $attributes);
+
+  // Attributes on the iframe.
+  $video['attributes']['allowfullscreen'] = TRUE;
+
   return video_filter_iframe($video);
 }
 
@@ -513,6 +572,10 @@ function video_filter_mailru($video) {
  */
 function video_filter_myvideo($video) {
   $video['source'] = '//www.myvideo.de/embedded/public/' . $video['codec']['matches'][2];
+
+  // Attributes on the iframe.
+  $video['attributes']['allowfullscreen'] = TRUE;
+
   return video_filter_iframe($video);
 }
 
@@ -587,6 +650,10 @@ function video_filter_soundcloud($video) {
  */
 function video_filter_twitch($video) {
   $video['source'] = '//player.twitch.tv/?channel=' . $video['codec']['matches'][1] ;
+
+  // Attributes on the iframe.
+  $video['attributes']['scrolling'] = 'no';
+
   return video_filter_iframe($video);
 }
 
@@ -599,6 +666,9 @@ function video_filter_twitch($video) {
  */
 function video_filter_teachertube($video) {
   $video['source'] = '//www.teachertube.com/embed/videos/' . $video['codec']['matches'][2];
+
+  // Attributes on the iframe.
+  $video['attributes']['allowfullscreen'] = TRUE;
 
   return video_filter_iframe($video);
 }
@@ -614,6 +684,10 @@ function video_filter_ustream($video) {
     'autoplay' => isset($video['autoplay']) ? 'autoplay=' . (int) $video['autoplay'] : 'autoplay=0',
   );
   $video['source'] = '//www.ustream.tv/embed/recorded/' . $video['codec']['matches'][1] . '?' . implode('&', $attributes);
+
+  // Attributes on the iframe.
+  $video['attributes']['allowfullscreen'] = TRUE;
+
   return video_filter_iframe($video);
 }
 
@@ -644,6 +718,9 @@ function video_filter_vimeo_html5($video) {
   }
   $video['source'] = '//player.vimeo.com/video/' . $video['codec']['matches'][1] . '?' . implode('&', $attributes);
 
+  // Attributes on the iframe.
+  $video['attributes']['allowfullscreen'] = TRUE;
+
   return video_filter_iframe($video);
 }
 
@@ -667,6 +744,9 @@ function video_filter_youku_html5($video) {
   $attributes = array();
   $video['source'] = '//player.youku.com/embed/' . $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
 
+  // Attributes on the iframe.
+  $video['attributes']['allowfullscreen'] = TRUE;
+
   return video_filter_iframe($video);
 }
 
@@ -676,6 +756,7 @@ function video_filter_youku_html5($video) {
  * @see video_filter_codec_info()
  */
 function video_filter_youtube_html5($video) {
+  // Attributes on the video.
   $attributes = array(
     'modestbranding' => !empty($video['modestbranding']) ? 'modestbranding=1' : 'modestbranding=0',
     'html5' => 'html5=1',
@@ -706,6 +787,9 @@ function video_filter_youtube_html5($video) {
   $domain = (!empty($video['privacy']) || preg_match('/youtube-nocookie\.com/', $video['source'])) ? '//www.youtube-nocookie.com/embed/' : '//www.youtube.com/embed/';
   $video['source'] = $domain . $video['codec']['matches'][1] . '?' . implode('&amp;', $attributes);
 
+  // Attributes on the iframe.
+  $video['attributes']['allowfullscreen'] = TRUE;
+
   return video_filter_iframe($video);
 }
 
@@ -721,6 +805,9 @@ function video_filter_youtube_playlist_html5($video) {
     'wmode' => 'wmode=opaque',
   );
   $video['source'] = '//www.youtube.com/embed/videoseries?list=' . $video['codec']['matches'][1] . '&amp;' . implode('&amp;', $attributes);
+
+  // Attributes on the iframe.
+  $video['attributes']['allowfullscreen'] = TRUE;
 
   return video_filter_iframe($video);
 }
