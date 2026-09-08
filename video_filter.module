@@ -331,11 +331,12 @@ function _video_filter_process($text, $filter, $format, $langcode, $cache, $cach
  * @return string
  */
 function _video_filter_parse($text, $matches_code, $filter, $type = 'token') {
+  $replacement = $code = '';
   foreach ($matches_code[0] as $ci => $code) {
     $code = decode_entities($code);
     $code = $type == 'token' ? check_plain($code) : $code;
     $video = array(
-      'source' => $type == 'token' ? $matches_code[2][$ci] : $matches_code[0][$ci],
+      'source' => $type == 'token' ? $matches_code[2][$ci] : $matches_code[1][$ci],
       'autoplay' => $filter->settings['video_filter_autoplay'],
       'related' => $filter->settings['video_filter_related'],
     );

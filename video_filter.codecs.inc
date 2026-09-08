@@ -358,6 +358,7 @@ function video_filter_flickr_slideshows($video) {
     $html = $cache->data;
   }
   else {
+    $html = '';
     $endpoint = 'https://www.flickr.com/services/oembed';
     $options = array(
       'url' => $video['source'],
